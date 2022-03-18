@@ -1,60 +1,42 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-
-interface User {
-    name: string,
-    surname: string,
-    bio?: string,
-    email: string,
-    password: string,
-    status: string,
-    role: string,
-    profile_photo?: string,
-    created_at: Date,
-    updated_at: Date,
-    token?: string,
-    token_created_at: Date,
-    account_id: number
-}
-
-interface Account {
-    id: number,
-    name: string,
-    status: string,
-    created_at: Date,
-    updated_ad: Date
-}
+import { View, StyleSheet, Text, Image } from 'react-native';
+import { Post } from '../redux'
 
 
 interface TextFieldProps {
-    user: Account
+    post: Post,
 }
 
 
-const TextField: React.FC<TextFieldProps> = ({ user }) => {
+const TextField: React.FC<TextFieldProps> = ({ post }) => {
 
-    return(
-        <View style={styles.container} >
-           <Text>{user.name}</Text>
-           <Text>{user.status}</Text>
-        </View>
-    )
+    if(post.image != null) {
+        return(
+            <View style={styles.container} >
+               <Text>{post.body}</Text>
+               <Text>{post.post_from}</Text>
     
+              <Image source={{uri: post.image}} style = {{height: 200, resizeMode : 'stretch', margin: 5 }} />
+    
+            </View>
+        )
+    } else {
+        return(
+            <View style={styles.container} >
+               <Text>{post.body}</Text>
+               <Text>{post.post_from}</Text>
+        
+            </View>
+        )
+    }
+
 }
 
 const styles = StyleSheet.create({
     container: {
-        width: 340,
-        backgroundColor: "#DBDBDB",
-        height: 50,
-        borderRadius: 30,
-        justifyContent: "center",
-        alignItems: "center",
+        flex: 1,
+        marginTop: 50,
         margin: 10,
-        marginLeft: 30,
-        marginRight: 30,
-        paddingRight: 10,
-        paddingLeft: 20,
     }
 })
 

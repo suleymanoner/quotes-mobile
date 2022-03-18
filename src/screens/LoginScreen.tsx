@@ -2,16 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
 import { useNavigation } from '../utils/useNavigation'
 import { MAIN_COLOR } from '../utils/Config'
+import { TextField } from '../components/TextField';
 
-
-const LandingScreen = () => {
+const LoginScreen = () => {
 
     const { navigate } = useNavigation()
 
     useEffect(() => {
-        setTimeout(() => {
-            navigate('loginStack')
-        }, 1000)
+        
     }, [])
 
 
@@ -20,7 +18,13 @@ const LandingScreen = () => {
 
             <View style={styles.body} >
                 <Image source={require('../assets/images/quotes-icon.png')} style={styles.image} />
-                <Text style={styles.text} >"Quotes"</Text>
+                <Text style={styles.title} >"Quotes"</Text>
+            </View>
+
+            <View style={styles.input_container} >
+                <TextField placeholder='email' onTextChange={() => {}} />
+                <TextField placeholder='password' onTextChange={() => {}} isSecure={true} />
+                <Text style={styles.link_text} >You don’t have account yet? Click for Sign-up.</Text>
             </View>
 
 
@@ -28,7 +32,7 @@ const LandingScreen = () => {
     )
 }
 
-export { LandingScreen }
+export { LoginScreen }
 
 const styles = StyleSheet.create({
     container: {
@@ -36,18 +40,26 @@ const styles = StyleSheet.create({
         backgroundColor: MAIN_COLOR,
     },
     body: {
-        flex: 1,
+        flex: 5,
         alignItems: "center",
         justifyContent: "center",
     },
-    image: {
-        width: 150,
-        height: 150,
+    input_container: {
+        flex: 8,
     },
-    text: {
-        fontSize: 55,
+    image: {
+        width: 100,
+        height: 100,
+    },
+    title: {
+        fontSize: 45,
         marginBottom: 50,
         fontFamily: 'Aleo-Regular',
+        color: "black"
+    },
+    link_text: {
+        textAlign: "center",
+        fontSize: 15,
         color: "black"
     }
 })

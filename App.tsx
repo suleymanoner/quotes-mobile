@@ -4,6 +4,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { LandingScreen } from './src/screens/LandingScreen'
+import { LoginScreen } from './src/screens/LoginScreen'
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
@@ -14,6 +15,16 @@ const switchNavigator = createSwitchNavigator({
   landingStack: {
     screen: createStackNavigator({
       Landing: LandingScreen
+    }, {
+      defaultNavigationOptions: {
+        headerShown: false
+      }
+    })
+  },
+
+  loginStack: {
+    screen: createStackNavigator({
+      LoginPage: LoginScreen
     }, {
       defaultNavigationOptions: {
         headerShown: false

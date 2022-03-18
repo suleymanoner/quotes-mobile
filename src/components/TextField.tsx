@@ -1,42 +1,50 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
-import { Post } from '../redux'
+import { View, StyleSheet, TextInput, Dimensions  } from 'react-native';
 
 
 interface TextFieldProps {
-    post: Post,
+    placeholder: string,
+    isSecure?: boolean,
+    onTextChange: Function,
 }
 
 
-const TextField: React.FC<TextFieldProps> = ({ post }) => {
+const TextField: React.FC<TextFieldProps> = ({ placeholder, isSecure = false, onTextChange }) => {
 
-    if(post.image != null) {
-        return(
-            <View style={styles.container} >
-               <Text>{post.body}</Text>
-               <Text>{post.post_from}</Text>
-    
-              <Image source={{uri: post.image}} style = {{height: 200, resizeMode : 'stretch', margin: 5 }} />
-    
-            </View>
-        )
-    } else {
-        return(
-            <View style={styles.container} >
-               <Text>{post.body}</Text>
-               <Text>{post.post_from}</Text>
-        
-            </View>
-        )
-    }
+
+    return(
+        <View style={styles.container} >
+            <TextInput 
+            placeholder={placeholder}
+            autoCapitalize='none'
+            secureTextEntry={isSecure}
+            onChangeText={(text) => onTextChange(text)}
+            style={styles.textField} />
+        </View>
+    )
 
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        marginTop: 50,
+        height: 55,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
         margin: 10,
+        marginLeft: 25,
+        marginRight: 25,
+        paddingRight: 10,
+        paddingLeft: 20,
+        borderWidth: 2,
+        borderColor: "black"
+    },
+    textField: {
+        flex: 1,
+        width: 320,
+        height: 50,
+        fontSize: 16,
+        color: "black"
     }
 })
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
 import { useNavigation } from '../utils/useNavigation'
 import { MAIN_COLOR } from '../utils/Config'
-import { TextField } from '../components';
+import { TextField, ButtonWithIcon } from '../components';
 
 const LoginScreen = () => {
 
@@ -54,6 +54,8 @@ const LoginScreen = () => {
                 <TextField placeholder='Username' onTextChange={() => {}} />
                 <TextField placeholder='Password' onTextChange={() => {}} isSecure={true} />
                 <TextField placeholder='Password Again' onTextChange={() => {}} isSecure={true} />
+
+                <ButtonWithIcon onTap={() => {}} title="Sign Up" width={350} height={50} icon={require('../assets/images/add_account.png')} />
 
 
 

@@ -1,10 +1,10 @@
-export interface Category {
-    id: string,
-    title: string,
-    icon: string,   
+export interface UserState {
+    user: UserModel,
+    account: AccountModel,
+    error: ErrorModel
 }
 
-export interface Account {
+export interface AccountModel {
     id: number,
     name: string,
     status: string,
@@ -12,14 +12,15 @@ export interface Account {
     updated_at: Date
 }
 
-export interface DailyPost {
+export interface DailyPostModel {
     id: number,
     body: string,
     post_from: string,
     image: string
 }
 
-export interface User {
+export interface UserModel {
+    id: number,
     name: string,
     surname: string,
     bio?: string,
@@ -35,7 +36,7 @@ export interface User {
     account_id: number
 }
 
-export interface Post {
+export interface PostModel {
     id: number,
     body: string,
     post_from: string,
@@ -45,6 +46,10 @@ export interface Post {
     created_at: Date,
     updated_at: Date,
     user_id: number
+}
+
+export interface ErrorModel {
+    error: string
 }
 
 

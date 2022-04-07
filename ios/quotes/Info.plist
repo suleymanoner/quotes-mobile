@@ -54,6 +54,22 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Aleo-Regular.ttf</string>
+		<string>bahnschrift.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
+		<string>RubikWetPaint-Regular.ttf</string>
+		<string>BAHNSCHRIFT 10.TTF</string>
+		<string>BAHNSCHRIFT 11.TTF</string>
+		<string>BAHNSCHRIFT 12.TTF</string>
+		<string>BAHNSCHRIFT 13.TTF</string>
+		<string>BAHNSCHRIFT 14.TTF</string>
+		<string>BAHNSCHRIFT 2.TTF</string>
+		<string>BAHNSCHRIFT 3.TTF</string>
+		<string>BAHNSCHRIFT 4.TTF</string>
+		<string>BAHNSCHRIFT 5.TTF</string>
+		<string>BAHNSCHRIFT 6.TTF</string>
+		<string>BAHNSCHRIFT 7.TTF</string>
+		<string>BAHNSCHRIFT 8.TTF</string>
+		<string>BAHNSCHRIFT 9.TTF</string>
 	</array>
 </dict>
 </plist>

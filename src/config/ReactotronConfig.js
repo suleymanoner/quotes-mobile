@@ -17,7 +17,6 @@ const reactotron = Reactotron
     overlay: false, // just turning off overlay
   })
   .use(reactotronRedux())
-  .connect()
   
 console.tron = Reactotron;
 

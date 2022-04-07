@@ -1,16 +1,36 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import {useNavigation} from '../utils/useNavigation';
 import {MAIN_COLOR} from '../utils/Config';
 import LottieView from "lottie-react-native";
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 const LandingScreen = () => {
+
   const {navigate} = useNavigation();
 
+
+  const getStatus = async () => {
+    try {
+      const status = await AsyncStorage.getItem('user_status')
+      if(status === "ACTIVE") {
+        setTimeout(() => {
+          navigate('home');
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          navigate('LoginPage');
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+
   useEffect(() => {
-    setTimeout(() => {
-      navigate('loginStack');
-    }, 1000);
+    getStatus()
   }, []);
 
   /*
@@ -25,7 +45,7 @@ const LandingScreen = () => {
     <View style={styles.container}>
       <View style={styles.body}>
         <Image
-          source={require('../assets/images/quotes-icon.png')}
+          source={require('../assets/images/quotes-logo.png')}
           style={styles.image}
         />
         <Text style={styles.text}>"Quotes"</Text>
@@ -47,13 +67,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
   },
   text: {
-    fontSize: 55,
+    fontSize: 60,
     marginBottom: 50,
-    fontFamily: 'Aleo-Regular',
-    color: 'black',
+    fontFamily: 'bahnschrift',
+    color: 'black'
   },
 });

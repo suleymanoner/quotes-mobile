@@ -2,6 +2,7 @@ import axios from 'axios';
 import {Dispatch} from 'react';
 import {BASE_URL} from '../../utils/Config';
 import {ErrorModel,UserModel} from '../models';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export interface UserLoginAction {
   readonly type: 'ON_USER_LOGIN';
@@ -41,7 +42,9 @@ export const onUserLogin = (email: string, password: string) => {
             payload: response.data,
           });
         } else {
-          //await AsyncStorage.setItem('user_status', response.data.status);
+          await AsyncStorage.setItem('user_status', response.data.status);
+          await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
+
           console.log('response data on action but correct: ' + response.data);
           dispatch({
             type: 'ON_USER_LOGIN',
@@ -83,6 +86,9 @@ export const onUserSignUp = (name: string, surname: string, email: string, passw
           payload: response.data,
         });
       } else {
+        await AsyncStorage.setItem('user_status', response.data.status);
+        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
+
         dispatch({
           type: 'ON_USER_LOGIN',
           payload: response.data,
@@ -114,6 +120,9 @@ export const onGetUser = (id: string) => {
           payload: {"message": "User not found!"},
         });
       } else {
+        await AsyncStorage.setItem('user_status', response.data.status);
+        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
+
         dispatch({
           type: 'ON_USER_LOGIN',
           payload: response.data,

@@ -15,7 +15,7 @@ const ButtonWithIcon: React.FC<ButtonProps> = ({ onTap, width, height, icon, tit
     return(
         <TouchableOpacity style={[styles.button, { width, height }]} onPress={() => onTap()} >
             <Text style={styles.button_text} >{title}</Text>
-            <Image style={{width: 45, height: 45}} source={icon} />
+            <Image style={{width: 30, height: 30, marginLeft: 10}} source={icon} />
         </TouchableOpacity>
     )
 }
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     },
     button: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
         width: 350,
         height: 50,

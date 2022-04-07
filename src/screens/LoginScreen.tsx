@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
 import {useNavigation} from '../utils/useNavigation';
-import {connect, useSelector} from 'react-redux';
+import {connect} from 'react-redux';
 import {MAIN_COLOR, BASE_URL, BUTTON_COLOR} from '../utils/Config';
 import {TextField, ButtonWithIcon} from '../components';
 import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, ErrorModel } from '../redux';
@@ -46,7 +46,10 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   useEffect(() => {
     if(user.id !== undefined) {
       if(user.status == "ACTIVE") {
-        navigate("HomePage")
+        navigate("home")
+      } else {
+        navigate("ConfirmationPage")
+        console.log("navigate confirm page ! ! ! ");
       }
     } else {
       showError()
@@ -89,7 +92,7 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
       <View style={styles.container}>
         <View style={styles.body}>
           <Image
-            source={require('../assets/images/quotes-icon.png')}
+            source={require('../assets/images/quotes-logo.png')}
             style={styles.image}
           />
           <Text style={styles.title}>"Quotes"</Text>
@@ -107,7 +110,7 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
             title="Sign In"
             width={350}
             height={50}
-            icon={require('../assets/images/add_account.png')}
+            icon={require('../assets/images/sign_in.png')}
           />
 
           <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
@@ -187,15 +190,7 @@ const styles = StyleSheet.create({
     fontSize: 45,
     marginBottom: 15,
     marginTop: 15,
-    fontFamily: 'Aleo-Regular',
-    color: 'black',
-    textAlign: 'center',
-  },
-  title2: {
-    fontSize: 30,
-    marginBottom: 15,
-    marginTop: 15,
-    fontFamily: 'Aleo-Regular',
+    fontFamily: 'bahnschrift',
     color: 'black',
     textAlign: 'center',
   },

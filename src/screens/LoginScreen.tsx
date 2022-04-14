@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
-import {useNavigation} from '../utils/useNavigation';
 import {connect} from 'react-redux';
 import {MAIN_COLOR, BASE_URL, BUTTON_COLOR} from '../utils/Config';
 import {TextField, ButtonWithIcon} from '../components';
 import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, ErrorModel } from '../redux';
 import FlashMessage from 'react-native-flash-message';
 import {showMessage, hideMessage} from 'react-native-flash-message';
+import { useNavigation } from '@react-navigation/native';
 
 interface LoginScreenProps {
   userReducer: UserState;
@@ -18,7 +18,11 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   
   const {user, error} = userReducer;
 
-  const {navigate} = useNavigation();
+  const navigation = useNavigation()
+
+  //navigation.navigate('HomePage')
+
+  //const {navigate} = useNavigation();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,9 +50,9 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   useEffect(() => {
     if(user.id !== undefined) {
       if(user.status == "ACTIVE") {
-        navigate("home")
+        //navigate("Home")
       } else {
-        navigate("ConfirmationPage")
+        //navigate("ConfirmationPage")
         console.log("navigate confirm page ! ! ! ");
       }
     } else {

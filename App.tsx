@@ -9,54 +9,37 @@ import { HomeScreen } from './src/screens/HomeScreen'
 import { ConfirmationScreen } from './src/screens/ConfirmationScreen'
 import { Provider } from 'react-redux';
 import { store } from './src/redux'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {MAIN_COLOR} from './src/utils/Config';
 
+
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
+import MainTabScreen from './src/screens/MainTabs'
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you\'re using an old API with gesture components, check out new Gestures system!",
 ]);
 
-const switchNavigator = createSwitchNavigator({
+export type RootStackParams = {
+  LandingPage,
+  LoginPage,
+  BottomTabStack
+}
 
-  landingStack: {
-    screen: createStackNavigator({
-      Landing: LandingScreen
-    }, {
-      defaultNavigationOptions: {
-        headerShown: false
-      }
-    })
-  },
-
-  loginStack: {
-    screen: createStackNavigator({
-      LoginPage: LoginScreen,
-      ConfirmationPage: ConfirmationScreen
-    }, {
-      defaultNavigationOptions: {
-        headerShown: false
-      }
-    })
-  },
-
-  homeStack: {
-    screen: createStackNavigator({
-      HomePage: HomeScreen
-    }, {
-      defaultNavigationOptions: {
-        headerShown: false
-      }
-    })
-  }
-
-})
-
-
-const AppNavigation = createAppContainer(switchNavigator)
+const RootStack = createNativeStackNavigator<RootStackParams>();
 
 const App = () => {
   return(
     <Provider store={store} >
-      <AppNavigation />
+      <NavigationContainer>
+        <RootStack.Navigator initialRouteName='LandingPage' screenOptions={{headerShown: false}} >
+          <RootStack.Screen name='LandingPage' component={LandingScreen} />
+          <RootStack.Screen name="LoginPage" component={LoginScreen} />
+          <RootStack.Screen name="BottomTabStack" component={MainTabScreen} />
+        </RootStack.Navigator>
+      </NavigationContainer>
     </Provider>
     )
 }

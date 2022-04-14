@@ -24,7 +24,7 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
     onGetUser(id);
 
     if (user.status == 'ACTIVE') {
-      navigate('home');
+      navigate('HomePage');
     } else {
       console.log('not active yet!!!');
     }

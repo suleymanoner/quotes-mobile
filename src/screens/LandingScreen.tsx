@@ -1,26 +1,31 @@
 import React, {useEffect} from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import {useNavigation} from '../utils/useNavigation';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import {MAIN_COLOR} from '../utils/Config';
 import LottieView from "lottie-react-native";
 import AsyncStorage from '@react-native-community/async-storage';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import { RootStackParams } from '../../App';
+
 
 
 const LandingScreen = () => {
 
-  const {navigate} = useNavigation();
+  //const {navigate} = useNavigation();
 
-
+  const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
+  
   const getStatus = async () => {
     try {
       const status = await AsyncStorage.getItem('user_status')
       if(status === "ACTIVE") {
         setTimeout(() => {
-          navigate('home');
+          navigation.navigate('BottomTabStack')
         }, 1000);
       } else {
         setTimeout(() => {
-          navigate('LoginPage');
+          navigation.navigate('LoginPage')
         }, 1000);
       }
     } catch (error) {
@@ -28,18 +33,9 @@ const LandingScreen = () => {
     }
   }
   
-
   useEffect(() => {
     getStatus()
   }, []);
-
-  /*
-    <LottieView 
-          source={require('../assets/images/loading-blocks.json')}
-          autoPlay
-          loop
-        />
-  */
 
   return (
     <View style={styles.container}>
@@ -48,6 +44,9 @@ const LandingScreen = () => {
           source={require('../assets/images/quotes-logo.png')}
           style={styles.image}
         />
+        <TouchableOpacity onPress={() => navigation.navigate('LoginPage')} >
+          <Icon name='home' color={'black'} size={50} />
+        </TouchableOpacity>
         <Text style={styles.text}>"Quotes"</Text>
       </View>
     </View>

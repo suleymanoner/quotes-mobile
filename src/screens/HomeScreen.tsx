@@ -3,6 +3,7 @@ import {View, Text, Image, StyleSheet} from 'react-native';
 import {UserModel, ApplicationState, UserState, onGetUser} from '../redux';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 interface HomeScreenProps {
   userReducer: UserState;
@@ -12,6 +13,9 @@ interface HomeScreenProps {
 
 const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, onGetUser}) => {
   //const {getParam} = props.navigation;
+
+  const navigation = useNavigation()
+
 
   const {user, error} = userReducer;
 

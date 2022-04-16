@@ -7,6 +7,9 @@ import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, Erro
 import FlashMessage from 'react-native-flash-message';
 import {showMessage, hideMessage} from 'react-native-flash-message';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
+import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import { RootStackParams } from '../../App';
 
 interface LoginScreenProps {
   userReducer: UserState;
@@ -17,12 +20,7 @@ interface LoginScreenProps {
 const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, onUserSignUp }) => {
   
   const {user, error} = userReducer;
-
-  const navigation = useNavigation()
-
-  //navigation.navigate('HomePage')
-
-  //const {navigate} = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,6 +28,21 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   const [surname, setSurname] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [username, setUsername] = useState('');
+
+  
+  const getStatus = async () => {
+    try {
+      const status = await AsyncStorage.getItem('user_status')
+      if(status === "ACTIVE") {
+        setTimeout(() => {
+          navigation.navigate('BottomTabStack')
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   const showError = (errorMsg?: string) => {
     if(error.message) {
@@ -48,9 +61,11 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   }
 
   useEffect(() => {
+    getStatus()
+
     if(user.id !== undefined) {
       if(user.status == "ACTIVE") {
-        //navigate("Home")
+          navigation.navigate('BottomTabStack')
       } else {
         //navigate("ConfirmationPage")
         console.log("navigate confirm page ! ! ! ");

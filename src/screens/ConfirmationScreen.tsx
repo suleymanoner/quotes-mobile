@@ -20,13 +20,17 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
 
   const checkActive = async () => {
 
-    const id = await AsyncStorage.getItem('user_id')
-    onGetUser(id);
-
-    if (user.status == 'ACTIVE') {
-      navigate('HomePage');
-    } else {
-      console.log('not active yet!!!');
+    try {
+      const id = await AsyncStorage.getItem('user_id')
+      onGetUser(id);
+  
+      if (user.status == 'ACTIVE') {
+        navigate('HomePage');
+      } else {
+        console.log('not active yet!!!');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

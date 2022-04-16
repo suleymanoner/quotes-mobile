@@ -3,7 +3,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {MAIN_COLOR} from '../utils/Config';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import {HomeScreen} from './HomeScreen';
 
 const HomeStack = createNativeStackNavigator();

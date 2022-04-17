@@ -3,6 +3,7 @@ import { Text, View, Image, StyleSheet, Dimensions } from 'react-native'
 import { MAIN_COLOR, BACKGROUND_COLOR} from '../utils/Config';
 import { PostModel, UserModel } from '../redux/models'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import moment from 'moment';
 
 interface QuoteCardProps {
     post: PostModel,
@@ -12,6 +13,10 @@ interface QuoteCardProps {
 
 const QuoteCard: React.FC<QuoteCardProps> = ({ post, user }) => {
 
+    const date = moment(post.created_at).fromNow();       // an hour ago
+
+
+
 
     return(
         <View style={styles.container} >
@@ -20,11 +25,11 @@ const QuoteCard: React.FC<QuoteCardProps> = ({ post, user }) => {
                 source={{uri: user.profile_photo}}
                 style={styles.image} />
                 <Text style={styles.name} >{user.name}</Text>
-                <Text style={styles.username} >@{user.name} · 3h</Text>
+                <Text style={styles.username} >@{user.name}  • {date}</Text>
             </View>
             <View style={styles.post_container} >
                 <Text style={styles.post_text} >{post.body}</Text>
-                <Text style={styles.quote_from} >· {post.post_from}</Text>
+                <Text style={styles.quote_from} >• {post.post_from}</Text>
             </View>
             <View style={styles.image_container} >
                 <Image source={{uri: post.image}}
@@ -115,16 +120,17 @@ const styles = StyleSheet.create({
       width: 40,
       height: 40,
       borderRadius: 30,
-      margin: 5
+      margin: 5,
     },
     top_container_icon: {
       margin: 10
     },
     post_image: {
-        width: Dimensions.get('screen').width - 50,
-        height: Dimensions.get('screen').height / 5,
+        width: '90%',
+        height: undefined,
         alignItems: "center",
-        borderRadius: 15
+        borderRadius: 15,
+        aspectRatio: 1,
     }
   })
 

@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         color: "black",
         marginLeft: 55,
         marginRight: 5,
-        fontFamily: 'Aleo-Regular',
+        fontFamily: 'Roboto-Regular',
         fontSize: 16
     },
     quote_from: {
@@ -94,26 +94,22 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginRight: 10,
         marginBottom: 5,
-        fontWeight: "700"
+        fontWeight: "700",
+        fontFamily: "Roboto-Regular"
     },
     name:{
       fontSize: 20,
-      fontFamily: 'bahnschrift',
-      marginTop: 13,
+      fontFamily: 'Roboto-Regular',
+      marginTop: 11,
       color: "black",
       marginLeft: 5
     },
     username: {
         fontSize: 15,
-        marginTop: 16,
+        marginTop: 15,
         marginLeft: 5,
-        color: "gray"
-    },
-    time: {
-        fontSize: 15,
-        marginTop: 16,
-        marginLeft: 5,
-        color: "gray"
+        color: "gray",
+        fontFamily: "Roboto-Regular"
     },
     image: {
       width: 40,

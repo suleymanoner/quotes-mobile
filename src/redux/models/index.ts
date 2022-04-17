@@ -45,7 +45,8 @@ export interface PostState {
   users_posts: [PostModel],
   feed_posts: [PostModel],
   liked_posts: [PostModel],
-  indv_post: PostModel
+  indv_post: PostModel,
+  daily_post: PostModel
 }
 
 export interface PostModel {

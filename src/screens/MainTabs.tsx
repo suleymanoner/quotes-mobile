@@ -4,6 +4,7 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {MAIN_COLOR} from '../utils/Config';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {HomeScreen} from './HomeScreen';
+import { DailyPostScreen } from './DailyQuoteScreen';
 
 const HomeStack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -31,13 +32,13 @@ const MainTabScreen = () => (
         }}
       />
       <Tab.Screen
-        name="HomeStacka"
-        component={HomeStackScreen}
+        name="DailyPostStack"
+        component={DailyPostScreen}
         options={{
-            tabBarLabel: "Search",
+            tabBarLabel: "Daily Quote",
             tabBarColor: '#694fad',
             tabBarIcon: ({color}) => (
-                <Icon name='magnify' color={color} size={26} />
+                <Icon name='format-quote-close' color={color} size={26} />
             )
         }}
       />

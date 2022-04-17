@@ -1,21 +1,26 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 import { BUTTON_COLOR } from '../utils/Config'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface ButtonProps {
     onTap: Function,
     width: number,
     height: number,
-    icon: ImageSourcePropType,
+    iconName: string,
+    iconColor: string,
+    iconSize: number,
     title: string
 }
 
-const ButtonWithIcon: React.FC<ButtonProps> = ({ onTap, width, height, icon, title }) => {
+const ButtonWithIcon: React.FC<ButtonProps> = ({ onTap, width, height, iconName, iconColor, iconSize, title }) => {
     
     return(
         <TouchableOpacity style={[styles.button, { width, height }]} onPress={() => onTap()} >
-            <Text style={styles.button_text} >{title}</Text>
-            <Image style={{width: 30, height: 30, marginLeft: 10}} source={icon} />
+            <View style={styles.inside_container} >
+                <Text style={styles.button_text} >{title}</Text>
+                <Icon size={iconSize} color={iconColor} style={styles.icon} name={iconName} />
+            </View>
         </TouchableOpacity>
     )
 }
@@ -36,6 +41,11 @@ const styles = StyleSheet.create({
         borderColor: "black",
         backgroundColor: BUTTON_COLOR
     },
+    inside_container: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
     button: {
         flexDirection: "row",
         justifyContent: "center",
@@ -53,6 +63,9 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: "white",
         fontWeight: "800"
+    },
+    icon: {
+        marginLeft: 10,
     }
 })
 

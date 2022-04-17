@@ -18,6 +18,12 @@ const PostReducer = (state: PostState = initialState, action: PostAction) => {
         ...state,
         feed_posts: action.payload
       }
+
+    case 'ON_GET_USERS_POSTS':
+      return {
+        ...state,
+        users_posts: action.payload
+      }
         
 
     case 'ON_GET_INDV_POST':

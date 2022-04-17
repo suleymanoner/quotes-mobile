@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
-import {onGetIndividualPost, ApplicationState, UserState, onGetUser, PostState, onGetFeedPosts, onGetPostUser} from '../redux';
+import {onGetIndividualPost, ApplicationState, UserState, onGetUser, PostState, onGetFeedPosts, onGetPostUser, onGetUserAccount} from '../redux';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -15,11 +15,12 @@ interface HomeScreenProps {
   postReducer: PostState;
   onGetUser: Function;
   onGetFeedPosts: Function;
-  onGetIndividualPost: Function
-  onGetPostUser: Function
+  onGetIndividualPost: Function;
+  onGetPostUser: Function;
+  onGetUserAccount: Function
 }
 
-const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGetUser, onGetFeedPosts, onGetIndividualPost, onGetPostUser}) => {
+const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGetUser, onGetFeedPosts, onGetIndividualPost, onGetUserAccount}) => {
 
   const [postUser, setPostUser] = useState()
 
@@ -38,6 +39,10 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
     getUser()
     onGetFeedPosts(6)
     onGetIndividualPost(1)
+  }, [])
+
+  useEffect(() => {
+    onGetUserAccount(user.account_id)
   }, [])
 
 
@@ -99,6 +104,6 @@ const mapToStateProps = (state: ApplicationState) => ({
   postReducer: state.postReducer
 });
 
-const HomeScreen = connect(mapToStateProps, {onGetUser, onGetFeedPosts, onGetIndividualPost, onGetPostUser})(_HomeScreen);
+const HomeScreen = connect(mapToStateProps, {onGetUser, onGetFeedPosts, onGetIndividualPost, onGetPostUser, onGetUserAccount})(_HomeScreen);
 
 export {HomeScreen};

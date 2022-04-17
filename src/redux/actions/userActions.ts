@@ -1,12 +1,17 @@
 import axios from 'axios';
 import {Dispatch} from 'react';
 import {BASE_URL} from '../../utils/Config';
-import {ErrorModel,PostModel,UserModel} from '../models';
+import {AccountModel, ErrorModel,PostModel,UserModel} from '../models';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export interface UserLoginAction {
   readonly type: 'ON_USER_LOGIN';
   payload: UserModel;
+}
+
+export interface GetUserAccountAction {
+  readonly type: 'ON_GET_USER_ACCOUNT';
+  payload: AccountModel;
 }
 
 export interface GetPostUserAction {
@@ -20,7 +25,7 @@ export interface UserErrorAction {
 }
 
 
-export type UserAction = UserLoginAction | UserErrorAction | GetPostUserAction;
+export type UserAction = UserLoginAction | UserErrorAction | GetPostUserAction | GetUserAccountAction;
 
 export const onUserLogin = (email: string, password: string) => {
 
@@ -125,6 +130,33 @@ export const onGetUser = (id: string) => {
 
         dispatch({
           type: 'ON_USER_LOGIN',
+          payload: response.data,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: 'ON_USER_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
+  };
+};
+
+
+export const onGetUserAccount = (id: string) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+
+      const response = await axios.get<AccountModel & ErrorModel>(`${BASE_URL}accounts/${id}`);
+
+      if (response.data.message) {
+        dispatch({
+          type: 'ON_USER_ERROR',
+          payload: {"message": "User not found!"},
+        });
+      } else {
+        dispatch({
+          type: 'ON_GET_USER_ACCOUNT',
           payload: response.data,
         });
       }

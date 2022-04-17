@@ -11,12 +11,17 @@ export interface UserGetIndividualPostAction {
 
 export interface GetPostsAction {
     readonly type: 'ON_GET_POSTS';
-    payload: ErrorModel;
+    payload: PostModel;
+}
+
+export interface GetUsersPosts {
+  readonly type: 'ON_GET_USERS_POSTS';
+  payload: PostModel;
 }
 
 export interface GetDailyPostAction {
   readonly type: 'ON_GET_DAILY_POST';
-  payload: ErrorModel;
+  payload: PostModel;
 }
 
 export interface PostErrorAction {
@@ -24,7 +29,7 @@ export interface PostErrorAction {
     payload: ErrorModel;
 }
 
-export type PostAction = PostErrorAction | GetPostsAction | GetDailyPostAction | UserGetIndividualPostAction;
+export type PostAction = PostErrorAction | GetUsersPosts | GetPostsAction | GetDailyPostAction | UserGetIndividualPostAction;
 
 
 export const onGetFeedPosts = (id: string) => {
@@ -81,7 +86,7 @@ export const onGetIndividualPost = (id: string) => {
   };
 
 
-  export const onGetDailyPost = () => {
+export const onGetDailyPost = () => {
     return async (dispatch: Dispatch<PostAction>) => {
       try {
         
@@ -92,7 +97,7 @@ export const onGetIndividualPost = (id: string) => {
         if (response.data.message) {
           dispatch({
             type: 'ON_POST_ERROR',
-            payload: {"message": "User not found!"},
+            payload: {"message": "Post not found!"},
           });
         } else {
           dispatch({
@@ -107,4 +112,33 @@ export const onGetIndividualPost = (id: string) => {
         });
       }
     };
+};
+
+
+export const onGetUsersPosts = (id: string) => {
+  return async (dispatch: Dispatch<PostAction>) => {
+    try {
+      
+      const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/user/${id}`);
+
+      console.log(response.data)
+
+      if (response.data.message) {
+        dispatch({
+          type: 'ON_POST_ERROR',
+          payload: {"message": "Posts not found!"},
+        });
+      } else {
+        dispatch({
+          type: 'ON_GET_USERS_POSTS',
+          payload: response.data,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: 'ON_POST_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
   };
+};

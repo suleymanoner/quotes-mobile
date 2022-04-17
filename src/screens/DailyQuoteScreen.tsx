@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, Dimensions } from 'react-native'
 import {ApplicationState, UserState, onGetUser, PostState, onGetDailyPost} from '../redux';
 import {connect} from 'react-redux';
+import { BACKGROUND_COLOR } from '../utils/Config';
 
 
 interface DailyQuoteScreenProps {
@@ -37,7 +38,8 @@ const _DailyQuoteScreen: React.FC<DailyQuoteScreenProps> = ({userReducer,postRed
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: BACKGROUND_COLOR
     },
     title:{
         fontSize: 30,

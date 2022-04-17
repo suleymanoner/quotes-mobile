@@ -129,7 +129,9 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
             title="Sign In"
             width={350}
             height={50}
-            icon={require('../assets/images/sign_in.png')}
+            iconName="login"
+            iconColor='white'
+            iconSize={30}
           />
 
           <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
@@ -166,7 +168,9 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
           title="Sign Up"
           width={350}
           height={50}
-          icon={require('../assets/images/add_account.png')}
+          iconName="account-plus"
+          iconColor='white'
+          iconSize={30}
         />
 
         <TouchableOpacity onPress={() => onTapGoNextScreen('signin')}>

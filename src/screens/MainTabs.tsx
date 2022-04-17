@@ -5,14 +5,22 @@ import {MAIN_COLOR} from '../utils/Config';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {HomeScreen} from './HomeScreen';
 import { DailyPostScreen } from './DailyQuoteScreen';
+import { ProfileScreen } from './ProfileScreen';
 
 const HomeStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator screenOptions={{headerShown: false}}>
     <HomeStack.Screen name="HomePage" component={HomeScreen} />
   </HomeStack.Navigator>
+);
+
+const ProfileStackScreen = () => (
+  <ProfileStack.Navigator screenOptions={{headerShown: false}}>
+    <ProfileStack.Screen name="ProfilePage" component={ProfileScreen} />
+  </ProfileStack.Navigator>
 );
 
 const MainTabScreen = () => (
@@ -39,6 +47,17 @@ const MainTabScreen = () => (
             tabBarColor: '#694fad',
             tabBarIcon: ({color}) => (
                 <Icon name='format-quote-close' color={color} size={26} />
+            )
+        }}
+      />
+      <Tab.Screen
+        name="ProfileScreenStack"
+        component={ProfileStackScreen}
+        options={{
+            tabBarLabel: "Profile",
+            tabBarColor: '#694fad',
+            tabBarIcon: ({color}) => (
+                <Icon name='account-circle' color={color} size={26} />
             )
         }}
       />

@@ -18,6 +18,12 @@ const UserReducer = (state: UserState = initialState, action: UserAction) => {
         user: action.payload,
       };
 
+    case 'ON_GET_USER_ACCOUNT':
+      return {
+        ...state,
+        account: action.payload
+      }
+
     case 'ON_GET_POST_USER':
       return {
         ...state,

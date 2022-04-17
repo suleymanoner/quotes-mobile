@@ -1,10 +1,11 @@
 import {UserAction} from '../actions';
-import {AccountModel, UserModel, UserState, ErrorModel} from '../models';
+import {AccountModel, UserModel, UserState, ErrorModel, PostModel} from '../models';
 
 const initialState: UserState = {
   user: {} as UserModel,
   account: {} as AccountModel,
   error: {} as ErrorModel,
+  post: {} as PostModel
 };
 
 
@@ -21,7 +22,8 @@ const UserReducer = (state: UserState = initialState, action: UserAction) => {
         ...state,
         error: action.payload,
       };
-
+    
+  
     default:
       return state;
   }

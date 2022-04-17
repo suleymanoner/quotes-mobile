@@ -18,7 +18,7 @@ const MainTabScreen = () => (
     <Tab.Navigator
       initialRouteName="HomeStack"
       activeColor="black"
-      barStyle={{backgroundColor: MAIN_COLOR}}>
+      barStyle={{backgroundColor: "#588AAA"}}>
       <Tab.Screen
         name="HomeStack"
         component={HomeStackScreen}

@@ -2,6 +2,7 @@ export interface UserState {
   user: UserModel;
   account: AccountModel;
   error: ErrorModel;
+  post: PostModel
 }
 
 export interface ErrorModel {
@@ -40,14 +41,23 @@ export interface UserModel {
   account_id: number;
 }
 
+export interface PostState {
+  users_posts: [PostModel],
+  feed_posts: [PostModel],
+  liked_posts: [PostModel],
+  indv_post: PostModel
+}
+
 export interface PostModel {
   id: number;
   body: string;
   post_from: string;
   image?: string;
-  total_like?: number;
-  total_comments?: number;
-  created_at: Date;
-  updated_at: Date;
+  total_likes: number;
+  total_comments: number;
+  created_at: string;
+  updated_at: string;
   user_id: number;
 }
+
+

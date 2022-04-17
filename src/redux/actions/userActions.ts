@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Dispatch} from 'react';
 import {BASE_URL} from '../../utils/Config';
-import {ErrorModel,UserModel} from '../models';
+import {ErrorModel,PostModel,UserModel} from '../models';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export interface UserLoginAction {
@@ -14,8 +14,8 @@ export interface UserErrorAction {
   payload: ErrorModel;
 }
 
-export type UserAction = UserLoginAction | UserErrorAction;
 
+export type UserAction = UserLoginAction | UserErrorAction;
 
 export const onUserLogin = (email: string, password: string) => {
 
@@ -106,13 +106,8 @@ export const onUserSignUp = (name: string, surname: string, email: string, passw
 export const onGetUser = (id: string) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
-      console.log('before get user');
 
       const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}users/${id}`);
-
-      console.log('after get user');
-
-      console.log(response.data);
 
       if (response.data.message) {
         dispatch({
@@ -136,3 +131,5 @@ export const onGetUser = (id: string) => {
     }
   };
 };
+
+

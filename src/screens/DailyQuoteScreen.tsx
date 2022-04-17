@@ -47,12 +47,14 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     text_container: {
-        marginTop: 25
+        marginTop: 25,
     },
     image_container: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 50,
+        marginTop: 20,
+        flex: 2,
+        marginBottom: 15,
     },
     post_image: {
         width: '95%',
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
         color: "black",
         textAlign: "left",
         fontFamily: 'Roboto-Regular',
-        fontSize: 25,
+        fontSize: 20,
         marginLeft: 30
     },
     post_from_text: {
@@ -74,7 +76,8 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         fontFamily: "Roboto-Regular",
         marginRight: 10,
-        marginTop: 20
+        marginTop: 20,
+        fontSize: 15
     },
 })
 
@@ -82,8 +85,8 @@ const styles = StyleSheet.create({
 const mapToStateProps = (state: ApplicationState) => ({
     userReducer: state.userReducer,
     postReducer: state.postReducer
-  });
+});
   
-  const DailyPostScreen = connect(mapToStateProps, {onGetUser, onGetDailyPost})(_DailyQuoteScreen);
+const DailyPostScreen = connect(mapToStateProps, {onGetUser, onGetDailyPost})(_DailyQuoteScreen);
   
-  export {DailyPostScreen};
+export {DailyPostScreen};

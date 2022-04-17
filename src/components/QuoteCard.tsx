@@ -1,31 +1,38 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, View, Image, StyleSheet, Dimensions } from 'react-native'
 import { MAIN_COLOR, BACKGROUND_COLOR} from '../utils/Config';
-import { PostModel, UserModel } from '../redux/models'
+import { PostModel, UserModel, UserState } from '../redux/models'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
+import {ApplicationState, onGetPostUser} from '../redux';
+import {connect} from 'react-redux';
 
 interface QuoteCardProps {
+    userReducer: UserState;
     post: PostModel,
     onTap: Function,
-    user: UserModel
+    userId: number,
+    onGetPostUser: Function
 }
 
-const QuoteCard: React.FC<QuoteCardProps> = ({ post, user }) => {
+const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, onGetPostUser }) => {
 
-    const date = moment(post.created_at).fromNow();       // an hour ago
+    const date = moment(post.created_at).fromNow();
 
+    const { postUser } = userReducer
 
-
+    useEffect(() => {
+        onGetPostUser(userId)
+    }, [])
 
     return(
         <View style={styles.container} >
             <View style={styles.top_container} >
                 <Image
-                source={{uri: user.profile_photo}}
+                source={{uri: postUser.profile_photo}}
                 style={styles.image} />
-                <Text style={styles.name} >{user.name}</Text>
-                <Text style={styles.username} >@{user.name}  • {date}</Text>
+                <Text style={styles.name} >{postUser.name}</Text>
+                <Text style={styles.username} > • {date}</Text>
             </View>
             <View style={styles.post_container} >
                 <Text style={styles.post_text} >{post.body}</Text>
@@ -121,6 +128,8 @@ const styles = StyleSheet.create({
       height: 40,
       borderRadius: 30,
       margin: 5,
+      borderWidth: 1,
+      borderColor: "black"
     },
     top_container_icon: {
       margin: 10
@@ -132,6 +141,14 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         aspectRatio: 1,
     }
-  })
+})
 
+
+const mapToStateProps = (state: ApplicationState) => ({
+    userReducer: state.userReducer,
+    postReducer: state.postReducer
+});
+  
+const QuoteCard = connect(mapToStateProps, {onGetPostUser})(_QuoteCard);
+  
 export { QuoteCard }

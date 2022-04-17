@@ -2,7 +2,8 @@ export interface UserState {
   user: UserModel;
   account: AccountModel;
   error: ErrorModel;
-  post: PostModel
+  post: PostModel;
+  postUser: UserModel
 }
 
 export interface ErrorModel {

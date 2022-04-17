@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
-import {onGetIndividualPost, ApplicationState, UserState, onGetUser, PostState, onGetFeedPosts} from '../redux';
+import {onGetIndividualPost, ApplicationState, UserState, onGetUser, PostState, onGetFeedPosts, onGetPostUser} from '../redux';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -16,9 +16,12 @@ interface HomeScreenProps {
   onGetUser: Function;
   onGetFeedPosts: Function;
   onGetIndividualPost: Function
+  onGetPostUser: Function
 }
 
-const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGetUser, onGetFeedPosts, onGetIndividualPost}) => {
+const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGetUser, onGetFeedPosts, onGetIndividualPost, onGetPostUser}) => {
+
+  const [postUser, setPostUser] = useState()
 
   const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
   const {user, error} = userReducer;
@@ -50,7 +53,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
 
       <FlatList 
         data={feed_posts}
-        renderItem={({item}) => <QuoteCard post={item} user={user} onTap={() => {}} />}
+        renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} onTap={() => {}} />}
       />
       
     </View>
@@ -96,6 +99,6 @@ const mapToStateProps = (state: ApplicationState) => ({
   postReducer: state.postReducer
 });
 
-const HomeScreen = connect(mapToStateProps, {onGetUser, onGetFeedPosts, onGetIndividualPost})(_HomeScreen);
+const HomeScreen = connect(mapToStateProps, {onGetUser, onGetFeedPosts, onGetIndividualPost, onGetPostUser})(_HomeScreen);
 
 export {HomeScreen};

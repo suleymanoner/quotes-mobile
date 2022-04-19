@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import { RootStackParams } from '../../App';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MAIN_COLOR, BACKGROUND_COLOR} from '../utils/Config';
+import { TEXT_COLOR, BACKGROUND_COLOR} from '../utils/Config';
 import { QuoteCard } from '../components/QuoteCard'
 
 interface HomeScreenProps {
@@ -22,27 +22,22 @@ interface HomeScreenProps {
 
 const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGetUser, onGetFeedPosts, onGetIndividualPost, onGetUserAccount}) => {
 
-  const [postUser, setPostUser] = useState()
-
   const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
-  const {user, error} = userReducer;
+  const {user, error, account} = userReducer;
 
   const {feed_posts, indv_post} = postReducer
 
   const getUser = async () => {
     const id = await AsyncStorage.getItem('user_id')
+    const account_id = await AsyncStorage.getItem('account_id')
     onGetUser(id);
+    onGetUserAccount(account_id)
   }
 
 
   useEffect(() => {
     getUser()
     onGetFeedPosts(6)
-    onGetIndividualPost(1)
-  }, [])
-
-  useEffect(() => {
-    onGetUserAccount(user.account_id)
   }, [])
 
 
@@ -79,7 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontFamily: 'bahnschrift',
     marginTop: 10,
-    color: "#00344F"
+    color: TEXT_COLOR
   },
   top_container_image: {
     width: 40,

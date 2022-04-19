@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
         width: '90%',
         height: undefined,
         alignItems: "center",
-        borderRadius: 15,
+        borderRadius: 10,
         aspectRatio: 1,
     }
 })

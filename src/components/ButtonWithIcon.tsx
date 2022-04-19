@@ -7,9 +7,9 @@ interface ButtonProps {
     onTap: Function,
     width: number,
     height: number,
-    iconName: string,
-    iconColor: string,
-    iconSize: number,
+    iconName?: string,
+    iconColor?: string,
+    iconSize?: number,
     title: string
 }
 
@@ -19,7 +19,7 @@ const ButtonWithIcon: React.FC<ButtonProps> = ({ onTap, width, height, iconName,
         <TouchableOpacity style={[styles.button, { width, height }]} onPress={() => onTap()} >
             <View style={styles.inside_container} >
                 <Text style={styles.button_text} >{title}</Text>
-                <Icon size={iconSize} color={iconColor} style={styles.icon} name={iconName} />
+                <Icon size={iconSize} color={iconColor} style={styles.icon} name={iconName!} />
             </View>
         </TouchableOpacity>
     )

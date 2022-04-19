@@ -54,6 +54,7 @@ export const onUserLogin = (email: string, password: string) => {
         } else {
           await AsyncStorage.setItem('user_status', response.data.status);
           await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
+          await AsyncStorage.setItem('account_id', JSON.stringify(response.data.account_id));
 
           console.log('response data on action but correct: ' + response.data);
           dispatch({
@@ -127,6 +128,7 @@ export const onGetUser = (id: string) => {
       } else {
         await AsyncStorage.setItem('user_status', response.data.status);
         await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
+        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.account_id));
 
         dispatch({
           type: 'ON_USER_LOGIN',
@@ -155,6 +157,7 @@ export const onGetUserAccount = (id: string) => {
           payload: {"message": "User not found!"},
         });
       } else {
+        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.id));
         dispatch({
           type: 'ON_GET_USER_ACCOUNT',
           payload: response.data,

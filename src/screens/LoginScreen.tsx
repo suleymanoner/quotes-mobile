@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
 import {connect} from 'react-redux';
-import {MAIN_COLOR, BASE_URL, BUTTON_COLOR} from '../utils/Config';
+import {MAIN_COLOR} from '../utils/Config';
 import {TextField, ButtonWithIcon} from '../components';
 import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, ErrorModel } from '../redux';
 import FlashMessage from 'react-native-flash-message';
@@ -175,7 +175,7 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
 
         <TouchableOpacity onPress={() => onTapGoNextScreen('signin')}>
           <Text style={styles.link_text}>
-            You don't have account yet? Click for Sign-up.
+            Do you have account? Click for Sign-in.
           </Text>
         </TouchableOpacity>
         <FlashMessage position="top" />

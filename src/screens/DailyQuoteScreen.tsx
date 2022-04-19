@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, Dimensions } from 'react-native'
 import {ApplicationState, UserState, onGetUser, PostState, onGetDailyPost} from '../redux';
 import {connect} from 'react-redux';
-import { BACKGROUND_COLOR } from '../utils/Config';
+import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/Config';
 
 
 interface DailyQuoteScreenProps {
@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontFamily: 'bahnschrift',
         marginTop: 10,
-        color: "#00344F",
-        textAlign: "center"
+        color: TEXT_COLOR,
+        textAlign: "center",
     },
     text_container: {
         marginTop: 25,
@@ -62,8 +62,9 @@ const styles = StyleSheet.create({
         width: '95%',
         height: undefined,
         alignItems: "center",
-        borderRadius: 15,
+        borderRadius: 10,
         aspectRatio: 1,
+       
     },
     post_body_text: {
         color: "black",

@@ -46,7 +46,7 @@ export const onGetFeedPosts = (id: string) => {
         } else {
           dispatch({
             type: 'ON_GET_POSTS',
-            payload: response.data[0],
+            payload: response.data,
           });
         }
       } catch (error) {

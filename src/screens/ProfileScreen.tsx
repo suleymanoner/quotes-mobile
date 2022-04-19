@@ -4,7 +4,7 @@ import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUsersPost
 import {connect} from 'react-redux';
 import { ButtonWithIcon, QuoteCard } from '../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {BACKGROUND_COLOR} from '../utils/Config'
+import {BACKGROUND_COLOR, TEXT_COLOR} from '../utils/Config'
 
 interface ProfileScreenProps {
     userReducer: UserState;
@@ -40,16 +40,16 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
             </View>
             <View style={styles.follow_button_container} >
                 <Text style={styles.info_text} >{user.bio}</Text>
-                <ButtonWithIcon height={30} title="Follow" width={100} iconName="plus" iconColor='white' iconSize={20} onTap={() => {}} />
+                <ButtonWithIcon height={30} title="Follow" width={100} onTap={() => {}} />
             </View>
             <View style={styles.followings_detail_container} >
                 <View>
-                    <Text style={[styles.followers_text, {marginLeft: 10}]} >Followers</Text>
-                    <Text style={[styles.followers_text, {marginLeft: 30, marginTop: 5}]} >50</Text>
+                    <Text style={[styles.followers_text, {marginLeft: 30}]} >Followers</Text>
+                    <Text style={[styles.followers_text, {marginLeft: 55, marginTop: 5}]} >50</Text>
                 </View>
                 <View>
-                    <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 10}]} >Following</Text>
-                    <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 30 }]} >150</Text>
+                    <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 30}]} >Following</Text>
+                    <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55 }]} >150</Text>
                 </View>
             </View>
 
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontFamily: 'bahnschrift',
         marginTop: 10,
-        color: "#00344F",
+        color: TEXT_COLOR,
         textAlign: "center"
     },
     user_info_container: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontFamily: 'Roboto-Regular',
         marginTop: 10,
-        color: "#00344F",
+        color: TEXT_COLOR,
     },
     user_account_name_text: {
         fontSize: 14,
@@ -124,12 +124,12 @@ const styles = StyleSheet.create({
         fontSize: 17,
         marginLeft: 10,
         fontFamily: 'Roboto-Regular',
-        color: "#00344F",
+        color: TEXT_COLOR,
     },
     followers_text: {
         fontSize: 17,
         fontFamily: 'Roboto-Regular',
-        color: "#00344F",
+        color: TEXT_COLOR,
     }
 })
 

@@ -20,8 +20,8 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
 
 
     useEffect(() => {
-        onGetUsersPosts(1)
-    }, [])
+        onGetUsersPosts(user.id)
+    }, [users_posts])
 
     return(
         <View style={styles.container} >
@@ -56,7 +56,7 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
             <FlatList 
             style={styles.post_flatlist}
                     data={users_posts}
-                    renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} onTap={() => {}} />}
+                    renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} isImage={item.image} onTap={() => {}} />}
             />
         </View>
     )

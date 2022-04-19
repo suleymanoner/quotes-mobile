@@ -1,27 +1,43 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View, Image, StyleSheet, Dimensions } from 'react-native'
-import { MAIN_COLOR, BACKGROUND_COLOR} from '../utils/Config';
-import { PostModel, UserModel, UserState } from '../redux/models'
+import { MAIN_COLOR, BACKGROUND_COLOR, BASE_URL} from '../utils/Config';
+import { PostModel, UserModel, UserState, ErrorModel } from '../redux/models'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
 import {ApplicationState, onGetPostUser} from '../redux';
 import {connect} from 'react-redux';
+import axios from 'axios'
 
 interface QuoteCardProps {
     userReducer: UserState;
     post: PostModel,
     onTap: Function,
     userId: number,
+    isImage: string,
     onGetPostUser: Function
 }
 
-const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, onGetPostUser }) => {
+const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isImage, onGetPostUser }) => {
 
     const date = moment(post.created_at).fromNow();
 
-    const { postUser } = userReducer
+    //const { postUser } = userReducer
+
+    const [postUser, setPostUser] = useState<UserModel>()
+
+
+    const getUser = async () => {
+
+        const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}users/${userId}`);
+
+        if(response.data.id) {
+            setPostUser(response.data)
+        }
+    }
+
 
     useEffect(() => {
+        getUser()
         onGetPostUser(userId)
     }, [])
 
@@ -29,19 +45,21 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, onGet
         <View style={styles.container} >
             <View style={styles.top_container} >
                 <Image
-                source={{uri: postUser.profile_photo}}
+                source={{uri: postUser?.profile_photo}}
                 style={styles.image} />
-                <Text style={styles.name} >{postUser.name}</Text>
+                <Text style={styles.name} >{postUser?.name}</Text>
                 <Text style={styles.username} > • {date}</Text>
             </View>
             <View style={styles.post_container} >
                 <Text style={styles.post_text} >{post.body}</Text>
                 <Text style={styles.quote_from} >• {post.post_from}</Text>
             </View>
+            {isImage ? 
             <View style={styles.image_container} >
                 <Image source={{uri: post.image}}
                 style={styles.post_image} />
-            </View>
+            </View> : null}
+            
             <View style={styles.comment_like_container} >
                 <View style={styles.comment_like_inside_container} >
                     <Icon name='comment-outline' color="#00344F" size={25} />

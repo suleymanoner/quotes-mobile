@@ -27,8 +27,11 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
 
   const {feed_posts, indv_post} = postReducer
 
+  const [storageUserId, setStorageUserId] = useState<string|null>()
+
   const getUser = async () => {
     const id = await AsyncStorage.getItem('user_id')
+    setStorageUserId(id)
     const account_id = await AsyncStorage.getItem('account_id')
     onGetUser(id);
     onGetUserAccount(account_id)
@@ -37,8 +40,11 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
 
   useEffect(() => {
     getUser()
-    onGetFeedPosts(6)
   }, [])
+
+  useEffect(() => {
+    onGetFeedPosts(storageUserId)
+  }, [storageUserId, feed_posts])
 
 
   return (
@@ -53,7 +59,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
 
       <FlatList 
         data={feed_posts}
-        renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} onTap={() => {}} />}
+        renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} isImage={item.image} onTap={() => {}} />}
       />
       
     </View>

@@ -19,13 +19,18 @@ export interface GetPostUserAction {
   payload: UserModel;
 }
 
+export interface GetUserFollowersAndFollowings {
+  readonly type: 'ON_GET_USER_FOLLOW';
+  payload: UserModel;
+}
+
 export interface UserErrorAction {
   readonly type: 'ON_USER_ERROR';
   payload: ErrorModel;
 }
 
 
-export type UserAction = UserLoginAction | UserErrorAction | GetPostUserAction | GetUserAccountAction;
+export type UserAction = UserLoginAction | UserErrorAction | GetPostUserAction | GetUserFollowersAndFollowings | GetUserAccountAction;
 
 export const onUserLogin = (email: string, password: string) => {
 
@@ -188,6 +193,60 @@ export const onGetPostUser = (id: string) => {
         dispatch({
           type: 'ON_GET_POST_USER',
           payload: response.data,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: 'ON_USER_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
+  };
+};
+
+
+export const onGetUserFollowers = (id: string) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+
+      const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}userfollowers/followers/${id}`);
+
+      if (response.data.message) {
+        dispatch({
+          type: 'ON_USER_ERROR',
+          payload: {"message": "User not found!"},
+        });
+      } else {
+        dispatch({
+          type: 'ON_GET_USER_FOLLOW',
+          payload: response.data[0],
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: 'ON_USER_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
+  };
+};
+
+
+export const onGetUserFollowings = (id: string) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+
+      const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}userfollowers/followings/${id}`);
+
+      if (response.data.message) {
+        dispatch({
+          type: 'ON_USER_ERROR',
+          payload: {"message": "User not found!"},
+        });
+      } else {
+        dispatch({
+          type: 'ON_GET_USER_FOLLOW',
+          payload: response.data[0],
         });
       }
     } catch (error) {

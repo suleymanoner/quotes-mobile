@@ -3,7 +3,8 @@ export interface UserState {
   account: AccountModel;
   error: ErrorModel;
   post: PostModel;
-  postUser: UserModel
+  followers: [UserModel],
+  followings: [UserModel],
 }
 
 export interface ErrorModel {
@@ -33,6 +34,8 @@ export interface UserModel {
   email: string;
   password: string;
   status: string;
+  followers: number;
+  following: number;
   role: string;
   profile_photo?: string;
   created_at: Date;
@@ -54,12 +57,11 @@ export interface PostModel {
   id: number;
   body: string;
   post_from: string;
-  image?: string;
+  image: string;
   total_likes: number;
   total_comments: number;
   created_at: string;
   updated_at: string;
   user_id: number;
 }
-
 

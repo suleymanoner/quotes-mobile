@@ -6,7 +6,8 @@ const initialState: UserState = {
   account: {} as AccountModel,
   error: {} as ErrorModel,
   post: {} as PostModel,
-  postUser: {} as UserModel
+  followers: {} as [UserModel],
+  followings: {} as [UserModel],
 };
 
 
@@ -28,6 +29,13 @@ const UserReducer = (state: UserState = initialState, action: UserAction) => {
       return {
         ...state,
         postUser: action.payload
+      }
+
+    case 'ON_GET_USER_FOLLOW':
+      return {
+        ...state,
+        followers: action.payload,
+        followings: action.payload,
       }
 
     case 'ON_USER_ERROR':

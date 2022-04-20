@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, FlatList } from 'react-native'
-import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUsersPosts} from '../redux';
+import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUserFollowers, onGetUsersPosts} from '../redux';
 import {connect} from 'react-redux';
 import { ButtonWithIcon, QuoteCard } from '../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,18 +9,18 @@ import {BACKGROUND_COLOR, TEXT_COLOR} from '../utils/Config'
 interface ProfileScreenProps {
     userReducer: UserState;
     postReducer: PostState;
-    onGetUserAccount: Function
     onGetUsersPosts: Function;
+    onGetUserFollowers: Function;
 }
 
-const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer, onGetUserAccount, onGetUsersPosts}) => {
+const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer, onGetUserFollowers, onGetUsersPosts}) => {
 
-    const {user,account} = userReducer
+    const {user,account, followers } = userReducer
     const {users_posts, indv_post} = postReducer
-
 
     useEffect(() => {
         onGetUsersPosts(user.id)
+        onGetUserFollowers(user.id)
     }, [users_posts])
 
     return(
@@ -45,18 +45,18 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
             <View style={styles.followings_detail_container} >
                 <View>
                     <Text style={[styles.followers_text, {marginLeft: 30}]} >Followers</Text>
-                    <Text style={[styles.followers_text, {marginLeft: 55, marginTop: 5}]} >50</Text>
+                    <Text style={[styles.followers_text, {marginLeft: 55, marginTop: 5, fontWeight: "700"}]} >{user.followers}</Text>
                 </View>
                 <View>
                     <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 30}]} >Following</Text>
-                    <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55 }]} >150</Text>
+                    <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55, fontWeight: "700" }]} >{user.following}</Text>
                 </View>
             </View>
 
             <FlatList 
-            style={styles.post_flatlist}
-                    data={users_posts}
-                    renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} isImage={item.image} onTap={() => {}} />}
+                style={styles.post_flatlist}
+                data={users_posts}
+                renderItem={({item}) => <QuoteCard post={item} userId={user.id} isImage={item.image} onTap={() => {}} />}
             />
         </View>
     )
@@ -139,6 +139,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     postReducer: state.postReducer
   });
   
-  const ProfileScreen = connect(mapToStateProps, {onGetUserAccount, onGetUsersPosts})(_ProfileScreen);
+  const ProfileScreen = connect(mapToStateProps, {onGetUserAccount, onGetUsersPosts, onGetUserFollowers})(_ProfileScreen);
   
   export {ProfileScreen};

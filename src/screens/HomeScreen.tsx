@@ -60,6 +60,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
       <FlatList 
         data={feed_posts}
         renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} isImage={item.image} onTap={() => {}} />}
+        keyExtractor={(item, index) => String(index)}
       />
       
     </View>

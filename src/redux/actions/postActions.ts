@@ -59,7 +59,7 @@ export const onGetFeedPosts = (id: string) => {
 };
 
 
-export const onGetIndividualPost = (id: string) => {
+export const onGetIndividualPost = (id: number) => {
     return async (dispatch: Dispatch<PostAction>) => {
       try {
         

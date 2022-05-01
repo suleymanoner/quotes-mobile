@@ -4,7 +4,7 @@ import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUserFollo
 import {connect} from 'react-redux';
 import { ButtonWithIcon, QuoteCard } from '../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {BACKGROUND_COLOR, TEXT_COLOR} from '../utils/Config'
+import {BACKGROUND_COLOR, TEXT_COLOR, MAIN_COLOR} from '../utils/Config'
 
 interface ProfileScreenProps {
     userReducer: UserState;
@@ -27,7 +27,7 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
         <View style={styles.container} >
             <View style={styles.top_container} >
                 <Text style={styles.top_container_title} >"Profile"</Text>
-                <Icon name='cog-outline' color="#00344F" size={30} style={styles.settings_icon}  />
+                <Icon name='cog-outline' color="black" size={30} style={styles.settings_icon}  />
             </View>
             <View style={styles.user_info_container} >
                 <Image
@@ -40,7 +40,7 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
             </View>
             <View style={styles.follow_button_container} >
                 <Text style={styles.info_text} >{user.bio}</Text>
-                <ButtonWithIcon height={30} title="Follow" width={100} onTap={() => {}} />
+                <ButtonWithIcon height={30} title="Follow" btnColor={MAIN_COLOR} txtColor="white" width={100} onTap={() => {}} />
             </View>
             <View style={styles.followings_detail_container} >
                 <View>

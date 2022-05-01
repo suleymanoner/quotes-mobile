@@ -111,7 +111,7 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
       <View style={styles.container}>
         <View style={styles.body}>
           <Image
-            source={require('../assets/images/quotes-logo.png')}
+            source={require('../assets/images/quotes-white-logo.png')}
             style={styles.image}
           />
           <Text style={styles.title}>"Quotes"</Text>
@@ -130,8 +130,10 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
             width={350}
             height={50}
             iconName="login"
-            iconColor='white'
+            iconColor={MAIN_COLOR}
             iconSize={30}
+            btnColor="white"
+            txtColor={MAIN_COLOR}
           />
 
           <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
@@ -169,8 +171,10 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
           width={350}
           height={50}
           iconName="account-plus"
-          iconColor='white'
+          iconColor= {MAIN_COLOR}
           iconSize={30}
+          btnColor="white"
+          txtColor={MAIN_COLOR}
         />
 
         <TouchableOpacity onPress={() => onTapGoNextScreen('signin')}>
@@ -214,12 +218,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginTop: 15,
     fontFamily: 'bahnschrift',
-    color: 'black',
+    color: 'white',
     textAlign: 'center',
   },
   link_text: {
     textAlign: 'center',
     fontSize: 15,
-    color: 'black',
+    color: 'white',
   },
 });

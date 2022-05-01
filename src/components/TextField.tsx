@@ -16,6 +16,7 @@ const TextField: React.FC<TextFieldProps> = ({ placeholder, isSecure = false, on
         <View style={styles.container} >
             <TextInput 
             placeholder={placeholder}
+            placeholderTextColor="white"
             autoCapitalize='none'
             secureTextEntry={isSecure}
             onChangeText={(text) => onTextChange(text)}
@@ -37,14 +38,14 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         paddingLeft: 20,
         borderWidth: 2,
-        borderColor: "black"
+        borderColor: "white"
     },
     textField: {
         flex: 1,
         width: 320,
         height: 50,
         fontSize: 16,
-        color: "black"
+        color: "white"
     }
 })
 

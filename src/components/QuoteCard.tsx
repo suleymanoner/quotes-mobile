@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, Image, StyleSheet, Dimensions } from 'react-native'
+import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import { MAIN_COLOR, BACKGROUND_COLOR, BASE_URL} from '../utils/Config';
 import { PostModel, UserModel, UserState, ErrorModel } from '../redux/models'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,6 +7,9 @@ import moment from 'moment';
 import {ApplicationState, onGetPostUser} from '../redux';
 import {connect} from 'react-redux';
 import axios from 'axios'
+import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import { RootStackParams } from '../../App';
+import { useNavigation } from '@react-navigation/native';
 
 interface QuoteCardProps {
     userReducer: UserState;
@@ -18,6 +21,9 @@ interface QuoteCardProps {
 }
 
 const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isImage, onGetPostUser }) => {
+
+    const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
+
 
     const date = moment(post.created_at).fromNow();
 
@@ -33,6 +39,15 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
         if(response.data.id) {
             setPostUser(response.data)
         }
+    }
+
+    const onTapComment = (post_id: number) => {
+
+        console.log(post_id);
+
+        navigation.navigate('PostDetailPage', {post_id})
+
+        
     }
 
 
@@ -61,12 +76,17 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
             </View> : null}
             
             <View style={styles.comment_like_container} >
+                <TouchableOpacity onPress={() => onTapComment(post.id)} >
+                    <View style={styles.comment_like_inside_container} >
+                        <Icon name='comment-outline' color="#00344F" size={25} />
+                        <Text style={styles.comment_like_number} >{post.total_comments}</Text>
+                    </View>
+                </TouchableOpacity>
+            
                 <View style={styles.comment_like_inside_container} >
-                    <Icon name='comment-outline' color="#00344F" size={25} />
-                    <Text style={styles.comment_like_number} >{post.total_comments}</Text>
-                </View>
-                <View style={styles.comment_like_inside_container} >
-                    <Icon name='cards-heart' color="#00344F" size={25} />
+                    <TouchableOpacity>
+                        <Icon name='cards-heart' color="#00344F" size={25} />
+                    </TouchableOpacity>
                     <Text style={styles.comment_like_number} >{post.total_likes}</Text>
                 </View>
             </View>

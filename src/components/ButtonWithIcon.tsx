@@ -1,24 +1,26 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
-import { BUTTON_COLOR } from '../utils/Config'
+import { MAIN_COLOR } from '../utils/Config'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface ButtonProps {
     onTap: Function,
     width: number,
     height: number,
+    btnColor: string,
+    txtColor?: string,
     iconName?: string,
     iconColor?: string,
     iconSize?: number,
     title: string
 }
 
-const ButtonWithIcon: React.FC<ButtonProps> = ({ onTap, width, height, iconName, iconColor, iconSize, title }) => {
+const ButtonWithIcon: React.FC<ButtonProps> = ({ onTap, width, height, iconName, iconColor, iconSize, title, btnColor, txtColor }) => {
     
     return(
-        <TouchableOpacity style={[styles.button, { width, height }]} onPress={() => onTap()} >
+        <TouchableOpacity style={[styles.button, { width, height, backgroundColor: btnColor }]} onPress={() => onTap()} >
             <View style={styles.inside_container} >
-                <Text style={styles.button_text} >{title}</Text>
+                <Text style={[styles.button_text, {color: txtColor}]} >{title}</Text>
                 <Icon size={iconSize} color={iconColor} style={styles.icon} name={iconName!} />
             </View>
         </TouchableOpacity>
@@ -26,21 +28,6 @@ const ButtonWithIcon: React.FC<ButtonProps> = ({ onTap, width, height, iconName,
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: "row",
-        height: 55,
-        borderRadius: 15,
-        alignItems: "center",
-        justifyContent: "space-between",
-        margin: 10,
-        marginLeft: 25,
-        marginRight: 25,
-        paddingRight: 10,
-        paddingLeft: 20,
-        borderWidth: 2,
-        borderColor: "black",
-        backgroundColor: BUTTON_COLOR
-    },
     inside_container: {
         flexDirection: "row",
         alignItems: "center",
@@ -52,7 +39,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: 350,
         height: 50,
-        backgroundColor: BUTTON_COLOR,
         margin: 10,
         paddingRight: 10,
         paddingLeft: 20,
@@ -61,7 +47,7 @@ const styles = StyleSheet.create({
     },
     button_text: {
         fontSize: 17,
-        color: "white",
+        color: MAIN_COLOR,
         fontWeight: "800"
     },
     icon: {

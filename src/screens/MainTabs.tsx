@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {HomeScreen} from './HomeScreen';
 import { DailyPostScreen } from './DailyQuoteScreen';
 import { ProfileScreen } from './ProfileScreen';
+import { PostDetailScreen } from './PostDetailScreen';
+import { MAIN_COLOR } from '../utils/Config';
 
 const HomeStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
@@ -13,6 +15,7 @@ const Tab = createMaterialBottomTabNavigator();
 const HomeStackScreen = () => (
   <HomeStack.Navigator screenOptions={{headerShown: false}}>
     <HomeStack.Screen name="HomePage" component={HomeScreen} />
+    <HomeStack.Screen name="PostDetailPage" component={PostDetailScreen} />
   </HomeStack.Navigator>
 );
 
@@ -25,16 +28,16 @@ const ProfileStackScreen = () => (
 const MainTabScreen = () => (
     <Tab.Navigator
       initialRouteName="HomeStack"
-      activeColor="black"
-      barStyle={{backgroundColor: "#588AAA"}}>
+      activeColor="white"
+      barStyle={{backgroundColor: MAIN_COLOR}}>
       <Tab.Screen
         name="HomeStack"
         component={HomeStackScreen}
         options={{
             tabBarLabel: "Home",
             tabBarColor: '#009387',
-            tabBarIcon: ({color}) => (
-                <Icon name='home' color={color} size={26} />
+            tabBarIcon: ({color, focused}) => (
+              <Icon name='home' color={color} size={26} />
             )
         }}
       />

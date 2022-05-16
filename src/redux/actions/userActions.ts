@@ -46,27 +46,23 @@ export const onUserLogin = (email: string, password: string) => {
         }
       )
 
-      console.log("response : " + response.data.message)
+      if (response.data.message) {
+        console.log('in respns.data.message : ' + response.data.message);
+        dispatch({
+          type: 'ON_USER_ERROR',
+          payload: response.data,
+        });
+      } else {
+        await AsyncStorage.setItem('user_status', response.data.status);
+        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
+        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.account_id));
 
-      console.log('after login');
-
-        if (response.data.message) {
-          console.log('in respns.data.message : ' + response.data.message);
-          dispatch({
-            type: 'ON_USER_ERROR',
-            payload: response.data,
-          });
-        } else {
-          await AsyncStorage.setItem('user_status', response.data.status);
-          await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
-          await AsyncStorage.setItem('account_id', JSON.stringify(response.data.account_id));
-
-          console.log('response data on action but correct: ' + response.data);
-          dispatch({
-            type: 'ON_USER_LOGIN',
-            payload: response.data,
-          });
-        }
+        console.log('response data on action but correct: ' + response.data);
+        dispatch({
+          type: 'ON_USER_LOGIN',
+          payload: response.data,
+        });
+      }
     } catch (error) {
       console.log('ON error on action: ' + error);
       dispatch({
@@ -90,10 +86,6 @@ export const onUserSignUp = (name: string, surname: string, email: string, passw
           username,
         }
       );
-
-      console.log('after signup');
-
-      console.log(response.data);
 
       if (response.data.message) {
         console.log("signup error : " + response.data.message)

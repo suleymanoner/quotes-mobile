@@ -91,8 +91,6 @@ export const onGetDailyPost = () => {
       try {
         
         const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}dailypost`);
-
-        console.log(response.data)
   
         if (response.data.message) {
           dispatch({
@@ -120,8 +118,6 @@ export const onGetUsersPosts = (id: string) => {
     try {
       
       const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/user/${id}`);
-
-      console.log(response.data)
 
       if (response.data.message) {
         dispatch({

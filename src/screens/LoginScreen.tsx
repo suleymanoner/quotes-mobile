@@ -34,9 +34,7 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     try {
       const status = await AsyncStorage.getItem('user_status')
       if(status === "ACTIVE") {
-        setTimeout(() => {
-          navigation.navigate('BottomTabStack')
-        }, 1000);
+        navigation.navigate('BottomTabStack')
       }
     } catch (error) {
       console.log(error);

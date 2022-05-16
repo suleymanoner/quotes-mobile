@@ -5,8 +5,6 @@ import {ConfirmationScreen} from './src/screens/ConfirmationScreen';
 import {Provider} from 'react-redux';
 import {store} from './src/redux';
 import SplashScreen from 'react-native-splash-screen';
-import AsyncStorage from '@react-native-community/async-storage';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MainTabScreen from './src/screens/MainTabs';
@@ -14,6 +12,7 @@ import MainTabScreen from './src/screens/MainTabs';
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
 ]);
+
 
 export type RootStackParams = {
   LoginStack;
@@ -29,7 +28,10 @@ const LoginStackScreens = () => (
   </LoginStack.Navigator>
 );
 
+
+
 const RootStack = createNativeStackNavigator<RootStackParams>();
+
 
 const App = () => {
   useEffect(() => {

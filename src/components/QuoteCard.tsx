@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, memo } from 'react'
 import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import { MAIN_COLOR, BACKGROUND_COLOR, BASE_URL} from '../utils/Config';
 import { PostModel, UserModel, UserState, ErrorModel } from '../redux/models'
@@ -24,10 +24,7 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
-
     const date = moment(post.created_at).fromNow();
-
-    //const { postUser } = userReducer
 
     const [postUser, setPostUser] = useState<UserModel>()
 
@@ -42,12 +39,7 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
     }
 
     const onTapComment = (post_id: number) => {
-
-        console.log(post_id);
-
         navigation.navigate('PostDetailPage', {post_id})
-
-        
     }
 
 
@@ -189,4 +181,4 @@ const mapToStateProps = (state: ApplicationState) => ({
   
 const QuoteCard = connect(mapToStateProps, {onGetPostUser})(_QuoteCard);
   
-export { QuoteCard }
+export default memo(QuoteCard)

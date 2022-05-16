@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
-import {onGetIndividualPost, ApplicationState, UserState, onGetUser, PostState, onGetFeedPosts, onGetPostUser, onGetUserAccount} from '../redux';
+import {onGetIndividualPost, ApplicationState, UserState, CommentAndLikeState, onGetUser, PostState, onGetFeedPosts, onGetPostUser, onGetUserAccount} from '../redux';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -8,11 +8,12 @@ import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/v
 import { RootStackParams } from '../../App';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TEXT_COLOR, BACKGROUND_COLOR} from '../utils/Config';
-import { QuoteCard } from '../components/QuoteCard'
+import QuoteCard from '../components/QuoteCard'
 
 interface HomeScreenProps {
   userReducer: UserState;
   postReducer: PostState;
+  commentAndLikeReducer: CommentAndLikeState;
   onGetUser: Function;
   onGetFeedPosts: Function;
   onGetIndividualPost: Function;
@@ -20,12 +21,15 @@ interface HomeScreenProps {
   onGetUserAccount: Function
 }
 
-const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGetUser, onGetFeedPosts, onGetIndividualPost, onGetUserAccount}) => {
+const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, commentAndLikeReducer, onGetUser, onGetFeedPosts, onGetUserAccount}) => {
 
   const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
+
   const {user, error, account} = userReducer;
 
   const {feed_posts, indv_post} = postReducer
+
+  const { comments } = commentAndLikeReducer
 
   const [storageUserId, setStorageUserId] = useState<string|null>()
 
@@ -44,7 +48,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
 
   useEffect(() => {
     onGetFeedPosts(storageUserId)
-  }, [storageUserId, feed_posts])
+  }, [feed_posts, comments])
 
 
   return (
@@ -59,6 +63,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
 
       <FlatList 
         data={feed_posts}
+        initialNumToRender={3}
         renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} isImage={item.image} onTap={() => {}} />}
         keyExtractor={(item, index) => String(index)}
       />
@@ -103,7 +108,8 @@ const styles = StyleSheet.create({
 
 const mapToStateProps = (state: ApplicationState) => ({
   userReducer: state.userReducer,
-  postReducer: state.postReducer
+  postReducer: state.postReducer,
+  commentAndLikeReducer: state.commentAndLikeReducer
 });
 
 const HomeScreen = connect(mapToStateProps, {onGetUser, onGetFeedPosts, onGetIndividualPost, onGetPostUser, onGetUserAccount})(_HomeScreen);

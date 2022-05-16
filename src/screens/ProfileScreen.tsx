@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image, FlatList } from 'react-native'
 import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUserFollowers, onGetUsersPosts} from '../redux';
 import {connect} from 'react-redux';
-import { ButtonWithIcon, QuoteCard } from '../components';
+import { ButtonWithIcon} from '../components';
+import QuoteCard from '../components/QuoteCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {BACKGROUND_COLOR, TEXT_COLOR, MAIN_COLOR} from '../utils/Config'
 
@@ -56,6 +57,7 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
             <FlatList 
                 style={styles.post_flatlist}
                 data={users_posts}
+                initialNumToRender={3}
                 renderItem={({item}) => <QuoteCard post={item} userId={user.id} isImage={item.image} onTap={() => {}} />}
             />
         </View>

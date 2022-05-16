@@ -23,10 +23,12 @@ const _DailyQuoteScreen: React.FC<DailyQuoteScreenProps> = ({userReducer,postRed
     return(
         <View style={styles.container} >
             <Text style={styles.title} >"Daily Quote"</Text>
-            <View style={styles.text_container} >
+            {
+                daily_post.id ? <View style={styles.text_container} >
                 <Text style={styles.post_body_text} >"{daily_post.body}"</Text>
                 <Text style={styles.post_from_text} >• {daily_post.post_from}</Text>
-            </View>
+                </View> : <></>
+            }
             <View style={styles.image_container} >
                 <Image
                 source={{uri: daily_post.image}}

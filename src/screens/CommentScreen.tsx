@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import { RootStackParams } from '../../App';
@@ -9,9 +9,10 @@ import CommentCard from '../components/CommentCard';
 import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/Config'
 import {ApplicationState, UserState, PostState, CommentAndLikeState, onGetComments, CommentModel} from '../redux';
 import {connect} from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
 
 
-interface PostDetailScreenProps {
+interface CommentScreenScreenProps {
     userReducer: UserState;
     postReducer: PostState;
     commentAndLikeReducer: CommentAndLikeState;
@@ -20,8 +21,10 @@ interface PostDetailScreenProps {
     route: any
 }
 
-const _PostDetailScreen: React.FC<PostDetailScreenProps> = (props) => {
 
+const _CommentScreen: React.FC<CommentScreenScreenProps> = (props) => {
+
+    
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
     const { post_id } = props.route.params
@@ -33,7 +36,6 @@ const _PostDetailScreen: React.FC<PostDetailScreenProps> = (props) => {
 
     const goBack = () => {
         props.route.params = undefined
-        props.commentAndLikeReducer.comments = {} as [CommentModel]
         navigation.goBack()
     }
  
@@ -54,16 +56,15 @@ const _PostDetailScreen: React.FC<PostDetailScreenProps> = (props) => {
 
             <CommentInput user={user} acc_name={account.name} post_id={post_id} />
 
-
-            {comments ?
+            {
+                comments ? 
                 <FlatList
-                data={comments}
-                initialNumToRender={3}
-                renderItem={({item}) => <CommentCard comment={item} userId={item.user_id} />} 
+                    data={comments}
+                    initialNumToRender={6}
+                    renderItem={({item}) => <CommentCard comment={item} userId={item.user_id} />} 
                 /> : <></>
             }
 
-                 
         </View>
     )
 }
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
+        marginBottom: 10
     },
     top_container_title:{
         fontSize: 30,
@@ -99,6 +101,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     commentAndLikeReducer: state.commentAndLikeReducer
 });
 
-const PostDetailScreen = connect(mapToStateProps, { onGetComments })(_PostDetailScreen);
+const CommentScreen = connect(mapToStateProps, { onGetComments })(_CommentScreen);
 
-export { PostDetailScreen }
+export { CommentScreen }

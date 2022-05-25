@@ -1,8 +1,9 @@
 import axios from 'axios';
 import {Dispatch} from 'react';
 import {BASE_URL} from '../../utils/Config';
-import {AccountModel, ErrorModel,PostModel,UserModel} from '../models';
+import {AccountModel, ErrorModel,UserModel, Response} from '../models';
 import AsyncStorage from '@react-native-community/async-storage';
+import { showMessage } from 'react-native-flash-message';
 
 export interface UserLoginAction {
   readonly type: 'ON_USER_LOGIN';
@@ -12,11 +13,6 @@ export interface UserLoginAction {
 export interface GetUserAccountAction {
   readonly type: 'ON_GET_USER_ACCOUNT';
   payload: AccountModel;
-}
-
-export interface GetPostUserAction {
-  readonly type: 'ON_GET_POST_USER';
-  payload: UserModel;
 }
 
 export interface GetUserFollowersAndFollowings {
@@ -30,7 +26,7 @@ export interface UserErrorAction {
 }
 
 
-export type UserAction = UserLoginAction | UserErrorAction | GetPostUserAction | GetUserFollowersAndFollowings | GetUserAccountAction;
+export type UserAction = UserLoginAction | UserErrorAction | GetUserFollowersAndFollowings | GetUserAccountAction;
 
 export const onUserLogin = (email: string, password: string) => {
 
@@ -38,33 +34,30 @@ export const onUserLogin = (email: string, password: string) => {
 
     try {
 
-      console.log('before login');
-
-      const response = await axios.post<UserModel & ErrorModel>(`${BASE_URL}users/login`, {
+      const response = await axios.post<Response & UserModel>(`${BASE_URL}users/login`, {
           email,
           password,
         }
       )
 
-      if (response.data.message) {
-        console.log('in respns.data.message : ' + response.data.message);
-        dispatch({
-          type: 'ON_USER_ERROR',
-          payload: response.data,
+      if(response.data.status == 'error') {
+        showMessage({
+          message: response.data.response,
+          description: 'Try again!',
+          type: 'danger',
         });
       } else {
-        await AsyncStorage.setItem('user_status', response.data.status);
-        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
-        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.account_id));
 
-        console.log('response data on action but correct: ' + response.data);
+        await AsyncStorage.setItem('user_status', response.data.response.status);
+        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.response.id));
+        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.response.account_id));
+
         dispatch({
           type: 'ON_USER_LOGIN',
-          payload: response.data,
+          payload: response.data.response,
         });
       }
     } catch (error) {
-      console.log('ON error on action: ' + error);
       dispatch({
         type: 'ON_USER_ERROR',
         payload: {"message": "Error : " + error},
@@ -78,7 +71,7 @@ export const onUserSignUp = (name: string, surname: string, email: string, passw
     try {
       console.log('before signup');
 
-      const response = await axios.post<UserModel & ErrorModel>(`${BASE_URL}users/register`, {
+      const response = await axios.post<Response & UserModel>(`${BASE_URL}users/register`, {
           name,
           surname,
           email,
@@ -87,25 +80,30 @@ export const onUserSignUp = (name: string, surname: string, email: string, passw
         }
       );
 
-      if (response.data.message) {
-        console.log("signup error : " + response.data.message)
-        dispatch({
-          type: 'ON_USER_ERROR',
-          payload: response.data,
+      console.log(response.data.response)
+
+      if (response.data.status == "error") {
+        console.log("signup error : " + response.data.response)
+        showMessage({
+          message: response.data.response,
+          description: 'Try again!',
+          type: 'danger',
         });
       } else {
-        await AsyncStorage.setItem('user_status', response.data.status);
-        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
+        await AsyncStorage.setItem('user_status', response.data.response.status);
+        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.response.id));
+        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.response.account_id));
 
         dispatch({
           type: 'ON_USER_LOGIN',
-          payload: response.data,
+          payload: response.data.response,
         });
       }
     } catch (error) {
-      dispatch({
-        type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+      showMessage({
+        message: "Error : " + error,
+        description: 'Try again!',
+        type: 'danger',
       });
     }
   };
@@ -115,21 +113,22 @@ export const onGetUser = (id: string) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
-      const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}users/${id}`);
+      const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${id}`);
 
-      if (response.data.message) {
-        dispatch({
-          type: 'ON_USER_ERROR',
-          payload: {"message": "User not found!"},
+      if (response.data.status == "error") {
+        showMessage({
+          message: response.data.response,
+          description: 'Try again!',
+          type: 'danger',
         });
       } else {
-        await AsyncStorage.setItem('user_status', response.data.status);
-        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.id));
-        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.account_id));
+        await AsyncStorage.setItem('user_status', response.data.response.status);
+        await AsyncStorage.setItem('user_id', JSON.stringify(response.data.response.id));
+        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.response.account_id));
 
         dispatch({
           type: 'ON_USER_LOGIN',
-          payload: response.data,
+          payload: response.data.response,
         });
       }
     } catch (error) {
@@ -146,18 +145,19 @@ export const onGetUserAccount = (id: string) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
-      const response = await axios.get<AccountModel & ErrorModel>(`${BASE_URL}accounts/${id}`);
+      const response = await axios.get<Response & AccountModel>(`${BASE_URL}accounts/${id}`);
 
-      if (response.data.message) {
-        dispatch({
-          type: 'ON_USER_ERROR',
-          payload: {"message": "User not found!"},
+      if (response.data.status == "error") {
+        showMessage({
+          message: response.data.response,
+          description: 'Try again!',
+          type: 'danger',
         });
       } else {
-        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.id));
+        await AsyncStorage.setItem('account_id', JSON.stringify(response.data.response.id));
         dispatch({
           type: 'ON_GET_USER_ACCOUNT',
-          payload: response.data,
+          payload: response.data.response,
         });
       }
     } catch (error) {
@@ -168,50 +168,23 @@ export const onGetUserAccount = (id: string) => {
     }
   };
 };
-
-
-export const onGetPostUser = (id: string) => {
-  return async (dispatch: Dispatch<UserAction>) => {
-    try {
-
-      const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}users/${id}`);
-
-      if (response.data.message) {
-        dispatch({
-          type: 'ON_USER_ERROR',
-          payload: {"message": "User not found!"},
-        });
-      } else {
-        dispatch({
-          type: 'ON_GET_POST_USER',
-          payload: response.data,
-        });
-      }
-    } catch (error) {
-      dispatch({
-        type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
-      });
-    }
-  };
-};
-
 
 export const onGetUserFollowers = (id: string) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
-      const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}userfollowers/followers/${id}`);
+      const response = await axios.get<Response & UserModel>(`${BASE_URL}userfollowers/followers/${id}`);
 
-      if (response.data.message) {
-        dispatch({
-          type: 'ON_USER_ERROR',
-          payload: {"message": "User not found!"},
+      if (response.data.status == "error") {
+        showMessage({
+          message: response.data.response,
+          description: 'Try again!',
+          type: 'danger',
         });
       } else {
         dispatch({
           type: 'ON_GET_USER_FOLLOW',
-          payload: response.data[0],
+          payload: response.data.response[0],
         });
       }
     } catch (error) {
@@ -228,17 +201,18 @@ export const onGetUserFollowings = (id: string) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
-      const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}userfollowers/followings/${id}`);
+      const response = await axios.get<Response & UserModel>(`${BASE_URL}userfollowers/followings/${id}`);
 
-      if (response.data.message) {
-        dispatch({
-          type: 'ON_USER_ERROR',
-          payload: {"message": "User not found!"},
+      if (response.data.status == "error") {
+        showMessage({
+          message: response.data.response,
+          description: 'Try again!',
+          type: 'danger',
         });
       } else {
         dispatch({
           type: 'ON_GET_USER_FOLLOW',
-          payload: response.data[0],
+          payload: response.data.response[0],
         });
       }
     } catch (error) {
@@ -250,3 +224,26 @@ export const onGetUserFollowings = (id: string) => {
   };
 };
 
+export const onUserSignOut = () => {
+
+  return async (dispatch: Dispatch<UserAction>) => {
+
+    try {
+     
+      await AsyncStorage.setItem('user_status', '');
+      await AsyncStorage.setItem('user_id', '');
+      await AsyncStorage.setItem('account_id', '');
+
+      dispatch({
+        type: 'ON_USER_LOGIN',
+        payload: {} as UserModel,
+      });
+      
+    } catch (error) {
+      dispatch({
+        type: 'ON_USER_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
+  };
+};

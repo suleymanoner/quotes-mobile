@@ -1,11 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {ApplicationState, UserState, onGetUser} from '../redux';
-import {MAIN_COLOR} from '../utils/Config';
+import {ApplicationState, UserState, Response, onGetUser, UserModel} from '../redux';
+import {BASE_URL, MAIN_COLOR} from '../utils/Config';
 import {connect} from 'react-redux';
-import {useNavigation} from '../utils/useNavigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import LottieView from "lottie-react-native";
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import { RootStackParams } from '../../App';
+import axios from 'axios';
 
 interface ConfirmationScreenProps {
   navigation: {getParam: Function};
@@ -14,18 +17,36 @@ interface ConfirmationScreenProps {
 }
 
 const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, onGetUser}) => {
-  const {navigate} = useNavigation();
+
+  const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
   const {user} = userReducer;
+
+  const [storageUserId, setStorageUserId] = useState<string|null>()
+  const [storageUser, setStorageUser] = useState<UserModel>()
+
+
+  const getUserFromStorage = async () => {
+
+    const id = await AsyncStorage.getItem('user_id')
+    setStorageUserId(id)
+
+    console.log(id);
+
+    if(storageUserId) {
+        const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${storageUserId}`);
+
+        if(response.data.response) {
+          setStorageUser(response.data.response)
+        }
+    }
+  }
 
   const checkActive = async () => {
 
     try {
-      const id = await AsyncStorage.getItem('user_id')
-      onGetUser(id);
-  
-      if (user.status == 'ACTIVE') {
-        navigate('HomePage');
+      if (storageUser?.status == 'ACTIVE') {
+        navigation.navigate('HomePage');
       } else {
         console.log('not active yet!!!');
       }
@@ -35,12 +56,16 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
   };
 
   useEffect(() => {
+    getUserFromStorage()
+  }, [])
+
+  useEffect(() => {
     checkActive();
   });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>"Please confirm your account"</Text>
+      <Text style={styles.title}>"Please check your email and confirm your account!"</Text>
       <LottieView 
           source={require('../assets/images/loading.json')}
           autoPlay
@@ -66,11 +91,13 @@ const styles = StyleSheet.create({
     backgroundColor: MAIN_COLOR,
   },
   title: {
-    fontSize: 45,
+    fontSize: 30,
     marginBottom: 40,
     marginTop: 60,
     fontFamily: 'bahnschrift',
-    color: 'black',
+    color: 'white',
     textAlign: 'center',
+    marginLeft: 10,
+    marginRight: 10
   },
 });

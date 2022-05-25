@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
 import {connect} from 'react-redux';
-import {MAIN_COLOR} from '../utils/Config';
+import {BASE_URL, MAIN_COLOR} from '../utils/Config';
 import {TextField, ButtonWithIcon} from '../components';
-import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, ErrorModel } from '../redux';
+import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, Response } from '../redux';
 import FlashMessage from 'react-native-flash-message';
 import {showMessage, hideMessage} from 'react-native-flash-message';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import { RootStackParams } from '../../App';
+import axios from 'axios';
 
 interface LoginScreenProps {
   userReducer: UserState;
@@ -28,6 +29,25 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   const [surname, setSurname] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [username, setUsername] = useState('');
+
+  const [storageUserId, setStorageUserId] = useState<string|null>()
+  const [storageUser, setStorageUser] = useState<UserModel>()
+
+
+  const getUserFromStorage = async () => {
+
+    const id = await AsyncStorage.getItem('user_id')
+    setStorageUserId(id)
+
+    if(storageUserId) {
+        const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${storageUserId}`);
+
+        if(response.data.response) {
+          setStorageUser(response.data.response)
+        }
+    }
+
+  }
 
   
   const getStatus = async () => {
@@ -59,17 +79,25 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   }
 
   useEffect(() => {
-    getStatus()
+    getUserFromStorage()
+    if(storageUser?.id !== undefined) {
+      if(storageUser.status == "ACTIVE") {
+          navigation.navigate('BottomTabStack')
+      } else {
+          navigation.navigate("ConfirmationPage")
+      }
+    }
+  })
 
+  useEffect(() => {
+    getStatus()
+    
     if(user.id !== undefined) {
       if(user.status == "ACTIVE") {
           navigation.navigate('BottomTabStack')
       } else {
-        //navigate("ConfirmationPage")
-        console.log("navigate confirm page ! ! ! ");
+          navigation.navigate("ConfirmationPage")
       }
-    } else {
-      showError()
     }
   }, [user,error]);
 

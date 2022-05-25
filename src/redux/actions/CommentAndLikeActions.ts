@@ -15,11 +15,11 @@ export interface CommentErrorAction {
 }
 
 
-export type CommentAction = GetCommentsActions | CommentErrorAction;
+export type CommentAndLikeAction = GetCommentsActions | CommentErrorAction;
 
 
 export const onGetComments = (id: number) => {
-    return async (dispatch: Dispatch<CommentAction>) => {
+    return async (dispatch: Dispatch<CommentAndLikeAction>) => {
       try {
   
         const response = await axios.get<CommentModel & ErrorModel>(`${BASE_URL}postcomments/${id}`);
@@ -45,27 +45,47 @@ export const onGetComments = (id: number) => {
 };
 
 
+// make comment not work. look later.
 export const onMakeComment = (comment: string, post_id: number, user_id: number) => {
-  return async (dispatch: Dispatch<CommentAction>) => {
+  return async (dispatch: Dispatch<CommentAndLikeAction>) => {
     try {
 
-      const comment_info = {
-        "comment" : comment,
-        "post_id" : post_id,
-        "user_id" : user_id
-      }
+      console.log(typeof(post_id))
+      console.log(typeof(user_id))
 
-      const response = await axios.post(`${BASE_URL}postcomments/make`, {
-        comment,
+      const p_id = Number(post_id)
+      const u_id = Number(user_id)
+
+
+      const response =  await axios.post(`${BASE_URL}postcomments/make`, {
+        "comment": comment,
+        "post_id" : post_id,
+        "user_id": user_id
+      });
+
+      console.log(response.data)
+
+
+    } catch (error) {
+      console.log(error)
+      dispatch({
+        type: 'ON_COMMENT_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
+  };
+};
+
+
+export const onLikePost = (post_id: number, user_id: number) => {
+  return async (dispatch: Dispatch<CommentAndLikeAction>) => {
+    try {
+
+      await axios.post(`${BASE_URL}post/like`, {
         post_id,
         user_id
       });
 
-      console.log(response.data);
-
-
-
-   
     } catch (error) {
       console.log(error)
       dispatch({

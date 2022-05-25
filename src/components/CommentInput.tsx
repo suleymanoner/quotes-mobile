@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Image, TextInput } from 'react-native'
 import { PostModel, UserModel, ErrorModel, onGetComments, CommentModel } from '../redux'
 import { BACKGROUND_COLOR, BASE_URL, MAIN_COLOR } from '../utils/Config'
-import {ApplicationState, onGetPostUser, CommentAndLikeState, onMakeComment} from '../redux';
+import {ApplicationState, CommentAndLikeState, onMakeComment} from '../redux';
 import {connect} from 'react-redux';
 import {ButtonWithIcon} from './ButtonWithIcon'
 
+
 interface CommentInputProps {
+    commentAndLikeReducer: CommentAndLikeState
     user: UserModel,
     acc_name: string,
     post_id: number,
@@ -14,17 +16,20 @@ interface CommentInputProps {
 }
 
 
-const _CommentInput: React.FC<CommentInputProps> = ({user, acc_name, post_id, onMakeComment}) => {
+const _CommentInput: React.FC<CommentInputProps> = ({commentAndLikeReducer, user, acc_name, post_id, onMakeComment}) => {
 
     const [comm, setComm] = useState('')
 
+    const { commentError } = commentAndLikeReducer
 
-    const onAddComment = () => {
+    const onSendComment = () => {
+
+        console.log("Comment: ", comm);
+        console.log("User id : ", user.id);
+        console.log("Post id : ", post_id);
 
         onMakeComment(comm, user.id, post_id)
-
     }
-
 
     return(
         <View style={styles.container} >
@@ -45,7 +50,7 @@ const _CommentInput: React.FC<CommentInputProps> = ({user, acc_name, post_id, on
             </View>
 
             <View style={styles.button_container} >
-                <ButtonWithIcon title='Add' onTap={onAddComment} width={80} height={40} btnColor={MAIN_COLOR} txtColor="white" />
+                <ButtonWithIcon title='Send' onTap={() => onSendComment()} width={80} height={40} btnColor={MAIN_COLOR} txtColor="white" />
             </View>
         </View>
     )
@@ -115,7 +120,8 @@ const styles = StyleSheet.create({
 
 const mapToStateProps = (state: ApplicationState) => ({
     userReducer: state.userReducer,
-    postReducer: state.postReducer
+    postReducer: state.postReducer,
+    commentAndLikeReducer: state.commentAndLikeReducer
 });
   
 const CommentInput = connect(mapToStateProps, {onMakeComment})(_CommentInput);

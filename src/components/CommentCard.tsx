@@ -1,11 +1,12 @@
 import React, { useEffect, useState, memo } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
-import { PostModel, UserModel, ErrorModel, onGetComments, CommentModel } from '../redux'
+import { PostModel, UserModel, ErrorModel, CommentModel } from '../redux'
 import { BACKGROUND_COLOR, BASE_URL } from '../utils/Config'
 import moment from 'moment'
-import {ApplicationState, onGetPostUser, CommentAndLikeState} from '../redux';
+import {ApplicationState, Response, CommentAndLikeState} from '../redux';
 import {connect} from 'react-redux';
 import axios from 'axios'
+import LottieView from "lottie-react-native";
 
 interface CommentCardProps {
     comment: CommentModel,
@@ -13,39 +14,74 @@ interface CommentCardProps {
 }
 
 
+const initialUser: UserModel = {
+    id: 0,
+    name: "string",
+    surname: "string",
+    email: "string",
+    password: "string",
+    status: "string",
+    followers: 0,
+    following: 0,
+    role: "string",
+    created_at: new Date(),
+    updated_at: new Date(),
+    token_created_at: new Date(),
+    account_id: 0,
+}
+
 const _CommentCard: React.FC<CommentCardProps> = ({comment, userId}) => {
+
+    const [loading, setLoading] = useState(true)
 
     const date = moment(comment.created_at).fromNow();
 
     const [commentUser, setCommentUser] = useState<UserModel>()
 
     const getUser = async () => {
-        const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}users/${userId}`);
 
-        if(response.data.id) {
-            setCommentUser(response.data)
+        if(userId) {
+            const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${userId}`);
+
+            if(response.data.response) {
+                setCommentUser(response.data.response)
+                setLoading(false)
+            }
         }
     }
 
-    
     useEffect(() => {
         getUser()
+        return () => {
+            setCommentUser(initialUser)
+        }
     }, [])
 
-    
 
-
-    return(
-        <View style={styles.container} >
-            <View style={styles.top_container} >
-                <Image
-                source={{uri: commentUser?.profile_photo}}
-                style={styles.image} />
-                <Text style={styles.name} >{commentUser?.name}</Text>
-                <Text style={styles.username} > • {date}</Text>
+    const body = () => {
+        return(
+            <View style={styles.container} >
+                <View style={styles.top_container} >
+                    <Image
+                    source={{uri: commentUser?.profile_photo}}
+                    style={styles.image} />
+                    <Text style={styles.name} >{commentUser?.name}</Text>
+                    <Text style={styles.username} > • {date}</Text>
+                </View>
+                <Text style={styles.comment} >{comment.comment}</Text>
             </View>
-            <Text style={styles.comment} >{comment.comment}</Text>
-        </View>
+        )
+    }
+
+    
+    return(
+        <View >
+            {
+                loading ? 
+                <></>:
+                body()
+            }
+        </View>            
     )
 }
 
@@ -99,6 +135,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     postReducer: state.postReducer
 });
   
-const CommentCard = connect(mapToStateProps, {onGetComments})(_CommentCard);
+const CommentCard = connect(mapToStateProps, {})(_CommentCard);
 
 export default memo(CommentCard)

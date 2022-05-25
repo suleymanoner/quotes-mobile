@@ -143,3 +143,30 @@ export const onGetUsersPosts = (id: string) => {
     }
   };
 };
+
+export const onPostQuote = (body: string, post_from: string, image: string|null, user_id: number) => {
+  return async (dispatch: Dispatch<PostAction>) => {
+    try {
+
+      console.log("before sent post!")
+
+      const response = await axios.post(`${BASE_URL}posts`, {
+        body,
+        post_from,
+        image,
+        user_id
+      });
+
+      console.log(response.data)
+
+      return "Post sent!"
+
+    } catch (error) {
+      console.log(error)
+      dispatch({
+        type: 'ON_POST_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
+  };
+};

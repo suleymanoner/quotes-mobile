@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
+import {View, Text, Image, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import {onGetIndividualPost, ApplicationState, UserState, CommentAndLikeState, onGetUser, PostState, onGetFeedPosts, onGetUserAccount} from '../redux';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -41,7 +41,6 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
     onGetUserAccount(account_id)
   }
 
-
   useEffect(() => {
     getUser()
   }, [])
@@ -49,6 +48,11 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
   useEffect(() => {
     onGetFeedPosts(storageUserId)
   }, [feed_posts, comments])
+
+
+  const onTapPostIcon = () => {
+    navigation.navigate("PostQuotePage", {acc_name : account.name})
+  }
 
   
   return (
@@ -58,7 +62,9 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
             source={{uri: user.profile_photo}}
             style={styles.top_container_image} />
         <Text style={styles.top_container_title} >"Quotes"</Text>
-        <Icon name='card-plus-outline' color="#00344F" size={35} style={styles.top_container_icon} />
+        <TouchableOpacity onPress={() => onTapPostIcon()} >
+          <Icon name='card-plus-outline' color="#00344F" size={35} style={styles.top_container_icon} />
+        </TouchableOpacity>
       </View>
 
       <FlatList 

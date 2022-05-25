@@ -8,6 +8,7 @@ import { ProfileScreen } from './ProfileScreen';
 import { CommentScreen } from './CommentScreen';
 import { SearchScreen } from './SearchScreen';
 import { SettingScreen } from './SettingScreen';
+import { PostQuoteScreen } from './PostQuoteScreen';
 import { MAIN_COLOR } from '../utils/Config';
 
 const HomeStack = createNativeStackNavigator();
@@ -18,6 +19,7 @@ const HomeStackScreen = () => (
   <HomeStack.Navigator screenOptions={{headerShown: false}}>
     <HomeStack.Screen name="HomePage" component={HomeScreen} />
     <HomeStack.Screen name="CommentsPage" component={CommentScreen} />
+    <HomeStack.Screen name="PostQuotePage" component={PostQuoteScreen} />
   </HomeStack.Navigator>
 );
 

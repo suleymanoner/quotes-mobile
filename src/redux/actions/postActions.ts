@@ -1,7 +1,8 @@
 import axios from 'axios';
 import {Dispatch} from 'react';
 import {BASE_URL} from '../../utils/Config';
-import {ErrorModel,PostModel,UserModel} from '../models';
+import {ErrorModel,PostModel,UserModel,Response} from '../models';
+import { showMessage } from 'react-native-flash-message';
 
 
 export interface UserGetIndividualPostAction {
@@ -39,9 +40,10 @@ export const onGetFeedPosts = (id: string) => {
         const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/feed/${id}`);
 
         if (response.data.message) {
-          dispatch({
-            type: 'ON_POST_ERROR',
-            payload: {"message": "Posts not found!"},
+          showMessage({
+            message: "Posts not found!",
+            description: 'Try again!',
+            type: 'danger',
           });
         } else {
           dispatch({
@@ -66,9 +68,10 @@ export const onGetIndividualPost = (id: number) => {
         const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/${id}`);
   
         if (response.data.message) {
-          dispatch({
-            type: 'ON_POST_ERROR',
-            payload: {"message": "Post not found!"},
+          showMessage({
+            message: "Post not found!",
+            description: 'Try again!',
+            type: 'danger',
           });
         } else {
           dispatch({
@@ -93,9 +96,10 @@ export const onGetDailyPost = () => {
         const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}dailypost`);
   
         if (response.data.message) {
-          dispatch({
-            type: 'ON_POST_ERROR',
-            payload: {"message": "Post not found!"},
+          showMessage({
+            message: "Post not found!",
+            description: 'Try again!',
+            type: 'danger',
           });
         } else {
           dispatch({
@@ -120,9 +124,10 @@ export const onGetUsersPosts = (id: string) => {
       const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/user/${id}`);
 
       if (response.data.message) {
-        dispatch({
-          type: 'ON_POST_ERROR',
-          payload: {"message": "Posts not found!"},
+        showMessage({
+          message: "Posts not found!",
+          description: 'Try again!',
+          type: 'danger',
         });
       } else {
         dispatch({

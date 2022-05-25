@@ -1,18 +1,17 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import {ApplicationState, UserState, onGetUser, PostState, onGetDailyPost} from '../redux';
 import {connect} from 'react-redux';
 import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/Config';
 
 
 interface DailyQuoteScreenProps {
-    userReducer: UserState;
     postReducer: PostState;
     onGetDailyPost: Function;
 }
 
 
-const _DailyQuoteScreen: React.FC<DailyQuoteScreenProps> = ({userReducer,postReducer,onGetDailyPost}) => {
+const _DailyQuoteScreen: React.FC<DailyQuoteScreenProps> = ({postReducer,onGetDailyPost}) => {
 
     const {daily_post} = postReducer
 
@@ -88,7 +87,6 @@ const styles = StyleSheet.create({
 
 
 const mapToStateProps = (state: ApplicationState) => ({
-    userReducer: state.userReducer,
     postReducer: state.postReducer
 });
   

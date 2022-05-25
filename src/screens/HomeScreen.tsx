@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
-import {onGetIndividualPost, ApplicationState, UserState, CommentAndLikeState, onGetUser, PostState, onGetFeedPosts, onGetPostUser, onGetUserAccount} from '../redux';
+import {onGetIndividualPost, ApplicationState, UserState, CommentAndLikeState, onGetUser, PostState, onGetFeedPosts, onGetUserAccount} from '../redux';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -25,7 +25,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
 
   const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
-  const {user, error, account} = userReducer;
+  const {user, account} = userReducer;
 
   const {feed_posts, indv_post} = postReducer
 
@@ -50,7 +50,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
     onGetFeedPosts(storageUserId)
   }, [feed_posts, comments])
 
-
+  
   return (
     <View style={styles.container} >
       <View style={styles.top_container} >
@@ -70,6 +70,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
       
     </View>
   );
+
 };
 
 
@@ -112,6 +113,6 @@ const mapToStateProps = (state: ApplicationState) => ({
   commentAndLikeReducer: state.commentAndLikeReducer
 });
 
-const HomeScreen = connect(mapToStateProps, {onGetUser, onGetFeedPosts, onGetIndividualPost, onGetPostUser, onGetUserAccount})(_HomeScreen);
+const HomeScreen = connect(mapToStateProps, {onGetUser, onGetFeedPosts, onGetIndividualPost, onGetUserAccount})(_HomeScreen);
 
 export {HomeScreen};

@@ -8,6 +8,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MainTabScreen from './src/screens/MainTabs';
+import FlashMessage from 'react-native-flash-message';
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -48,6 +49,7 @@ const App = () => {
             <RootStack.Screen name="BottomTabStack" component={MainTabScreen} />
           </RootStack.Navigator>
         </NavigationContainer>
+        <FlashMessage position="top" />
       </Provider>
   )
 };

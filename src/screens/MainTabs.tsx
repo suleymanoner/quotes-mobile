@@ -5,7 +5,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {HomeScreen} from './HomeScreen';
 import { DailyPostScreen } from './DailyQuoteScreen';
 import { ProfileScreen } from './ProfileScreen';
-import { PostDetailScreen } from './PostDetailScreen';
+import { CommentScreen } from './CommentScreen';
+import { SearchScreen } from './SearchScreen';
+import { SettingScreen } from './SettingScreen';
 import { MAIN_COLOR } from '../utils/Config';
 
 const HomeStack = createNativeStackNavigator();
@@ -15,13 +17,15 @@ const Tab = createMaterialBottomTabNavigator();
 const HomeStackScreen = () => (
   <HomeStack.Navigator screenOptions={{headerShown: false}}>
     <HomeStack.Screen name="HomePage" component={HomeScreen} />
-    <HomeStack.Screen name="PostDetailPage" component={PostDetailScreen} />
+    <HomeStack.Screen name="CommentsPage" component={CommentScreen} />
   </HomeStack.Navigator>
 );
 
 const ProfileStackScreen = () => (
   <ProfileStack.Navigator screenOptions={{headerShown: false}}>
     <ProfileStack.Screen name="ProfilePage" component={ProfileScreen} />
+    <ProfileStack.Screen name="CommentsPage" component={CommentScreen} />
+    <ProfileStack.Screen name="SettingPage" component={SettingScreen} />
   </ProfileStack.Navigator>
 );
 
@@ -35,7 +39,7 @@ const MainTabScreen = () => (
         component={HomeStackScreen}
         options={{
             tabBarLabel: "Home",
-            tabBarColor: '#009387',
+            tabBarColor: MAIN_COLOR,
             tabBarIcon: ({color, focused}) => (
               <Icon name='home' color={color} size={26} />
             )
@@ -46,9 +50,20 @@ const MainTabScreen = () => (
         component={DailyPostScreen}
         options={{
             tabBarLabel: "Daily Quote",
-            tabBarColor: '#694fad',
+            tabBarColor: MAIN_COLOR,
             tabBarIcon: ({color}) => (
                 <Icon name='format-quote-close' color={color} size={26} />
+            )
+        }}
+      />
+      <Tab.Screen
+        name="SearchStack"
+        component={SearchScreen}
+        options={{
+            tabBarLabel: "Search",
+            tabBarColor: MAIN_COLOR,
+            tabBarIcon: ({color}) => (
+                <Icon name='magnify' color={color} size={26} />
             )
         }}
       />
@@ -57,7 +72,7 @@ const MainTabScreen = () => (
         component={ProfileStackScreen}
         options={{
             tabBarLabel: "Profile",
-            tabBarColor: '#694fad',
+            tabBarColor: MAIN_COLOR,
             tabBarIcon: ({color}) => (
                 <Icon name='account-circle' color={color} size={26} />
             )

@@ -1,3 +1,9 @@
+export interface Response {
+  ok: string,
+  error: string,
+  response: any
+}
+
 export interface UserState {
   user: UserModel;
   account: AccountModel;
@@ -66,7 +72,8 @@ export interface PostModel {
 }
 
 export interface CommentAndLikeState {
-  comments: [CommentModel]
+  comments: [CommentModel];
+  commentError: ErrorModel;
 }
 
 export interface CommentModel {

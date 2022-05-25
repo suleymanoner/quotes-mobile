@@ -1,11 +1,16 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
 import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUserFollowers, onGetUsersPosts} from '../redux';
 import {connect} from 'react-redux';
 import { ButtonWithIcon} from '../components';
 import QuoteCard from '../components/QuoteCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {BACKGROUND_COLOR, TEXT_COLOR, MAIN_COLOR} from '../utils/Config'
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import { RootStackParams } from '../../App';
+import LottieView from "lottie-react-native";
+
 
 interface ProfileScreenProps {
     userReducer: UserState;
@@ -16,6 +21,8 @@ interface ProfileScreenProps {
 
 const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer, onGetUserFollowers, onGetUsersPosts}) => {
 
+    const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
+
     const {user,account, followers } = userReducer
     const {users_posts, indv_post} = postReducer
 
@@ -24,11 +31,32 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
         onGetUserFollowers(user.id)
     }, [users_posts])
 
+
+    const onTapSettings = () => {
+        navigation.navigate("SettingPage")
+    }
+
+    const noPostComponent = () => {
+        return(
+            <View style={{flex: 1,  marginTop: 30}} >
+                <Text style={{fontSize: 20, color: "black", textAlign: "center", fontFamily: 'Roboto-Regular'}} >You didn't post yet!</Text>
+                <LottieView 
+                        source={require('../assets/images/eyes-looking.json')}
+                        autoPlay
+                        loop
+                />
+            </View>
+        )
+    }
+
     return(
         <View style={styles.container} >
             <View style={styles.top_container} >
                 <Text style={styles.top_container_title} >"Profile"</Text>
-                <Icon name='cog-outline' color="black" size={30} style={styles.settings_icon}  />
+                <TouchableOpacity onPress={() => onTapSettings()} style={styles.settings_icon}  >
+                    <Icon name='cog-outline' color="black" size={30}/>
+                </TouchableOpacity>
+                
             </View>
             <View style={styles.user_info_container} >
                 <Image
@@ -54,12 +82,15 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
                 </View>
             </View>
 
-            <FlatList 
+            {
+                users_posts.length > 0 ? 
+                <FlatList 
                 style={styles.post_flatlist}
                 data={users_posts}
                 initialNumToRender={3}
                 renderItem={({item}) => <QuoteCard post={item} userId={user.id} isImage={item.image} onTap={() => {}} />}
-            />
+                /> : noPostComponent()
+            }
         </View>
     )
 }
@@ -76,7 +107,7 @@ const styles = StyleSheet.create({
     },
     settings_icon: {
         position: 'absolute',
-        right: 5,
+        right: 5,        
     },
     top_container_title:{
         fontSize: 30,
@@ -100,7 +131,7 @@ const styles = StyleSheet.create({
     followings_detail_container: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginTop: 15
+        marginTop: 10
     },
     user_name_text: {
         fontSize: 25,

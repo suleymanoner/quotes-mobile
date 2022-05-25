@@ -1,10 +1,10 @@
 import React, { useEffect, useState, memo } from 'react'
 import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import { MAIN_COLOR, BACKGROUND_COLOR, BASE_URL} from '../utils/Config';
-import { PostModel, UserModel, UserState, ErrorModel } from '../redux/models'
+import { PostModel, UserModel, UserState, Response, onLikePost } from '../redux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import moment from 'moment';
-import {ApplicationState, onGetPostUser} from '../redux';
+import moment, { now } from 'moment';
+import {ApplicationState} from '../redux';
 import {connect} from 'react-redux';
 import axios from 'axios'
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
@@ -17,10 +17,26 @@ interface QuoteCardProps {
     onTap: Function,
     userId: number,
     isImage: string,
-    onGetPostUser: Function
+    onLikePost: Function,
 }
 
-const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isImage, onGetPostUser }) => {
+const initialUser: UserModel = {
+    id: 0,
+    name: "string",
+    surname: "string",
+    email: "string",
+    password: "string",
+    status: "string",
+    followers: 0,
+    following: 0,
+    role: "string",
+    created_at: new Date(),
+    updated_at: new Date(),
+    token_created_at: new Date(),
+    account_id: 0,
+}
+
+const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isImage, onLikePost }) => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
@@ -28,24 +44,35 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
 
     const [postUser, setPostUser] = useState<UserModel>()
 
+    const { user } = userReducer
+
 
     const getUser = async () => {
+        
+        if(userId == user.id) {
+            setPostUser(user)
+        } else {
+            const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${userId}`);
 
-        const response = await axios.get<UserModel & ErrorModel>(`${BASE_URL}users/${userId}`);
-
-        if(response.data.id) {
-            setPostUser(response.data)
+            if(response.data.response) {
+                setPostUser(response.data.response)
+            }
         }
     }
 
     const onTapComment = (post_id: number) => {
-        navigation.navigate('PostDetailPage', {post_id})
+        navigation.navigate('CommentsPage', {post_id})
     }
 
+    const onTapLike = () => {
+        onLikePost(post.id, user.id)
+    }
 
     useEffect(() => {
         getUser()
-        onGetPostUser(userId)
+        return () => {
+            setPostUser(initialUser)
+        }
     }, [])
 
     return(
@@ -76,7 +103,7 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
                 </TouchableOpacity>
             
                 <View style={styles.comment_like_inside_container} >
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => onTapLike()} >
                         <Icon name='cards-heart' color="#00344F" size={25} />
                     </TouchableOpacity>
                     <Text style={styles.comment_like_number} >{post.total_likes}</Text>
@@ -176,9 +203,10 @@ const styles = StyleSheet.create({
 
 const mapToStateProps = (state: ApplicationState) => ({
     userReducer: state.userReducer,
-    postReducer: state.postReducer
+    postReducer: state.postReducer,
+    commentAndLikeReducer: state.commentAndLikeReducer,
 });
   
-const QuoteCard = connect(mapToStateProps, {onGetPostUser})(_QuoteCard);
+const QuoteCard = connect(mapToStateProps, {onLikePost})(_QuoteCard);
   
 export default memo(QuoteCard)

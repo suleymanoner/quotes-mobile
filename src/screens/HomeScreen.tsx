@@ -42,11 +42,25 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
   }
 
   useEffect(() => {
-    getUser()
+    let unmounted = false
+
+    if(!unmounted) {
+      getUser()
+    }
+    return () => {
+        unmounted = true    
+    };
   }, [])
 
   useEffect(() => {
-    onGetFeedPosts(storageUserId)
+    let unmounted = false
+
+    if(!unmounted) {
+      onGetFeedPosts(storageUserId)
+    }
+    return () => {
+        unmounted = true    
+    };
   }, [feed_posts, comments])
 
 
@@ -54,16 +68,21 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
     navigation.navigate("PostQuotePage", {acc_name : account.name})
   }
 
+  const onTapProfilePhoto = () => {
+    navigation.navigate('ProfileScreenStack');
+  }
   
   return (
     <View style={styles.container} >
       <View style={styles.top_container} >
+      <TouchableOpacity onPress={() => onTapProfilePhoto()}>
         <Image
             source={{uri: user.profile_photo}}
             style={styles.top_container_image} />
+        </TouchableOpacity>
         <Text style={styles.top_container_title} >"Quotes"</Text>
         <TouchableOpacity onPress={() => onTapPostIcon()} >
-          <Icon name='card-plus-outline' color="#00344F" size={35} style={styles.top_container_icon} />
+          <Icon name='comment-quote-outline' color="#00344F" size={35} style={styles.top_container_icon} />
         </TouchableOpacity>
       </View>
 

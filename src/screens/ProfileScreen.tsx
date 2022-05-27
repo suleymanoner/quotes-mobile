@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
-import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUserFollowers, onGetUsersPosts} from '../redux';
+import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUserFollowers, onGetUsersPosts, onGetUserFollowings} from '../redux';
 import {connect} from 'react-redux';
 import { ButtonWithIcon} from '../components';
 import QuoteCard from '../components/QuoteCard';
@@ -17,19 +17,30 @@ interface ProfileScreenProps {
     postReducer: PostState;
     onGetUsersPosts: Function;
     onGetUserFollowers: Function;
+    onGetUserFollowings: Function;
 }
 
-const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer, onGetUserFollowers, onGetUsersPosts}) => {
+const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer, onGetUserFollowers, onGetUsersPosts, onGetUserFollowings}) => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
-    const {user,account, followers } = userReducer
+    const {user,account, followers, followings } = userReducer
     const {users_posts, indv_post} = postReducer
 
+    
+
     useEffect(() => {
-        onGetUsersPosts(user.id)
-        onGetUserFollowers(user.id)
-    }, [users_posts])
+        let unmounted = false
+
+        if(!unmounted) {
+            onGetUsersPosts(user.id)
+            onGetUserFollowers(user.id)
+            onGetUserFollowings(user.id)
+        }
+        return () => {
+            unmounted = true    
+        };
+    }, [users_posts, followers, followings])
 
 
     const onTapSettings = () => {
@@ -48,6 +59,8 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
             </View>
         )
     }
+
+
 
     return(
         <View style={styles.container} >
@@ -73,12 +86,16 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
             </View>
             <View style={styles.followings_detail_container} >
                 <View>
-                    <Text style={[styles.followers_text, {marginLeft: 30}]} >Followers</Text>
-                    <Text style={[styles.followers_text, {marginLeft: 55, marginTop: 5, fontWeight: "700"}]} >{user.followers}</Text>
+                    <TouchableOpacity onPress={() => console.log(followers)} >
+                        <Text style={[styles.followers_text, {marginLeft: 30}]} >Followers</Text>
+                        <Text style={[styles.followers_text, {marginLeft: 55, marginTop: 5, fontWeight: "700"}]} >{user.followers}</Text>
+                    </TouchableOpacity>
                 </View>
                 <View>
-                    <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 30}]} >Following</Text>
-                    <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55, fontWeight: "700" }]} >{user.following}</Text>
+                    <TouchableOpacity onPress={() => console.log(followings)} >
+                        <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 30}]} >Following</Text>
+                        <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55, fontWeight: "700" }]} >{user.following}</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -172,6 +189,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     postReducer: state.postReducer
   });
   
-  const ProfileScreen = connect(mapToStateProps, {onGetUserAccount, onGetUsersPosts, onGetUserFollowers})(_ProfileScreen);
+  const ProfileScreen = connect(mapToStateProps, {onGetUserAccount, onGetUsersPosts, onGetUserFollowers, onGetUserFollowings})(_ProfileScreen);
   
   export {ProfileScreen};

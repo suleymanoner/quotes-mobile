@@ -41,7 +41,14 @@ const _CommentScreen: React.FC<CommentScreenScreenProps> = (props) => {
  
 
     useEffect(() => {
-        props.onGetComments(post_id)
+        let unmounted = false
+
+        if(!unmounted) {
+            props.onGetComments(post_id)
+        }
+        return () => {
+            unmounted = true    
+        };
     }, [comments])
 
 

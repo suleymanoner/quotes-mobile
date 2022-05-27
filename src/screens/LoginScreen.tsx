@@ -79,26 +79,40 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   }
 
   useEffect(() => {
-    getUserFromStorage()
-    if(storageUser?.id !== undefined) {
-      if(storageUser.status == "ACTIVE") {
-          navigation.navigate('BottomTabStack')
-      } else {
-          navigation.navigate("ConfirmationPage")
+    let unmounted = false
+
+    if(!unmounted) {
+      getUserFromStorage()
+      if(storageUser?.id !== undefined) {
+        if(storageUser.status == "ACTIVE") {
+            navigation.navigate('BottomTabStack')
+        } else {
+            navigation.navigate("ConfirmationPage")
+        }
       }
     }
+    return () => {
+        unmounted = true    
+    };
   })
 
   useEffect(() => {
-    getStatus()
+    let unmounted = false
+
+    if(!unmounted) {
+      getStatus()
     
-    if(user.id !== undefined) {
-      if(user.status == "ACTIVE") {
-          navigation.navigate('BottomTabStack')
-      } else {
-          navigation.navigate("ConfirmationPage")
+      if(user.id !== undefined) {
+        if(user.status == "ACTIVE") {
+            navigation.navigate('BottomTabStack')
+        } else {
+            navigation.navigate("ConfirmationPage")
+        }
       }
     }
+    return () => {
+        unmounted = true    
+    };
   }, [user,error]);
 
  

@@ -56,12 +56,26 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
   };
 
   useEffect(() => {
-    getUserFromStorage()
+    let unmounted = false
+
+    if(!unmounted) {
+      getUserFromStorage()
+    }
+    return () => {
+        unmounted = true    
+    };
   }, [])
 
   useEffect(() => {
-    checkActive();
-  });
+    let unmounted = false
+
+    if(!unmounted) {
+      checkActive();
+    }
+    return () => {
+        unmounted = true    
+    };
+  }, [storageUser]);
 
   return (
     <View style={styles.container}>

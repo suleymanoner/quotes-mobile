@@ -4,10 +4,9 @@ import { View, Text, StyleSheet, Image } from 'react-native'
 interface UserCarddProps {
     image: string,
     name: string;
-    username: string;
 }
 
-const UserCard: React.FC<UserCarddProps> = ({image, name, username}) => {
+const UserCard: React.FC<UserCarddProps> = ({image, name}) => {
 
     return(
         <View style={styles.container} >
@@ -16,7 +15,6 @@ const UserCard: React.FC<UserCarddProps> = ({image, name, username}) => {
                 source={{uri: image}}
                 style={styles.image} />
                 <Text style={styles.name} >{name}</Text>
-                <Text style={styles.username} >@{username}</Text>
             </View>
         </View>
     )

@@ -181,12 +181,17 @@ const _UserDetailScreen: React.FC<UserDetailScreenProps> = ({userReducer, onUser
             </View>
             <View style={styles.followings_detail_container} >
                 <View>
-                    <Text style={[styles.followers_text, {marginLeft: 30}]} >Followers</Text>
-                    <Text style={[styles.followers_text, {marginLeft: 55, marginTop: 5, fontWeight: "700"}]} >{profileUser?.followers}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("FollowerListPage", {title: "Followers", user_id: user_id})} >
+                        <Text style={[styles.followers_text, {marginLeft: 30}]} >Followers</Text>
+                        <Text style={[styles.followers_text, {marginLeft: 55, marginTop: 5, fontWeight: "700"}]} >{profileUser?.followers}</Text>
+                    </TouchableOpacity>
                 </View>
                 <View>
-                    <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 30}]} >Following</Text>
-                    <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55, fontWeight: "700" }]} >{profileUser?.following}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("FollowerListPage", {title: "Following", user_id: user_id})} >
+                        <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 30}]} >Following</Text>
+                        <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55, fontWeight: "700" }]} >{profileUser?.following}</Text>
+                    </TouchableOpacity>
+
                 </View>
             </View>
 

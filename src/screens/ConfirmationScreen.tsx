@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {ApplicationState, UserState, Response, onGetUser, UserModel} from '../redux';
 import {BASE_URL, MAIN_COLOR} from '../utils/Config';
 import {connect} from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LottieView from "lottie-react-native";
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
@@ -22,31 +22,32 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
 
   const {user} = userReducer;
 
-  const [storageUserId, setStorageUserId] = useState<string|null>()
   const [storageUser, setStorageUser] = useState<UserModel>()
 
 
   const getUserFromStorage = async () => {
+    try {
+      const id = await AsyncStorage.getItem('user_id')
 
-    const id = await AsyncStorage.getItem('user_id')
-    setStorageUserId(id)
-
-    console.log(id);
-
-    if(storageUserId) {
-        const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${storageUserId}`);
-
-        if(response.data.response) {
-          setStorageUser(response.data.response)
+      if(id !== undefined) {
+        if(id) {
+          await axios.get<Response & UserModel>(`${BASE_URL}users/${id}`)
+          .then(response => {
+            if(response.data.response) {
+              setStorageUser(response.data.response)
+            }
+          });
         }
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
   const checkActive = async () => {
-
     try {
       if (storageUser?.status == 'ACTIVE') {
-        navigation.navigate('HomePage');
+        navigation.navigate('BottomTabStack');
       } else {
         console.log('not active yet!!!');
       }
@@ -55,27 +56,18 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
     }
   };
 
+
   useEffect(() => {
     let unmounted = false
 
     if(!unmounted) {
       getUserFromStorage()
-    }
-    return () => {
-        unmounted = true    
-    };
-  }, [])
-
-  useEffect(() => {
-    let unmounted = false
-
-    if(!unmounted) {
       checkActive();
     }
     return () => {
-        unmounted = true    
+        unmounted = true 
     };
-  }, [storageUser]);
+  });
 
   return (
     <View style={styles.container}>

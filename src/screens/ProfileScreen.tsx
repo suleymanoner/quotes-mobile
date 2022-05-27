@@ -27,20 +27,18 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
     const {user,account, followers, followings } = userReducer
     const {users_posts, indv_post} = postReducer
 
-    
 
     useEffect(() => {
         let unmounted = false
 
         if(!unmounted) {
             onGetUsersPosts(user.id)
-            onGetUserFollowers(user.id)
-            onGetUserFollowings(user.id)
+            
         }
         return () => {
             unmounted = true    
         };
-    }, [users_posts, followers, followings])
+    }, [users_posts])
 
 
     const onTapSettings = () => {
@@ -82,17 +80,16 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
             </View>
             <View style={styles.follow_button_container} >
                 <Text style={styles.info_text} >{user.bio}</Text>
-                <ButtonWithIcon height={30} title="Follow" btnColor={MAIN_COLOR} txtColor="white" width={100} onTap={() => {}} />
             </View>
             <View style={styles.followings_detail_container} >
                 <View>
-                    <TouchableOpacity onPress={() => console.log(followers)} >
+                    <TouchableOpacity onPress={() => navigation.navigate("FollowerListPage", {title: "Followers", user_id: user.id})} >
                         <Text style={[styles.followers_text, {marginLeft: 30}]} >Followers</Text>
                         <Text style={[styles.followers_text, {marginLeft: 55, marginTop: 5, fontWeight: "700"}]} >{user.followers}</Text>
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <TouchableOpacity onPress={() => console.log(followings)} >
+                    <TouchableOpacity onPress={() => navigation.navigate("FollowerListPage", {title: "Following", user_id: user.id})} >
                         <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 30}]} >Following</Text>
                         <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55, fontWeight: "700" }]} >{user.following}</Text>
                     </TouchableOpacity>

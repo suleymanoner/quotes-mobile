@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {LogBox} from 'react-native';
 import {LoginScreen} from './src/screens/LoginScreen';
 import {ConfirmationScreen} from './src/screens/ConfirmationScreen';

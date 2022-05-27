@@ -25,9 +25,11 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
     console.log(txt);
   };
 
-  const onTapSignOut = () => {
-    onUserSignOut()
-    navigation.navigate('LoginStack');
+  const onTapSignOut = async () => {
+    await onUserSignOut()
+    setTimeout(() => {
+      navigation.navigate('LoginStack');
+    }, 500);
   };
 
   

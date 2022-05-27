@@ -7,7 +7,7 @@ import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, Resp
 import FlashMessage from 'react-native-flash-message';
 import {showMessage, hideMessage} from 'react-native-flash-message';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import { RootStackParams } from '../../App';
 import axios from 'axios';
@@ -17,6 +17,7 @@ interface LoginScreenProps {
   onUserLogin: Function;
   onUserSignUp: Function;
 }
+
 
 const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, onUserSignUp }) => {
   
@@ -30,32 +31,36 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   const [passwordAgain, setPasswordAgain] = useState('');
   const [username, setUsername] = useState('');
 
-  const [storageUserId, setStorageUserId] = useState<string|null>()
   const [storageUser, setStorageUser] = useState<UserModel>()
 
-
   const getUserFromStorage = async () => {
+    try {
+      const id = await AsyncStorage.getItem('user_id')
 
-    const id = await AsyncStorage.getItem('user_id')
-    setStorageUserId(id)
-
-    if(storageUserId) {
-        const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${storageUserId}`);
-
-        if(response.data.response) {
-          setStorageUser(response.data.response)
+      if(id !== undefined) {
+        if(id) {
+          await axios.get<Response & UserModel>(`${BASE_URL}users/${id}`)
+          .then(response => {
+            if(response.data.response) {
+              setStorageUser(response.data.response)
+            }
+          }).catch(err => console.log(err));
         }
-    }
+      }
 
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   
   const getStatus = async () => {
     try {
-      const status = await AsyncStorage.getItem('user_status')
-      if(status === "ACTIVE") {
-        navigation.navigate('BottomTabStack')
-      }
+      await AsyncStorage.getItem('user_status').then(status => {
+        if(status === "ACTIVE") {
+          navigation.navigate('BottomTabStack')
+        }
+      }).catch(err => console.log(err))
     } catch (error) {
       console.log(error);
     }
@@ -78,41 +83,29 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     }
   }
 
+  
   useEffect(() => {
-    let unmounted = false
-
-    if(!unmounted) {
-      getUserFromStorage()
-      if(storageUser?.id !== undefined) {
-        if(storageUser.status == "ACTIVE") {
-            navigation.navigate('BottomTabStack')
-        } else {
-            navigation.navigate("ConfirmationPage")
-        }
+    getUserFromStorage()
+    if(storageUser?.id !== undefined) {
+      if(storageUser.status == "ACTIVE") {
+          navigation.navigate('BottomTabStack')
+          console.log("912. Satirdaki kod!");
+      } else {
+          navigation.navigate("ConfirmationPage")
       }
     }
-    return () => {
-        unmounted = true    
-    };
-  })
+  }, [storageUser?.status])
 
   useEffect(() => {
-    let unmounted = false
-
-    if(!unmounted) {
-      getStatus()
-    
-      if(user.id !== undefined) {
-        if(user.status == "ACTIVE") {
-            navigation.navigate('BottomTabStack')
-        } else {
-            navigation.navigate("ConfirmationPage")
-        }
+    getStatus()
+  
+    if(user.id !== undefined) {
+      if(user.status == "ACTIVE") {
+          navigation.navigate('BottomTabStack')
+      } else {
+          navigation.navigate("ConfirmationPage")
       }
     }
-    return () => {
-        unmounted = true    
-    };
   }, [user,error]);
 
  
@@ -133,7 +126,8 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     if (email.length == 0 || password.length == 0) {
       showError('Please fill all blanks!')
     } else {
-      await onUserLogin(email, password) 
+      await onUserLogin(email, password)
+      setPassword('')
     }
   }
 

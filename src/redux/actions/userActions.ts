@@ -2,7 +2,7 @@ import axios from 'axios';
 import {Dispatch} from 'react';
 import {BASE_URL} from '../../utils/Config';
 import {AccountModel, ErrorModel,UserModel, Response} from '../models';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showMessage } from 'react-native-flash-message';
 
 export interface UserLoginAction {
@@ -15,8 +15,13 @@ export interface GetUserAccountAction {
   payload: AccountModel;
 }
 
-export interface GetUserFollowersAndFollowings {
-  readonly type: 'ON_GET_USER_FOLLOW';
+export interface GetUserFollowers {
+  readonly type: 'ON_GET_USER_FOLLOWERS';
+  payload: UserModel;
+}
+
+export interface GetUserFollowings {
+  readonly type: 'ON_GET_USER_FOLLOWINGS';
   payload: UserModel;
 }
 
@@ -26,7 +31,7 @@ export interface UserErrorAction {
 }
 
 
-export type UserAction = UserLoginAction | UserErrorAction | GetUserFollowersAndFollowings | GetUserAccountAction;
+export type UserAction = UserLoginAction | UserErrorAction | GetUserFollowers | GetUserFollowings | GetUserAccountAction;
 
 export const onUserLogin = (email: string, password: string) => {
 
@@ -108,7 +113,7 @@ export const onUserSignUp = (name: string, surname: string, email: string, passw
   };
 };
 
-export const onGetUser = (id: string) => {
+export const onGetUser = (id: number) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
@@ -142,7 +147,7 @@ export const onGetUser = (id: string) => {
 };
 
 
-export const onGetUserAccount = (id: string) => {
+export const onGetUserAccount = (id: number) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
@@ -172,7 +177,7 @@ export const onGetUserAccount = (id: string) => {
   };
 };
 
-export const onGetUserFollowers = (id: string) => {
+export const onGetUserFollowers = (id: number) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
@@ -186,8 +191,8 @@ export const onGetUserFollowers = (id: string) => {
           });
         } else {
           dispatch({
-            type: 'ON_GET_USER_FOLLOW',
-            payload: response.data.response[0],
+            type: 'ON_GET_USER_FOLLOWERS',
+            payload: response.data.response,
           });
         }
       }).catch(err => console.log(err));
@@ -202,7 +207,7 @@ export const onGetUserFollowers = (id: string) => {
 };
 
 
-export const onGetUserFollowings = (id: string) => {
+export const onGetUserFollowings = (id: number) => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
@@ -216,8 +221,8 @@ export const onGetUserFollowings = (id: string) => {
           });
         } else {
           dispatch({
-            type: 'ON_GET_USER_FOLLOW',
-            payload: response.data.response[0],
+            type: 'ON_GET_USER_FOLLOWINGS',
+            payload: response.data.response,
           });
         }
       }).catch(err => console.log(err));
@@ -234,12 +239,23 @@ export const onGetUserFollowings = (id: string) => {
 export const onUserSignOut = () => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
-      await AsyncStorage.setItem('user_status', '').catch(err => console.log(err));
-      await AsyncStorage.setItem('user_id', '').catch(err => console.log(err));
-      await AsyncStorage.setItem('account_id', '').catch(err => console.log(err));
+      await AsyncStorage.getAllKeys()
+        .then(keys => AsyncStorage.multiRemove(keys))
 
       dispatch({
         type: 'ON_USER_LOGIN',
+        payload: {} as UserModel,
+      });
+      dispatch({
+        type: 'ON_GET_USER_ACCOUNT',
+        payload: {} as AccountModel,
+      });
+      dispatch({
+        type: 'ON_GET_USER_FOLLOWERS',
+        payload: {} as UserModel,
+      });
+      dispatch({
+        type: 'ON_GET_USER_FOLLOWINGS',
         payload: {} as UserModel,
       });
     } catch (error) {

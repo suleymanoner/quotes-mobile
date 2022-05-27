@@ -25,10 +25,15 @@ const UserReducer = (state: UserState = initialState, action: UserAction) => {
         account: action.payload
       }
 
-    case 'ON_GET_USER_FOLLOW':
+    case 'ON_GET_USER_FOLLOWERS':
       return {
         ...state,
         followers: action.payload,
+      }
+
+    case 'ON_GET_USER_FOLLOWINGS':
+      return {
+        ...state,
         followings: action.payload,
       }
 

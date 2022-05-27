@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {View, Text, Image, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import {onGetIndividualPost, ApplicationState, UserState, CommentAndLikeState, onGetUser, PostState, onGetFeedPosts, onGetUserAccount} from '../redux';
 import {connect} from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import { RootStackParams } from '../../App';
@@ -34,11 +34,22 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
   const [storageUserId, setStorageUserId] = useState<string|null>()
 
   const getUser = async () => {
-    const id = await AsyncStorage.getItem('user_id')
-    setStorageUserId(id)
-    const account_id = await AsyncStorage.getItem('account_id')
-    onGetUser(id);
-    onGetUserAccount(account_id)
+
+    try {
+      const id = await AsyncStorage.getItem('user_id')
+
+      if(id !== undefined) {
+        setStorageUserId(id)
+        onGetUser(id);
+      }
+      const account_id = await AsyncStorage.getItem('account_id')
+      if(account_id !== undefined) {
+        onGetUserAccount(account_id)
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {

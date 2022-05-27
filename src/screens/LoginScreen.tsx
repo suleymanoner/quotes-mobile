@@ -126,7 +126,6 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
       showError('Please fill all blanks!')
     } else {
       await onUserLogin(email, password)
-      setPassword('')
     }
   }
 

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
-import {ApplicationState, UserState, onUserEditProfile} from '../redux';
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
+import {ApplicationState, UserState, onUserEditProfile, onUserChangePassword} from '../redux';
 import {connect} from 'react-redux';
 import { ButtonWithIcon, TextField} from '../components';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,20 +14,28 @@ import { RNS3 } from 'react-native-aws3'
 
 interface EditProfileScreenProps {
     userReducer: UserState;
-    onUserEditProfile: Function
+    onUserEditProfile: Function;
+    onUserChangePassword: Function;
+    route: any;
 }
 
-const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUserEditProfile}) => {
+const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUserEditProfile, onUserChangePassword, route}) => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
-    const {user, account, followers, followings } = userReducer
+    const {user, error} = userReducer
+
+    const { type } = route.params
 
     const [photo, setPhoto] = useState(user.profile_photo)
     const [isPhoto, setIsPhoto] = useState(false)
     const [name, setName] = useState(user.name)
     const [surname, setSurname] = useState(user.surname)
     const [bio, setBio] = useState(user.bio)
+
+    const [oldPassword, setOldPassword] = useState<string>('')
+    const [newPassword, setNewPassword] = useState<string>('')
+    const [newPasswordAgain, setNewPasswordAgain] = useState<string>('')
 
     const goBack = () => {
         navigation.goBack()
@@ -53,36 +61,39 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
 
     const onTapSave = async () => {
 
-        if(isPhoto) {
-            let randomName = (Math.random() + 1).toString(36).substring(2);
-
-            const file = {
-                uri: photo!,
-                name: randomName,
-                type: 'image/jpeg'
-            }
-            
-            const config = {
-                keyPrefix: 's3/',
-                bucket: 'quotes-photo-bucket',
-                region: 'eu-central-1',
-                accessKey: AWS3_ACCESS_KEY,
-                secretKey: AWS3_SECRET_KEY,
-                successActionStatus: 201,
-            }
-        
-            await RNS3.put(file, config)
-            .then((response) => {
-                if(response.status !== 201) {
-                    console.log("Failed to upload!");
+        if(type == "Edit Profile") {
+            if(isPhoto) {
+                let randomName = (Math.random() + 1).toString(36).substring(2);
+    
+                const file = {
+                    uri: photo!,
+                    name: randomName,
+                    type: 'image/jpeg'
                 }
-                // call endpoint here
-            }).catch((error) => {
-                console.log(error);
-            })
+                
+                const config = {
+                    keyPrefix: 's3/',
+                    bucket: 'quotes-photo-bucket',
+                    region: 'eu-central-1',
+                    accessKey: AWS3_ACCESS_KEY,
+                    secretKey: AWS3_SECRET_KEY,
+                    successActionStatus: 201,
+                }
+            
+                await RNS3.put(file, config)
+                .then((response) => {
+                    if(response.status !== 201) {
+                        console.log("Failed to upload!");
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
+            await onUserEditProfile(user.id, name, surname, bio, photo)
+        } else if(type == "Change Password") {
+            await onUserChangePassword(user.id, oldPassword, newPassword, newPasswordAgain)
         }
 
-        await onUserEditProfile(user.id, name, surname, bio, photo)
         goBack()
     }  
 
@@ -90,44 +101,74 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
     return(
         <View style={styles.container} >
             <View style={styles.top_container} >
-                <Text style={styles.top_container_title} >"Edit Profile"</Text>
+                <Text style={styles.top_container_title} >"{type}"</Text>
                 <TouchableOpacity onPress={goBack} style={styles.top_container_icon}  >
                     <Icon name='keyboard-backspace' color="black" size={30}/>
                 </TouchableOpacity>
             </View>
-            <View style={styles.user_info_container} >
-                <TouchableOpacity onPress={chooseFromLibrary} >   
-                    <Image
-                    source={{uri: photo}}
-                    style={styles.top_container_image} />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.edit_input_container} >
-                <View style={styles.text_input_container} >
-                    <TextInput 
-                    placeholder="Change name"
-                    autoCapitalize='none'
-                    defaultValue={user.name}
-                    onChangeText={(text) => setName(text)}
-                    style={styles.textField} />
+
+            {
+                type == "Edit Profile" ?
+                <View>
+                    <View style={styles.user_info_container} >
+                        <TouchableOpacity onPress={chooseFromLibrary} >   
+                            <Image
+                            source={{uri: photo}}
+                            style={styles.top_container_image} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.edit_input_container} >
+                        <View style={styles.text_input_container} >
+                            <TextInput 
+                            placeholder="Change name"
+                            autoCapitalize='none'
+                            defaultValue={user.name}
+                            onChangeText={(text) => setName(text)}
+                            style={styles.textField} />
+                        </View>
+                        <View style={styles.text_input_container} >
+                            <TextInput 
+                            placeholder="Change surname"
+                            autoCapitalize='none'
+                            defaultValue={user.surname}
+                            onChangeText={(text) => setSurname(text)}
+                            style={styles.textField} />
+                        </View>
+                        <View style={styles.text_input_container} >
+                            <TextInput 
+                            placeholder="Add bio"
+                            autoCapitalize='none'
+                            defaultValue={user.bio}
+                            onChangeText={(text) => setBio(text)}
+                            style={styles.textField} />
+                        </View>
+                    </View>
                 </View>
-                <View style={styles.text_input_container} >
-                    <TextInput 
-                    placeholder="Change surname"
-                    autoCapitalize='none'
-                    defaultValue={user.surname}
-                    onChangeText={(text) => setSurname(text)}
-                    style={styles.textField} />
+                :
+                <View style={{marginTop: 35}} >
+                    <View style={styles.text_input_container} >
+                        <TextInput 
+                        placeholder="Old Password"
+                        autoCapitalize='none'
+                        onChangeText={(text) => setOldPassword(text)}
+                        style={styles.textField} />
+                    </View>
+                    <View style={styles.text_input_container} >
+                        <TextInput 
+                        placeholder="New Password"
+                        autoCapitalize='none'
+                        onChangeText={(text) => setNewPassword(text)}
+                        style={styles.textField} />
+                    </View>
+                    <View style={styles.text_input_container} >
+                        <TextInput 
+                        placeholder="New Password Again"
+                        autoCapitalize='none'
+                        onChangeText={(text) => setNewPasswordAgain(text)}
+                        style={styles.textField} />
+                    </View>
                 </View>
-                <View style={styles.text_input_container} >
-                    <TextInput 
-                    placeholder="Add bio"
-                    autoCapitalize='none'
-                    defaultValue={user.bio}
-                    onChangeText={(text) => setBio(text)}
-                    style={styles.textField} />
-                </View>
-            </View>
+            }
             <View style={{ position: 'absolute', bottom:10, right:10,}} >
                 <ButtonWithIcon btnColor={MAIN_COLOR} height={50} width={100} onTap={() => onTapSave()} title="Save" txtColor='white'  />
             </View>
@@ -234,6 +275,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     userReducer: state.userReducer,
 });
 
-const EditProfileScreen = connect(mapToStateProps, {onUserEditProfile})(_EditProfileScreen);
+const EditProfileScreen = connect(mapToStateProps, {onUserEditProfile,onUserChangePassword})(_EditProfileScreen);
 
 export {EditProfileScreen};

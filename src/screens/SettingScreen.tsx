@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from 'react-navigation-stack/lib/typescript/src/vendor/types';
@@ -25,8 +25,8 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
     console.log(txt);
   };
 
-  const onTapEditProfile = () => {
-    navigation.navigate("EditProfilePage")
+  const onHandleGoEditProfile = (type: string) => {
+    navigation.navigate("EditProfilePage", {type: type})
   }
 
   const onTapSignOut = async () => {
@@ -35,6 +35,17 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
       navigation.navigate('LoginStack');
     }, 500);
   };
+
+  const onTapDeleteAccount = () => {
+    Alert.alert(
+      'Are you sure?',
+      'You are deleting your account!',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]
+    );
+  }
 
   
   return (
@@ -58,7 +69,7 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
         btnColor="#7182BD"
         height={60}
         width={350}
-        onTap={onTapEditProfile}
+        onTap={() => onHandleGoEditProfile("Edit Profile")}
         title="Edit Profile"
         txtColor="white"
       />
@@ -66,7 +77,7 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
         btnColor="#7182BD"
         height={60}
         width={350}
-        onTap={() => onTapButton('Password changed!')}
+        onTap={() => onHandleGoEditProfile("Change Password")}
         title="Change password"
         txtColor="white"
       />
@@ -82,7 +93,7 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
         btnColor="#9A3833"
         height={60}
         width={350}
-        onTap={() => onTapSignOut()}
+        onTap={onTapDeleteAccount}
         title="DELETE ACCOUNT"
         txtColor="white"
       />

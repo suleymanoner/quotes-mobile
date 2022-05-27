@@ -37,20 +37,22 @@ export const onGetFeedPosts = (id: string) => {
     return async (dispatch: Dispatch<PostAction>) => {
       try {
   
-        const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/feed/${id}`);
+        await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/feed/${id}`)
+        .then(response => {
+          if (response.data.message) {
+            showMessage({
+              message: "Posts not found!",
+              description: 'Try again!',
+              type: 'danger',
+            });
+          } else {
+            dispatch({
+              type: 'ON_GET_POSTS',
+              payload: response.data,
+            });
+          }
+        }).catch(err => console.log(err));
 
-        if (response.data.message) {
-          showMessage({
-            message: "Posts not found!",
-            description: 'Try again!',
-            type: 'danger',
-          });
-        } else {
-          dispatch({
-            type: 'ON_GET_POSTS',
-            payload: response.data,
-          });
-        }
       } catch (error) {
         dispatch({
           type: 'ON_POST_ERROR',
@@ -65,20 +67,22 @@ export const onGetIndividualPost = (id: number) => {
     return async (dispatch: Dispatch<PostAction>) => {
       try {
         
-        const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/${id}`);
+        await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/${id}`)
+        .then(response => {
+          if (response.data.message) {
+            showMessage({
+              message: "Post not found!",
+              description: 'Try again!',
+              type: 'danger',
+            });
+          } else {
+            dispatch({
+              type: 'ON_GET_INDV_POST',
+              payload: response.data[0],
+            });
+          }
+        }).catch(err => console.log(err));
   
-        if (response.data.message) {
-          showMessage({
-            message: "Post not found!",
-            description: 'Try again!',
-            type: 'danger',
-          });
-        } else {
-          dispatch({
-            type: 'ON_GET_INDV_POST',
-            payload: response.data[0],
-          });
-        }
       } catch (error) {
         dispatch({
           type: 'ON_POST_ERROR',
@@ -93,20 +97,22 @@ export const onGetDailyPost = () => {
     return async (dispatch: Dispatch<PostAction>) => {
       try {
         
-        const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}dailypost`);
-  
-        if (response.data.message) {
-          showMessage({
-            message: "Post not found!",
-            description: 'Try again!',
-            type: 'danger',
-          });
-        } else {
-          dispatch({
-            type: 'ON_GET_DAILY_POST',
-            payload: response.data,
-          });
-        }
+        await axios.get<PostModel & ErrorModel>(`${BASE_URL}dailypost`)
+        .then(response => {
+          if (response.data.message) {
+            showMessage({
+              message: "Post not found!",
+              description: 'Try again!',
+              type: 'danger',
+            });
+          } else {
+            dispatch({
+              type: 'ON_GET_DAILY_POST',
+              payload: response.data,
+            });
+          }
+        }).catch(err => console.log(err));
+
       } catch (error) {
         dispatch({
           type: 'ON_POST_ERROR',
@@ -121,20 +127,22 @@ export const onGetUsersPosts = (id: string) => {
   return async (dispatch: Dispatch<PostAction>) => {
     try {
       
-      const response = await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/user/${id}`);
+      await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/user/${id}`)
+      .then(response => {
+        if (response.data.message) {
+          showMessage({
+            message: "Posts not found!",
+            description: 'Try again!',
+            type: 'danger',
+          });
+        } else {
+          dispatch({
+            type: 'ON_GET_USERS_POSTS',
+            payload: response.data,
+          });
+        }
+      }).catch(err => console.log(err));
 
-      if (response.data.message) {
-        showMessage({
-          message: "Posts not found!",
-          description: 'Try again!',
-          type: 'danger',
-        });
-      } else {
-        dispatch({
-          type: 'ON_GET_USERS_POSTS',
-          payload: response.data,
-        });
-      }
     } catch (error) {
       dispatch({
         type: 'ON_POST_ERROR',
@@ -148,19 +156,15 @@ export const onPostQuote = (body: string, post_from: string, image: string|null,
   return async (dispatch: Dispatch<PostAction>) => {
     try {
 
-      console.log("before sent post!")
-
-      const response = await axios.post(`${BASE_URL}posts`, {
+      await axios.post(`${BASE_URL}posts`, {
         body,
         post_from,
         image,
         user_id
-      });
-
-      console.log(response.data)
-
-      return "Post sent!"
-
+      }).then(response => {
+        console.log(response.data)
+      }).catch(err => console.log(err));
+      
     } catch (error) {
       console.log(error)
       dispatch({

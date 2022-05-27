@@ -1,7 +1,6 @@
 export interface Response {
-  ok: string,
-  error: string,
-  response: any
+  status: string;
+  response: any;
 }
 
 export interface UserState {
@@ -66,8 +65,8 @@ export interface PostModel {
   image: string;
   total_likes: number;
   total_comments: number;
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
   user_id: number;
 }
 

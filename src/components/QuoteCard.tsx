@@ -20,22 +20,6 @@ interface QuoteCardProps {
     onLikePost: Function,
 }
 
-const initialUser: UserModel = {
-    id: 0,
-    name: "string",
-    surname: "string",
-    email: "string",
-    password: "string",
-    status: "string",
-    followers: 0,
-    following: 0,
-    role: "string",
-    created_at: new Date(),
-    updated_at: new Date(),
-    token_created_at: new Date(),
-    account_id: 0,
-}
-
 const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isImage, onLikePost }) => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
@@ -52,11 +36,12 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
         if(userId == user.id) {
             setPostUser(user)
         } else {
-            const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${userId}`);
-
-            if(response.data.response) {
-                setPostUser(response.data.response)
-            }
+            await axios.get<Response & UserModel>(`${BASE_URL}users/${userId}`)
+            .then(response => {
+                if(response.data.response) {
+                    setPostUser(response.data.response)
+                }
+            });
         }
     }
 
@@ -68,19 +53,35 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
         onLikePost(post.id, user.id)
     }
 
-    useEffect(() => {
-        getUser()
-        return () => {
-            setPostUser(initialUser)
+    const onTapProfilePhoto = (user_id: number) => {
+
+        if(user_id == user.id) {
+            navigation.navigate('ProfileScreenStack')
+        } else {
+            navigation.navigate('UserDetailPage', {"user_id": user_id, "acc_id": postUser?.account_id})
         }
+    }
+
+    useEffect(() => {
+        let unmounted = false
+
+        if(!unmounted) {
+            getUser()
+        }
+        return () => {
+            unmounted = true    
+        };
     }, [])
 
     return(
         <View style={styles.container} >
             <View style={styles.top_container} >
-                <Image
-                source={{uri: postUser?.profile_photo}}
-                style={styles.image} />
+                <TouchableOpacity onPress={() => onTapProfilePhoto(userId)} >
+                    <Image
+                    source={{uri: postUser?.profile_photo}}
+                    style={styles.image} />
+                </TouchableOpacity>
+                
                 <Text style={styles.name} >{postUser?.name}</Text>
                 <Text style={styles.username} > • {date}</Text>
             </View>

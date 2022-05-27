@@ -13,23 +13,6 @@ interface CommentCardProps {
     userId: number;
 }
 
-
-const initialUser: UserModel = {
-    id: 0,
-    name: "string",
-    surname: "string",
-    email: "string",
-    password: "string",
-    status: "string",
-    followers: 0,
-    following: 0,
-    role: "string",
-    created_at: new Date(),
-    updated_at: new Date(),
-    token_created_at: new Date(),
-    account_id: 0,
-}
-
 const _CommentCard: React.FC<CommentCardProps> = ({comment, userId}) => {
 
     const [loading, setLoading] = useState(true)
@@ -41,45 +24,42 @@ const _CommentCard: React.FC<CommentCardProps> = ({comment, userId}) => {
     const getUser = async () => {
 
         if(userId) {
-            const response = await axios.get<Response & UserModel>(`${BASE_URL}users/${userId}`);
-
-            if(response.data.response) {
-                setCommentUser(response.data.response)
-                setLoading(false)
-            }
+            await axios.get<Response & UserModel>(`${BASE_URL}users/${userId}`)
+            .then(response => {
+                if(response.data.response) {
+                    setCommentUser(response.data.response)
+                    setLoading(false)
+                }
+            });
         }
     }
 
     useEffect(() => {
-        getUser()
-        return () => {
-            setCommentUser(initialUser)
+        let unmounted = false
+
+        if(!unmounted) {
+            getUser()
         }
+        return () => {
+            unmounted = true    
+        };
     }, [])
-
-
-    const body = () => {
-        return(
-            <View style={styles.container} >
-                <View style={styles.top_container} >
-                    <Image
-                    source={{uri: commentUser?.profile_photo}}
-                    style={styles.image} />
-                    <Text style={styles.name} >{commentUser?.name}</Text>
-                    <Text style={styles.username} > • {date}</Text>
-                </View>
-                <Text style={styles.comment} >{comment.comment}</Text>
-            </View>
-        )
-    }
-
     
     return(
         <View >
             {
                 loading ? 
                 <></>:
-                body()
+                <View style={styles.container} >
+                    <View style={styles.top_container} >
+                        <Image
+                        source={{uri: commentUser?.profile_photo}}
+                        style={styles.image} />
+                        <Text style={styles.name} >{commentUser?.name}</Text>
+                        <Text style={styles.username} > • {date}</Text>
+                    </View>
+                    <Text style={styles.comment} >{comment.comment}</Text>
+                </View>
             }
         </View>            
     )

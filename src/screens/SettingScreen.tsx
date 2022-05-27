@@ -25,6 +25,10 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
     console.log(txt);
   };
 
+  const onTapEditProfile = () => {
+    navigation.navigate("EditProfilePage")
+  }
+
   const onTapSignOut = async () => {
     await onUserSignOut()
     setTimeout(() => {
@@ -54,24 +58,8 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
         btnColor="#7182BD"
         height={60}
         width={350}
-        onTap={() => onTapButton('Profile editted!')}
+        onTap={onTapEditProfile}
         title="Edit Profile"
-        txtColor="white"
-      />
-      <ButtonWithIcon
-        btnColor="#7182BD"
-        height={60}
-        width={350}
-        onTap={() => onTapButton('Username changed!')}
-        title="Change username"
-        txtColor="white"
-      />
-      <ButtonWithIcon
-        btnColor="#7182BD"
-        height={60}
-        width={350}
-        onTap={() => onTapButton('Email changed!')}
-        title="Change email"
         txtColor="white"
       />
       <ButtonWithIcon

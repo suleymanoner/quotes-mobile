@@ -89,7 +89,6 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     if(storageUser?.id !== undefined) {
       if(storageUser.status == "ACTIVE") {
           navigation.navigate('BottomTabStack')
-          console.log("912. Satirdaki kod!");
       } else {
           navigation.navigate("ConfirmationPage")
       }

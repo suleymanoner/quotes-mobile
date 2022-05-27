@@ -169,7 +169,8 @@ const styles = StyleSheet.create({
     },
     info_text: {
         fontSize: 17,
-        marginLeft: 10,
+        marginLeft: 15,
+        marginTop: 5,
         fontFamily: 'Roboto-Regular',
         color: TEXT_COLOR,
     },

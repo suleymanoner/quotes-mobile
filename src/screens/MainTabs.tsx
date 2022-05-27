@@ -11,6 +11,7 @@ import { SettingScreen } from './SettingScreen';
 import { PostQuoteScreen } from './PostQuoteScreen';
 import { UserDetailScreen } from './UserDetailScreen';
 import { FollowerListScreen } from './FollowerListScreen';
+import { EditProfileScreen } from './EditProfileScreen';
 import { MAIN_COLOR } from '../utils/Config';
 
 const HomeStack = createNativeStackNavigator();
@@ -33,6 +34,7 @@ const ProfileStackScreen = () => (
     <ProfileStack.Screen name="CommentsPage" component={CommentScreen} />
     <ProfileStack.Screen name="SettingPage" component={SettingScreen} />
     <ProfileStack.Screen name="FollowerListPage" component={FollowerListScreen} />
+    <ProfileStack.Screen name="EditProfilePage" component={EditProfileScreen} />
   </ProfileStack.Navigator>
 );
 

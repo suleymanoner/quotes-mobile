@@ -191,7 +191,6 @@ const _UserDetailScreen: React.FC<UserDetailScreenProps> = ({userReducer, onUser
                         <Text style={[styles.followers_text, {textAlign: "right" ,marginRight: 30}]} >Following</Text>
                         <Text style={[styles.followers_text, {textAlign: "right", marginTop: 5, marginRight: 55, fontWeight: "700" }]} >{profileUser?.following}</Text>
                     </TouchableOpacity>
-
                 </View>
             </View>
 

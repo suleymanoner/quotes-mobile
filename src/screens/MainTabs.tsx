@@ -10,6 +10,7 @@ import { SearchScreen } from './SearchScreen';
 import { SettingScreen } from './SettingScreen';
 import { PostQuoteScreen } from './PostQuoteScreen';
 import { UserDetailScreen } from './UserDetailScreen';
+import { FollowerListScreen } from './FollowerListScreen';
 import { MAIN_COLOR } from '../utils/Config';
 
 const HomeStack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="CommentsPage" component={CommentScreen} />
     <HomeStack.Screen name="PostQuotePage" component={PostQuoteScreen} />
     <HomeStack.Screen name="UserDetailPage" component={UserDetailScreen} />
+    <HomeStack.Screen name="FollowerListPage" component={FollowerListScreen} />
   </HomeStack.Navigator>
 );
 
@@ -30,6 +32,7 @@ const ProfileStackScreen = () => (
     <ProfileStack.Screen name="ProfilePage" component={ProfileScreen} />
     <ProfileStack.Screen name="CommentsPage" component={CommentScreen} />
     <ProfileStack.Screen name="SettingPage" component={SettingScreen} />
+    <ProfileStack.Screen name="FollowerListPage" component={FollowerListScreen} />
   </ProfileStack.Navigator>
 );
 

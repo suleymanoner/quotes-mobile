@@ -9,6 +9,7 @@ import { CommentScreen } from './CommentScreen';
 import { SearchScreen } from './SearchScreen';
 import { SettingScreen } from './SettingScreen';
 import { PostQuoteScreen } from './PostQuoteScreen';
+import { UserDetailScreen } from './UserDetailScreen';
 import { MAIN_COLOR } from '../utils/Config';
 
 const HomeStack = createNativeStackNavigator();
@@ -20,6 +21,7 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="HomePage" component={HomeScreen} />
     <HomeStack.Screen name="CommentsPage" component={CommentScreen} />
     <HomeStack.Screen name="PostQuotePage" component={PostQuoteScreen} />
+    <HomeStack.Screen name="UserDetailPage" component={UserDetailScreen} />
   </HomeStack.Navigator>
 );
 

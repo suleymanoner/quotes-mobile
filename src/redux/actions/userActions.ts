@@ -304,3 +304,27 @@ export const onUserUnfollow = (follower_id: number, user_id: number) => {
     }
   };
 };
+
+export const onUserEditProfile = (id: number, name: string, surname: string, bio: string, profile_photo: string) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+      await axios.put<Response & UserModel>(`${BASE_URL}users/${id}`, {
+        name,
+        surname,
+        bio,
+        profile_photo
+      }).then(response => {
+        dispatch({
+          type: 'ON_USER_LOGIN',
+          payload: response.data.response,
+        });
+      }).catch(err => console.log(err));
+    } catch (error) {
+      console.log(error)
+      dispatch({
+        type: 'ON_USER_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
+  };
+};

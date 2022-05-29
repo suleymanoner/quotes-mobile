@@ -4,13 +4,12 @@ import {connect} from 'react-redux';
 import {BASE_URL, MAIN_COLOR} from '../utils/Config';
 import {TextField, ButtonWithIcon} from '../components';
 import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, Response } from '../redux';
-import FlashMessage from 'react-native-flash-message';
-import {showMessage, hideMessage} from 'react-native-flash-message';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import { RootStackParams } from '../../App';
 import axios from 'axios';
+import { showToast } from '../utils/showToast';
 
 interface LoginScreenProps {
   userReducer: UserState;
@@ -69,17 +68,9 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
 
   const showError = (errorMsg?: string) => {
     if(error.message) {
-      showMessage({
-        message: error.message,
-        description: 'Try again!',
-        type: 'danger',
-      });
+      showToast(error.message)
     } else if(errorMsg) {
-      showMessage({
-        message: errorMsg!!,
-        description: 'Try again!',
-        type: 'danger',
-      });
+      showToast(errorMsg)
     }
   }
 
@@ -174,7 +165,6 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
             </Text>
           </TouchableOpacity>
         </View>
-        <FlashMessage position="top" />
       </View>
     );
   } else {
@@ -214,7 +204,6 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
             Do you have account? Click for Sign-in.
           </Text>
         </TouchableOpacity>
-        <FlashMessage position="top" />
       </View>
     );
   }

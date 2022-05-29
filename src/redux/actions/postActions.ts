@@ -2,7 +2,7 @@ import axios from 'axios';
 import {Dispatch} from 'react';
 import {BASE_URL} from '../../utils/Config';
 import {ErrorModel,PostModel,UserModel,Response} from '../models';
-import { showMessage } from 'react-native-flash-message';
+import { showToast } from '../../utils/showToast';
 
 
 export interface UserGetIndividualPostAction {
@@ -40,11 +40,7 @@ export const onGetFeedPosts = (id: string) => {
         await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/feed/${id}`)
         .then(response => {
           if (response.data.message) {
-            showMessage({
-              message: "Posts not found!",
-              description: 'Try again!',
-              type: 'danger',
-            });
+            showToast("Posts not found!")
           } else {
             dispatch({
               type: 'ON_GET_POSTS',
@@ -70,11 +66,7 @@ export const onGetIndividualPost = (id: number) => {
         await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/${id}`)
         .then(response => {
           if (response.data.message) {
-            showMessage({
-              message: "Post not found!",
-              description: 'Try again!',
-              type: 'danger',
-            });
+            showToast("Post not found!")
           } else {
             dispatch({
               type: 'ON_GET_INDV_POST',
@@ -100,11 +92,7 @@ export const onGetDailyPost = () => {
         await axios.get<PostModel & ErrorModel>(`${BASE_URL}dailypost`)
         .then(response => {
           if (response.data.message) {
-            showMessage({
-              message: "Post not found!",
-              description: 'Try again!',
-              type: 'danger',
-            });
+            showToast("Post not found!")
           } else {
             dispatch({
               type: 'ON_GET_DAILY_POST',
@@ -130,11 +118,7 @@ export const onGetUsersPosts = (id: string) => {
       await axios.get<PostModel & ErrorModel>(`${BASE_URL}posts/user/${id}`)
       .then(response => {
         if (response.data.message) {
-          showMessage({
-            message: "Posts not found!",
-            description: 'Try again!',
-            type: 'danger',
-          });
+          showToast("Posts not found!")
         } else {
           dispatch({
             type: 'ON_GET_USERS_POSTS',

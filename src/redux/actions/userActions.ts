@@ -3,7 +3,7 @@ import {Dispatch} from 'react';
 import {BASE_URL} from '../../utils/Config';
 import {AccountModel, ErrorModel,UserModel, Response} from '../models';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { showMessage } from 'react-native-flash-message';
+import { showToast } from '../../utils/showToast';
 
 export interface UserLoginAction {
   readonly type: 'ON_USER_LOGIN';
@@ -45,11 +45,7 @@ export const onUserLogin = (email: string, password: string) => {
         }
       ).then(response => {
         if(response.data.status == 'error') {
-          showMessage({
-            message: response.data.response,
-            description: 'Try again!',
-            type: 'danger',
-          });
+          showToast(response.data.response)
         } else {
           AsyncStorage.setItem('user_status', response.data.response.status);
           AsyncStorage.setItem('user_id', JSON.stringify(response.data.response.id));
@@ -65,7 +61,7 @@ export const onUserLogin = (email: string, password: string) => {
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -86,11 +82,7 @@ export const onUserSignUp = (name: string, surname: string, email: string, passw
       ).then(response => {
         if (response.data.status == "error") {
           console.log("signup error : " + response.data.response)
-          showMessage({
-            message: response.data.response,
-            description: 'Try again!',
-            type: 'danger',
-          });
+          showToast(response.data.response)
         } else {
           AsyncStorage.setItem('user_status', response.data.response.status);
           AsyncStorage.setItem('user_id', JSON.stringify(response.data.response.id));
@@ -104,11 +96,7 @@ export const onUserSignUp = (name: string, surname: string, email: string, passw
       }).catch(err => console.log(err));
 
     } catch (error) {
-      showMessage({
-        message: "Error : " + error,
-        description: 'Try again!',
-        type: 'danger',
-      });
+      showToast("Error : " + error)
     }
   };
 };
@@ -120,11 +108,7 @@ export const onGetUser = (id: number) => {
       await axios.get<Response & UserModel>(`${BASE_URL}users/${id}`)
       .then(response => {
         if (response.data.status == "error") {
-          showMessage({
-            message: response.data.response,
-            description: 'Try again!',
-            type: 'danger',
-          });
+          showToast(response.data.response)
         } else {
           AsyncStorage.setItem('user_status', response.data.response.status);
           AsyncStorage.setItem('user_id', JSON.stringify(response.data.response.id));
@@ -140,7 +124,7 @@ export const onGetUser = (id: number) => {
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -154,11 +138,7 @@ export const onGetUserAccount = (id: number) => {
       await axios.get<Response & AccountModel>(`${BASE_URL}accounts/${id}`)
       .then(response => {
         if (response.data.status == "error") {
-          showMessage({
-            message: response.data.response,
-            description: 'Try again!',
-            type: 'danger',
-          });
+          showToast(response.data.response)
         } else {
           AsyncStorage.setItem('account_id', JSON.stringify(response.data.response.id));
           dispatch({
@@ -171,7 +151,7 @@ export const onGetUserAccount = (id: number) => {
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -184,11 +164,7 @@ export const onGetUserFollowers = (id: number) => {
       await axios.get<Response & UserModel>(`${BASE_URL}userfollowers/followers/${id}`)
       .then(response => {
         if (response.data.status == "error") {
-          showMessage({
-            message: response.data.response,
-            description: 'Try again!',
-            type: 'danger',
-          });
+          showToast(response.data.response)
         } else {
           dispatch({
             type: 'ON_GET_USER_FOLLOWERS',
@@ -200,7 +176,7 @@ export const onGetUserFollowers = (id: number) => {
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -214,11 +190,7 @@ export const onGetUserFollowings = (id: number) => {
       await axios.get<Response & UserModel>(`${BASE_URL}userfollowers/followings/${id}`)
       .then(response => {
         if (response.data.status == "error") {
-          showMessage({
-            message: response.data.response,
-            description: 'Try again!',
-            type: 'danger',
-          });
+          showToast(response.data.response)
         } else {
           dispatch({
             type: 'ON_GET_USER_FOLLOWINGS',
@@ -230,7 +202,7 @@ export const onGetUserFollowings = (id: number) => {
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -261,7 +233,7 @@ export const onUserSignOut = () => {
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -280,7 +252,7 @@ export const onUserFollow = (follower_id: number, user_id: number) => {
       console.log(error)
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -299,7 +271,7 @@ export const onUserUnfollow = (follower_id: number, user_id: number) => {
       console.log(error)
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -318,12 +290,13 @@ export const onUserEditProfile = (id: number, name: string, surname: string, bio
           type: 'ON_USER_LOGIN',
           payload: response.data.response,
         });
+        showToast("You editted your profile!")
       }).catch(err => console.log(err));
     } catch (error) {
       console.log(error)
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };
@@ -338,16 +311,16 @@ export const onUserChangePassword = (id: number, old_password: string, password:
         password_again
       }).then(response => {
         if(response.data.status == "error") {
-          console.log(response.data.response)
+          showToast(response.data.response)
         } else {
-          console.log(response.data.response)
+          showToast(response.data.response)
         }
       }).catch(err => console.log(err));
     } catch (error) {
       console.log(error)
       dispatch({
         type: 'ON_USER_ERROR',
-        payload: {"message": "Error : " + error},
+        payload: {message: "Error : " + error},
       });
     }
   };

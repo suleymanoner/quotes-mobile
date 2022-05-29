@@ -9,7 +9,6 @@ import CommentCard from '../components/CommentCard';
 import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/Config'
 import {ApplicationState, UserState, PostState, CommentAndLikeState, onGetComments, CommentModel} from '../redux';
 import {connect} from 'react-redux';
-import { showMessage } from 'react-native-flash-message';
 
 
 interface CommentScreenScreenProps {

@@ -23,7 +23,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
-    const {user, error} = userReducer
+    const {user} = userReducer
 
     const { type } = route.params
 
@@ -150,6 +150,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
                         <TextInput 
                         placeholder="Old Password"
                         autoCapitalize='none'
+                        secureTextEntry={true}
                         onChangeText={(text) => setOldPassword(text)}
                         style={styles.textField} />
                     </View>
@@ -157,6 +158,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
                         <TextInput 
                         placeholder="New Password"
                         autoCapitalize='none'
+                        secureTextEntry={true}
                         onChangeText={(text) => setNewPassword(text)}
                         style={styles.textField} />
                     </View>
@@ -164,6 +166,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
                         <TextInput 
                         placeholder="New Password Again"
                         autoCapitalize='none'
+                        secureTextEntry={true}
                         onChangeText={(text) => setNewPasswordAgain(text)}
                         style={styles.textField} />
                     </View>

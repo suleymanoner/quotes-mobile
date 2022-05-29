@@ -125,7 +125,7 @@ const _UserDetailScreen: React.FC<UserDetailScreenProps> = ({userReducer, onUser
             onGetUserFollowers(profileUser?.id)
         }
         return () => {
-            unmounted = true    
+            unmounted = true
         };
     }, [])
 

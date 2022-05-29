@@ -4,7 +4,7 @@ import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/v
 import { RootStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import { BACKGROUND_COLOR, BASE_URL, TEXT_COLOR } from '../utils/Config'
-import {ApplicationState, UserState, PostState, onGetUserFollowers, onGetUserFollowings, UserModel, Response} from '../redux';
+import {ApplicationState, UserState, UserModel, Response} from '../redux';
 import {connect} from 'react-redux';
 import { UserCard } from '../components/UserCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,36 +13,28 @@ import axios from 'axios';
 
 interface FollowerListScreenProps {
     userReducer: UserState;
-    postReducer: PostState;
-    onGetUserFollowers: Function;
-    onGetUserFollowings: Function;
     route: any
 }
 
-const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({route, userReducer, onGetUserFollowers, onGetUserFollowings}) => {
+const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({route, userReducer}) => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
 
-    const { user, followers, followings } = userReducer
+    const { user } = userReducer
 
     const { title, user_id } = route.params
 
     const [userFollowers, setUserFollowers] = useState<[UserModel]>()
     const [userFollowings, setUserFollowings] = useState<[UserModel]>()
 
-
     const getFollowers = async (id: number) => {
       try {
-        if(id == user.id) {
-          setUserFollowers(followers)
-        } else {
-          await axios.get<Response & UserModel>(`${BASE_URL}userfollowers/followers/${id}`)
-          .then(response => {
-            if (response.data.response) {
-              setUserFollowers(response.data.response)
-            }
-          }).catch(err => console.log(err));
-        }
+        await axios.get<Response & UserModel>(`${BASE_URL}userfollowers/followers/${id}`)
+        .then(response => {
+          if (response.data.response) {
+            setUserFollowers(response.data.response)
+          }
+        }).catch(err => console.log(err));
       } catch (error) {
         console.log(error);
       }
@@ -50,16 +42,12 @@ const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({route, userRedu
 
     const getFollowings = async (id: number) => {
       try {
-        if(id == user.id) {
-          setUserFollowings(followings)
-        } else {
-          await axios.get<Response & UserModel>(`${BASE_URL}userfollowers/followings/${id}`)
-          .then(response => {
-            if (response.data.response) {
-              setUserFollowings(response.data.response)
-            }
-          }).catch(err => console.log(err));
-        }
+        await axios.get<Response & UserModel>(`${BASE_URL}userfollowers/followings/${id}`)
+        .then(response => {
+          if (response.data.response) {
+            setUserFollowings(response.data.response)
+          }
+        }).catch(err => console.log(err));
       } catch (error) {
         console.log(error);
       }
@@ -89,13 +77,13 @@ const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({route, userRedu
         <FlatList 
         data={userFollowers}
         initialNumToRender={3}
-        renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name} />}
+        renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name} id={item.id} acc_id={item.account_id} />}
         keyExtractor={(item, index) => String(index)}
         /> :
         <FlatList 
         data={userFollowings}
         initialNumToRender={3}
-        renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name} />}
+        renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name} id={item.id} acc_id={item.account_id} />}
         keyExtractor={(item, index) => String(index)}
         />
       }
@@ -142,11 +130,9 @@ const styles = StyleSheet.create({
 
 const mapToStateProps = (state: ApplicationState) => ({
     userReducer: state.userReducer,
-    postReducer: state.postReducer,
-    commentAndLikeReducer: state.commentAndLikeReducer
 });
 
-const FollowerListScreen = connect(mapToStateProps, {onGetUserFollowers, onGetUserFollowings})(_FollowerListScreen);
+const FollowerListScreen = connect(mapToStateProps, {})(_FollowerListScreen);
 
 
 export {FollowerListScreen}

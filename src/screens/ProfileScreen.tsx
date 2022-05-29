@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
-import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUserFollowers, onGetUsersPosts, onGetUserFollowings} from '../redux';
+import {ApplicationState, UserState, PostState, onGetUserAccount, onGetUsersPosts, onGetUser} from '../redux';
 import {connect} from 'react-redux';
 import { ButtonWithIcon} from '../components';
 import QuoteCard from '../components/QuoteCard';
@@ -16,11 +16,10 @@ interface ProfileScreenProps {
     userReducer: UserState;
     postReducer: PostState;
     onGetUsersPosts: Function;
-    onGetUserFollowers: Function;
-    onGetUserFollowings: Function;
+    onGetUser: Function;
 }
 
-const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer, onGetUserFollowers, onGetUsersPosts, onGetUserFollowings}) => {
+const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer, onGetUsersPosts, onGetUser}) => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
@@ -33,7 +32,7 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
 
         if(!unmounted) {
             onGetUsersPosts(user.id)
-            
+            onGetUser(user.id)
         }
         return () => {
             unmounted = true    
@@ -187,6 +186,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     postReducer: state.postReducer
   });
   
-  const ProfileScreen = connect(mapToStateProps, {onGetUserAccount, onGetUsersPosts, onGetUserFollowers, onGetUserFollowings})(_ProfileScreen);
+  const ProfileScreen = connect(mapToStateProps, {onGetUserAccount, onGetUsersPosts, onGetUser})(_ProfileScreen);
   
   export {ProfileScreen};

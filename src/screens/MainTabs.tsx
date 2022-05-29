@@ -34,6 +34,7 @@ const ProfileStackScreen = () => (
     <ProfileStack.Screen name="CommentsPage" component={CommentScreen} />
     <ProfileStack.Screen name="SettingPage" component={SettingScreen} />
     <ProfileStack.Screen name="FollowerListPage" component={FollowerListScreen} />
+    <ProfileStack.Screen name="UserDetailPage" component={UserDetailScreen} />
     <ProfileStack.Screen name="EditProfilePage" component={EditProfileScreen} />
   </ProfileStack.Navigator>
 );

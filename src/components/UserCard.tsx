@@ -1,22 +1,35 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import { RootStackParams } from '../../App';
+import { useNavigation } from '@react-navigation/native';
 
-interface UserCarddProps {
+interface UserCardProps {
     image: string,
     name: string;
+    id: number;
+    acc_id: number;
 }
 
-const UserCard: React.FC<UserCarddProps> = ({image, name}) => {
+const UserCard: React.FC<UserCardProps> = ({image, name, id, acc_id}) => {
+
+    const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
+
+    const onTapUserCard = () => {
+        navigation.navigate('UserDetailPage', {"user_id": id, "acc_id": acc_id})
+    }
 
     return(
-        <View style={styles.container} >
-            <View style={styles.top_container} >
-                <Image
-                source={{uri: image}}
-                style={styles.image} />
-                <Text style={styles.name} >{name}</Text>
+        <TouchableOpacity onPress={() => onTapUserCard()} >
+            <View style={styles.container} >
+                <View style={styles.top_container} >
+                    <Image
+                    source={{uri: image}}
+                    style={styles.image} />
+                    <Text style={styles.name} >{name}</Text>
+                </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

@@ -86,8 +86,8 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
   const chooseFromLibrary = () => {
     try {
       ImagePicker.openPicker({
-        width: 300,
-        height: 400,
+        width: 350,
+        height: 300,
         cropping: true,
       }).then(image => {
         console.log(image);

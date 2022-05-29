@@ -70,11 +70,6 @@ export interface PostModel {
   user_id: number;
 }
 
-export interface CommentAndLikeState {
-  comments: [CommentModel];
-  commentError: ErrorModel;
-}
-
 export interface CommentModel {
   id: number;
   comment: string;

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Image, TextInput } from 'react-native'
-import { PostModel, UserModel, ErrorModel, onGetComments, CommentModel } from '../redux'
+import { PostModel, UserModel, ErrorModel, CommentModel } from '../redux'
 import { BACKGROUND_COLOR, BASE_URL, MAIN_COLOR } from '../utils/Config'
-import {ApplicationState, CommentAndLikeState, onMakeComment} from '../redux';
+import {ApplicationState, onMakeComment} from '../redux';
 import {connect} from 'react-redux';
 import {ButtonWithIcon} from './ButtonWithIcon'
 
 
 interface CommentInputProps {
-    commentAndLikeReducer: CommentAndLikeState
     user: UserModel,
     acc_name: string,
     post_id: number,
@@ -16,11 +15,9 @@ interface CommentInputProps {
 }
 
 
-const _CommentInput: React.FC<CommentInputProps> = ({commentAndLikeReducer, user, acc_name, post_id, onMakeComment}) => {
+const _CommentInput: React.FC<CommentInputProps> = ({user, acc_name, post_id, onMakeComment}) => {
 
     const [comm, setComm] = useState('')
-
-    const { commentError } = commentAndLikeReducer
 
     const onSendComment = () => {
 
@@ -121,7 +118,6 @@ const styles = StyleSheet.create({
 const mapToStateProps = (state: ApplicationState) => ({
     userReducer: state.userReducer,
     postReducer: state.postReducer,
-    commentAndLikeReducer: state.commentAndLikeReducer
 });
   
 const CommentInput = connect(mapToStateProps, {onMakeComment})(_CommentInput);

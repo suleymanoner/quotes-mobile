@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, Image, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import {onGetIndividualPost, ApplicationState, UserState, CommentAndLikeState, onGetUser, PostState, onGetFeedPosts, onGetUserAccount} from '../redux';
+import {onGetIndividualPost, ApplicationState, UserState, onGetUser, PostState, onGetFeedPosts, onGetUserAccount} from '../redux';
 import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -13,7 +13,6 @@ import QuoteCard from '../components/QuoteCard'
 interface HomeScreenProps {
   userReducer: UserState;
   postReducer: PostState;
-  commentAndLikeReducer: CommentAndLikeState;
   onGetUser: Function;
   onGetFeedPosts: Function;
   onGetIndividualPost: Function;
@@ -21,15 +20,13 @@ interface HomeScreenProps {
   onGetUserAccount: Function
 }
 
-const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, commentAndLikeReducer, onGetUser, onGetFeedPosts, onGetUserAccount}) => {
+const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGetUser, onGetFeedPosts, onGetUserAccount}) => {
 
   const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
   const {user, account} = userReducer;
 
   const {feed_posts, indv_post} = postReducer
-
-  const { comments } = commentAndLikeReducer
 
   const [storageUserId, setStorageUserId] = useState<string|null>()
 
@@ -72,7 +69,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, comme
     return () => {
         unmounted = true    
     };
-  }, [feed_posts, comments])
+  }, [feed_posts])
 
 
   const onTapPostIcon = () => {
@@ -146,7 +143,6 @@ const styles = StyleSheet.create({
 const mapToStateProps = (state: ApplicationState) => ({
   userReducer: state.userReducer,
   postReducer: state.postReducer,
-  commentAndLikeReducer: state.commentAndLikeReducer
 });
 
 const HomeScreen = connect(mapToStateProps, {onGetUser, onGetFeedPosts, onGetIndividualPost, onGetUserAccount})(_HomeScreen);

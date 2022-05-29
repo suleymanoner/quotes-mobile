@@ -6,20 +6,16 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CommentInput } from '../components';
 import CommentCard from '../components/CommentCard';
-import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/Config'
-import {ApplicationState, UserState, PostState, CommentAndLikeState, onGetComments, CommentModel} from '../redux';
+import { BACKGROUND_COLOR, BASE_URL, TEXT_COLOR } from '../utils/Config'
+import {ApplicationState, UserState, CommentModel, Response} from '../redux';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 
 interface CommentScreenScreenProps {
     userReducer: UserState;
-    postReducer: PostState;
-    commentAndLikeReducer: CommentAndLikeState;
-    onGetComments: Function;
-    onGetIndividualPost: Function;
     route: any
 }
-
 
 const _CommentScreen: React.FC<CommentScreenScreenProps> = (props) => {
 
@@ -28,11 +24,23 @@ const _CommentScreen: React.FC<CommentScreenScreenProps> = (props) => {
 
     const { post_id } = props.route.params
 
-    const { comments } = props.commentAndLikeReducer
-
     const { user, account } = props.userReducer
 
+    const [comments, setComments] = useState<[CommentModel]>()
 
+    const getComments = async () => {
+        try {
+          await axios.get<Response & CommentModel>(`${BASE_URL}postcomments/${post_id}`)
+          .then(response => {
+            if (response.data.response) {
+                setComments(response.data.response)
+            }
+          }).catch(err => console.log(err));
+        } catch (error) {
+          console.log(error);
+        }
+      }
+  
     const goBack = () => {
         props.route.params = undefined
         navigation.goBack()
@@ -43,7 +51,7 @@ const _CommentScreen: React.FC<CommentScreenScreenProps> = (props) => {
         let unmounted = false
 
         if(!unmounted) {
-            props.onGetComments(post_id)
+            getComments()
         }
         return () => {
             unmounted = true    
@@ -103,10 +111,8 @@ const styles = StyleSheet.create({
 
 const mapToStateProps = (state: ApplicationState) => ({
     userReducer: state.userReducer,
-    postReducer: state.postReducer,
-    commentAndLikeReducer: state.commentAndLikeReducer
 });
 
-const CommentScreen = connect(mapToStateProps, { onGetComments })(_CommentScreen);
+const CommentScreen = connect(mapToStateProps, {})(_CommentScreen);
 
 export { CommentScreen }

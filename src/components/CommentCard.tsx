@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native'
 import { PostModel, UserModel, ErrorModel, CommentModel } from '../redux'
 import { BACKGROUND_COLOR, BASE_URL } from '../utils/Config'
 import moment from 'moment'
-import {ApplicationState, Response, CommentAndLikeState} from '../redux';
+import {ApplicationState, Response} from '../redux';
 import {connect} from 'react-redux';
 import axios from 'axios'
 import LottieView from "lottie-react-native";

@@ -205,7 +205,6 @@ const styles = StyleSheet.create({
 const mapToStateProps = (state: ApplicationState) => ({
     userReducer: state.userReducer,
     postReducer: state.postReducer,
-    commentAndLikeReducer: state.commentAndLikeReducer,
 });
   
 const QuoteCard = connect(mapToStateProps, {onLikePost})(_QuoteCard);

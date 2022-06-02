@@ -1,21 +1,26 @@
 import React, { useEffect, useState, memo } from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
-import { PostModel, UserModel, ErrorModel, CommentModel } from '../redux'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { PostModel, UserModel, ErrorModel, CommentModel, UserState, onDeleteComment } from '../redux'
 import { BACKGROUND_COLOR, BASE_URL } from '../utils/Config'
 import moment from 'moment'
 import {ApplicationState, Response} from '../redux';
 import {connect} from 'react-redux';
 import axios from 'axios'
-import LottieView from "lottie-react-native";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { showToast } from '../utils/showToast'
 
 interface CommentCardProps {
+    userReducer: UserState;
     comment: CommentModel,
     userId: number;
+    onDeleteComment: Function
 }
 
-const _CommentCard: React.FC<CommentCardProps> = ({comment, userId}) => {
+const _CommentCard: React.FC<CommentCardProps> = ({userReducer, comment, userId, onDeleteComment}) => {
 
-    const [loading, setLoading] = useState(true)
+    const [deleteIcon, setDeleteIcon] = useState(false)
+
+    const { user } = userReducer
 
     const date = moment(comment.created_at).fromNow();
 
@@ -28,40 +33,53 @@ const _CommentCard: React.FC<CommentCardProps> = ({comment, userId}) => {
             .then(response => {
                 if(response.data.response) {
                     setCommentUser(response.data.response)
-                    setLoading(false)
                 }
             });
         }
     }
 
-    useEffect(() => {
-        let unmounted = false
-
-        if(!unmounted) {
-            getUser()
+    const checkCommentUser = () => {
+        if(commentUser?.id == user.id) {
+            setDeleteIcon(true)
         }
-        return () => {
-            unmounted = true    
-        };
+    }
+
+    const deleteComment = async () => {
+        await onDeleteComment(comment.id)
+        showToast("Comment deleted!")
+    }
+
+    useEffect(() => {
+        const ac = new AbortController();
+        getUser()
+        return () => ac.abort()
     }, [])
+
+    useEffect(() => {
+        const ac = new AbortController();
+        checkCommentUser()
+        return () => ac.abort()
+    }, [commentUser])
     
     return(
-        <View >
-            {
-                loading ? 
-                <></>:
-                <View style={styles.container} >
-                    <View style={styles.top_container} >
-                        <Image
-                        source={{uri: commentUser?.profile_photo}}
-                        style={styles.image} />
-                        <Text style={styles.name} >{commentUser?.name}</Text>
-                        <Text style={styles.username} > • {date}</Text>
-                    </View>
-                    <Text style={styles.comment} >{comment.comment}</Text>
-                </View>
-            }
-        </View>            
+        <View style={styles.container} >
+            <View style={styles.top_container} >
+                <Image
+                source={{uri: commentUser?.profile_photo}}
+                style={styles.image} />
+                <Text style={styles.name} >{commentUser?.name}</Text>
+                <Text style={styles.username} > • {date}</Text>
+                {
+                    deleteIcon ? 
+                    <View style={styles.delete_icon_container}>
+                        <TouchableOpacity onPress={() => deleteComment()} style={styles.delete_icon} >
+                            <Icon name='delete' color="#00344F" size={30}/>
+                        </TouchableOpacity>
+                    </View> : <></>
+                }
+            </View>
+            <Text style={styles.comment} >{comment.comment}</Text>
+        </View>
     )
 }
 
@@ -108,6 +126,13 @@ const styles = StyleSheet.create({
         color: "gray",
         fontFamily: "Roboto-Regular"
     },
+    delete_icon_container: {
+        flex: 1,
+        alignItems: "flex-end",
+    },
+    delete_icon: {
+        marginTop: 10
+    }
 })
 
 const mapToStateProps = (state: ApplicationState) => ({
@@ -115,6 +140,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     postReducer: state.postReducer
 });
   
-const CommentCard = connect(mapToStateProps, {})(_CommentCard);
+const CommentCard = connect(mapToStateProps, {onDeleteComment})(_CommentCard);
 
 export default memo(CommentCard)

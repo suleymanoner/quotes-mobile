@@ -49,84 +49,59 @@ const _UserDetailScreen: React.FC<UserDetailScreenProps> = ({userReducer, onUser
     const { user_id, acc_id } = route.params
 
     const getUserProfile = async () => {
-        let unmounted = false
+        await axios.get<Response & UserModel>(`${BASE_URL}users/${user_id}`)
+        .then(response => {
+            if(response.data.response) {
+                setProfileUser(response.data.response)
+            }
+        }).catch(err => console.log(err));
 
-        if(!unmounted) {
+        await axios.get<[PostModel]>(`${BASE_URL}posts/user/${user_id}`)
+        .then(response => {
+            if (response.data) {
+                setPosts(response.data)
+            } 
+        }).catch(err => console.log(err));
 
-            await axios.get<Response & UserModel>(`${BASE_URL}users/${user_id}`)
-            .then(response => {
-                if(response.data.response) {
-                    setProfileUser(response.data.response)
-                }
-            }).catch(err => console.log(err));
-
-            await axios.get<[PostModel]>(`${BASE_URL}posts/user/${user_id}`)
-            .then(response => {
-                if (response.data) {
-                    setPosts(response.data)
-                } 
-            }).catch(err => console.log(err));
-
-            await axios.get<Response & AccountModel>(`${BASE_URL}accounts/${acc_id}`)
-            .then(response => {
-                if(response.data.response) {
-                    setProfileAccount(response.data.response)
-                }
-            }).catch(err => console.log(err));
-
-        }
-        return () => {
-            unmounted = true    
-        };
-
+        await axios.get<Response & AccountModel>(`${BASE_URL}accounts/${acc_id}`)
+        .then(response => {
+            if(response.data.response) {
+                setProfileAccount(response.data.response)
+            }
+        }).catch(err => console.log(err));
     }
 
 
     const check = async () => {
-        let unmounted = false
-
-        if(!unmounted) {
-            await axios.post(`${BASE_URL}userfollowers/checkIfFollows`, {
-                "follower_id": user.id,
-                "user_id": profileUser?.id
-            })
-            .then(response => {
-                if(response.data == true) {
-                    setFollowBtnText("Unfollow")
-                }
-            }).catch(err => console.log(err));
-            return () => {
-                unmounted = true    
-            };
-        }
+        await axios.post(`${BASE_URL}userfollowers/checkIfFollows`, {
+            "follower_id": user.id,
+            "user_id": profileUser?.id
+        })
+        .then(response => {
+            if(response.data == true) {
+                setFollowBtnText("Unfollow")
+            }
+        }).catch(err => console.log(err));   
     }
 
     useEffect(() => {
+        const ac = new AbortController();
         check()
+        return () => ac.abort()
     })
 
     useEffect(() => {
-        let unmounted = false
-
-        if(!unmounted) {
-            getUserProfile()
-        }
-        return () => {
-            unmounted = true    
-        };
+        const ac = new AbortController();
+        getUserProfile()
+        return () => ac.abort()
     }, [posts, profileUser, profileAccount])
 
  
     useEffect(() => {
-        let unmounted = false
-
-        if(!unmounted) {
-            onGetUsersPosts(profileUser?.id)
-            onGetUserFollowers(profileUser?.id)
-        }
-        return () => {
-            unmounted = true
-        };
+        const ac = new AbortController();
+        onGetUsersPosts(profileUser?.id)
+        onGetUserFollowers(profileUser?.id)
+        return () => ac.abort()
     }, [])
 
     const goBack = () => {

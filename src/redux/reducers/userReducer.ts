@@ -8,6 +8,7 @@ const initialState: UserState = {
   post: {} as PostModel,
   followers: {} as [UserModel],
   followings: {} as [UserModel],
+  allUsers: {} as [UserModel],
 };
 
 
@@ -29,6 +30,12 @@ const UserReducer = (state: UserState = initialState, action: UserAction) => {
       return {
         ...state,
         followers: action.payload,
+      }
+
+    case 'ON_GET_ALL_USERS':
+      return {
+        ...state,
+        allUsers: action.payload
       }
 
     case 'ON_GET_USER_FOLLOWINGS':

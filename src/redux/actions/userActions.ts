@@ -20,6 +20,11 @@ export interface GetUserFollowers {
   payload: UserModel;
 }
 
+export interface GetAllUsers {
+  readonly type: 'ON_GET_ALL_USERS';
+  payload: UserModel;
+}
+
 export interface GetUserFollowings {
   readonly type: 'ON_GET_USER_FOLLOWINGS';
   payload: UserModel;
@@ -31,7 +36,7 @@ export interface UserErrorAction {
 }
 
 
-export type UserAction = UserLoginAction | UserErrorAction | GetUserFollowers | GetUserFollowings | GetUserAccountAction;
+export type UserAction = UserLoginAction | UserErrorAction | GetUserFollowers | GetUserFollowings | GetUserAccountAction | GetAllUsers;
 
 export const onUserLogin = (email: string, password: string) => {
 
@@ -46,6 +51,7 @@ export const onUserLogin = (email: string, password: string) => {
       ).then(response => {
         if(response.data.status == 'error') {
           showToast(response.data.response)
+          console.log("error : " + response.data)
         } else {
           AsyncStorage.setItem('user_status', response.data.response.status);
           AsyncStorage.setItem('user_id', JSON.stringify(response.data.response.id));
@@ -57,6 +63,7 @@ export const onUserLogin = (email: string, password: string) => {
           });
         }
       }).catch(err => console.log(err));
+      console.log("after login")
 
     } catch (error) {
       dispatch({
@@ -129,7 +136,6 @@ export const onGetUser = (id: number) => {
     }
   };
 };
-
 
 export const onGetUserAccount = (id: number) => {
   return async (dispatch: Dispatch<UserAction>) => {
@@ -211,8 +217,31 @@ export const onGetUserFollowings = (id: number) => {
 export const onUserSignOut = () => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
+
+      const keys = await AsyncStorage.getAllKeys();
+      await AsyncStorage.multiRemove(keys);
+
       await AsyncStorage.getAllKeys()
         .then(keys => AsyncStorage.multiRemove(keys))
+
+      await AsyncStorage.removeItem("user_status");
+      await AsyncStorage.removeItem("user_id");
+      await AsyncStorage.removeItem("account_id");
+
+      const user_status = await AsyncStorage.removeItem("user_status");
+      if (user_status !== null){
+        AsyncStorage.setItem("user_status", "");
+      }
+
+      const user_id = await AsyncStorage.removeItem("user_id");
+      if (user_id !== null){
+        AsyncStorage.setItem("user_id", "");
+      }
+
+      const account_id = await AsyncStorage.removeItem("account_id");
+      if (account_id !== null){
+        AsyncStorage.setItem("account_id", "");
+      }
 
       dispatch({
         type: 'ON_USER_LOGIN',
@@ -235,6 +264,30 @@ export const onUserSignOut = () => {
         type: 'ON_USER_ERROR',
         payload: {message: "Error : " + error},
       });
+    }
+  };
+};
+
+export const onUserDeleteAccount = (account_id: number, user_id: number) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+      onUserSignOut()
+
+      await axios.post<Response>(`${BASE_URL}users/deleteAccount`, {
+          account_id,
+          user_id
+        }
+      ).then(response => {
+        console.log(response.data)
+        if (response.data.status == "error") {
+          showToast(response.data.response)
+        } else {
+          showToast(response.data.response)
+        }
+      }).catch(err => console.log(err.response.data));
+    } catch (error) {
+      showToast("Error : " + error)
+      console.log(error);
     }
   };
 };
@@ -322,6 +375,71 @@ export const onUserChangePassword = (id: number, old_password: string, password:
         type: 'ON_USER_ERROR',
         payload: {message: "Error : " + error},
       });
+    }
+  };
+};
+
+export const onGetAllUsers = () => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+
+      await axios.get<Response & UserModel>(`${BASE_URL}users`)
+      .then(response => {
+        if (response.data.status == "error") {
+          showToast(response.data.response)
+        } else {
+          dispatch({
+            type: 'ON_GET_ALL_USERS',
+            payload: response.data.response,
+          });
+        }
+      }).catch(err => console.log(err));
+    } catch (error) {
+      dispatch({
+        type: 'ON_USER_ERROR',
+        payload: {message: "Error : " + error},
+      });
+    }
+  };
+};
+
+export const onLikePost = (post_id: number, user_id: number) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+      await axios.post(`${BASE_URL}post/like`, {
+        post_id,
+        user_id
+      });
+
+    } catch (error) {
+      showToast("Error : " + error)
+    }
+  }; 
+};
+
+
+export const onMakeComment = (comment: string, post_id: number, user_id: number) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+      await axios.post(`${BASE_URL}postcomments/make`, {
+        comment,
+        post_id,
+        user_id
+      });
+    } catch (error) {
+      showToast("Error : " + error)
+    }
+  };
+};
+
+export const onDeleteComment = (id: number) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+      await axios.post(`${BASE_URL}postcomments/delete`, {
+        id
+      });
+    } catch (error) {
+      showToast("Error : " + error)
     }
   };
 };

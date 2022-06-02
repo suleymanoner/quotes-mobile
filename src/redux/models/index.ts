@@ -10,6 +10,7 @@ export interface UserState {
   post: PostModel;
   followers: [UserModel],
   followings: [UserModel],
+  allUsers: [UserModel],
 }
 
 export interface ErrorModel {

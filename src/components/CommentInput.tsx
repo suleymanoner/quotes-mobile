@@ -5,6 +5,10 @@ import { BACKGROUND_COLOR, BASE_URL, MAIN_COLOR } from '../utils/Config'
 import {ApplicationState, onMakeComment} from '../redux';
 import {connect} from 'react-redux';
 import {ButtonWithIcon} from './ButtonWithIcon'
+import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import { RootStackParams } from '../../App';
+import { useNavigation } from '@react-navigation/native';
+import { showToast } from '../utils/showToast';
 
 
 interface CommentInputProps {
@@ -16,16 +20,14 @@ interface CommentInputProps {
 
 
 const _CommentInput: React.FC<CommentInputProps> = ({user, acc_name, post_id, onMakeComment}) => {
+    const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
     const [comm, setComm] = useState('')
 
-    const onSendComment = () => {
-
-        console.log("Comment: ", comm);
-        console.log("User id : ", user.id);
-        console.log("Post id : ", post_id);
-
-        onMakeComment(comm, user.id, post_id)
+    const onSendComment = async () => {
+        await onMakeComment(comm, post_id, user.id )
+        showToast("Comment sent!")
+        navigation.goBack()
     }
 
     return(

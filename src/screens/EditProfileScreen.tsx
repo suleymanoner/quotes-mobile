@@ -23,7 +23,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
-    const {user} = userReducer
+    const {user, error} = userReducer
 
     const { type } = route.params
 
@@ -93,7 +93,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
         } else if(type == "Change Password") {
             await onUserChangePassword(user.id, oldPassword, newPassword, newPasswordAgain)
         }
-
+        
         goBack()
     }  
 

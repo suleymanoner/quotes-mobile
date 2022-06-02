@@ -36,7 +36,7 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     try {
       const id = await AsyncStorage.getItem('user_id')
 
-      if(id !== undefined) {
+      if(id !== null) {
         if(id) {
           await axios.get<Response & UserModel>(`${BASE_URL}users/${id}`)
           .then(response => {
@@ -65,7 +65,6 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     }
   }
 
-
   const showError = (errorMsg?: string) => {
     if(error.message) {
       showToast(error.message)
@@ -74,21 +73,23 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     }
   }
 
-  
   useEffect(() => {
+    const ac = new AbortController();
     getUserFromStorage()
     if(storageUser?.id !== undefined) {
       if(storageUser.status == "ACTIVE") {
           navigation.navigate('BottomTabStack')
+          console.log("asdasd");
       } else {
           navigation.navigate("ConfirmationPage")
       }
     }
-  }, [storageUser?.status])
+    return () => ac.abort()
+  }, [])
 
   useEffect(() => {
+    const ac = new AbortController();
     getStatus()
-  
     if(user.id !== undefined) {
       if(user.status == "ACTIVE") {
           navigation.navigate('BottomTabStack')
@@ -96,7 +97,8 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
           navigation.navigate("ConfirmationPage")
       }
     }
-  }, [user,error]);
+    return () => ac.abort()
+  }, []);
 
  
   const onSignUp = async () => {

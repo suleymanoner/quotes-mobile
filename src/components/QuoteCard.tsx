@@ -63,14 +63,9 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
     }
 
     useEffect(() => {
-        let unmounted = false
-
-        if(!unmounted) {
-            getUser()
-        }
-        return () => {
-            unmounted = true    
-        };
+        const ac = new AbortController();
+        getUser()
+        return () => ac.abort()
     }, [])
 
     return(

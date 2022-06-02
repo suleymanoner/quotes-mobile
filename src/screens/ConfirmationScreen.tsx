@@ -58,15 +58,10 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
 
 
   useEffect(() => {
-    let unmounted = false
-
-    if(!unmounted) {
-      getUserFromStorage()
-      checkActive();
-    }
-    return () => {
-        unmounted = true 
-    };
+    const ac = new AbortController();
+    getUserFromStorage()
+    checkActive();
+    return () => ac.abort()
   });
 
   return (

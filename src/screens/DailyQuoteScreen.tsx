@@ -16,14 +16,9 @@ const _DailyQuoteScreen: React.FC<DailyQuoteScreenProps> = ({postReducer,onGetDa
     const {daily_post} = postReducer
 
     useEffect(() => {
-        let unmounted = false
-
-        if(!unmounted) {
-            onGetDailyPost()
-        }
-        return () => {
-            unmounted = true    
-        };
+        const ac = new AbortController();
+        onGetDailyPost()
+        return () => ac.abort()
     }, [])
 
     return(

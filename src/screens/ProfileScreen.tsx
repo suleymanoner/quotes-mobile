@@ -28,15 +28,10 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
 
 
     useEffect(() => {
-        let unmounted = false
-
-        if(!unmounted) {
-            onGetUsersPosts(user.id)
-            onGetUser(user.id)
-        }
-        return () => {
-            unmounted = true    
-        };
+        const ac = new AbortController();
+        onGetUsersPosts(user.id)
+        onGetUser(user.id)
+        return () => ac.abort()
     }, [users_posts])
 
 

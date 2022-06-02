@@ -50,25 +50,15 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
   }
 
   useEffect(() => {
-    let unmounted = false
-
-    if(!unmounted) {
-      getUser()
-    }
-    return () => {
-        unmounted = true    
-    };
+    const ac = new AbortController();
+    getUser()
+    return () => ac.abort()
   }, [])
 
   useEffect(() => {
-    let unmounted = false
-
-    if(!unmounted) {
-      onGetFeedPosts(storageUserId)
-    }
-    return () => {
-        unmounted = true    
-    };
+    const ac = new AbortController();
+    onGetFeedPosts(storageUserId)
+    return () => ac.abort()
   }, [feed_posts])
 
 

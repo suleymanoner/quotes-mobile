@@ -19,7 +19,6 @@ interface CommentScreenScreenProps {
 
 const _CommentScreen: React.FC<CommentScreenScreenProps> = (props) => {
 
-    
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
     const { post_id } = props.route.params
@@ -45,17 +44,11 @@ const _CommentScreen: React.FC<CommentScreenScreenProps> = (props) => {
         props.route.params = undefined
         navigation.goBack()
     }
- 
 
     useEffect(() => {
-        let unmounted = false
-
-        if(!unmounted) {
-            getComments()
-        }
-        return () => {
-            unmounted = true    
-        };
+        const ac = new AbortController();
+        getComments()
+        return () => ac.abort()
     }, [comments])
 
 

@@ -11,7 +11,6 @@ interface TextFieldProps {
 
 const TextField: React.FC<TextFieldProps> = ({ placeholder, isSecure = false, onTextChange }) => {
 
-
     return(
         <View style={styles.container} >
             <TextInput 

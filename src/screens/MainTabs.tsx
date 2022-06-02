@@ -16,6 +16,7 @@ import { MAIN_COLOR } from '../utils/Config';
 
 const HomeStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
+const SearchStack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 const HomeStackScreen = () => (
@@ -37,6 +38,13 @@ const ProfileStackScreen = () => (
     <ProfileStack.Screen name="UserDetailPage" component={UserDetailScreen} />
     <ProfileStack.Screen name="EditProfilePage" component={EditProfileScreen} />
   </ProfileStack.Navigator>
+);
+
+const SearchStackScreen = () => (
+  <SearchStack.Navigator screenOptions={{headerShown: false}}>
+    <SearchStack.Screen name='SearchPage' component={SearchScreen} />
+    <SearchStack.Screen name='UserDetailPage' component={UserDetailScreen} />
+  </SearchStack.Navigator>
 );
 
 const MainTabScreen = () => (
@@ -68,7 +76,7 @@ const MainTabScreen = () => (
       />
       <Tab.Screen
         name="SearchStack"
-        component={SearchScreen}
+        component={SearchStackScreen}
         options={{
             tabBarLabel: "Search",
             tabBarColor: MAIN_COLOR,

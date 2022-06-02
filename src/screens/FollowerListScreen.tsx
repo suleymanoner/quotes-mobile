@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { BACKGROUND_COLOR, BASE_URL, TEXT_COLOR } from '../utils/Config'
 import {ApplicationState, UserState, UserModel, Response} from '../redux';
 import {connect} from 'react-redux';
-import { UserCard } from '../components/UserCard';
+import UserCard from '../components/UserCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
@@ -53,9 +53,15 @@ const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({route, userRedu
       }
     }
 
+    const onGoUserDetail:Function = (id: number, acc_id: number) => {
+      navigation.navigate('UserDetailPage', {"user_id": id, "acc_id": acc_id})
+    }
+
     useEffect(() => {
+      const ac = new AbortController();
       getFollowers(user_id)
       getFollowings(user_id)
+      return () => ac.abort()
     }, [])
     
     const goBack = () => {
@@ -77,13 +83,15 @@ const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({route, userRedu
         <FlatList 
         data={userFollowers}
         initialNumToRender={3}
-        renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name} id={item.id} acc_id={item.account_id} />}
+        renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name}
+        onTap={() => onGoUserDetail(item.id, item.account_id)} />}
         keyExtractor={(item, index) => String(index)}
         /> :
         <FlatList 
         data={userFollowings}
         initialNumToRender={3}
-        renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name} id={item.id} acc_id={item.account_id} />}
+        renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name}
+        onTap={() => onGoUserDetail(item.id, item.account_id)}/>}
         keyExtractor={(item, index) => String(index)}
         />
       }

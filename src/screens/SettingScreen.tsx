@@ -1,28 +1,28 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {RootStackParams} from '../../App';
 import {ButtonWithIcon} from '../components';
-import {ApplicationState, UserState, onUserSignOut} from '../redux';
+import {ApplicationState, UserState, onUserSignOut, onUserDeleteAccount} from '../redux';
 import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface SettingScreenProps {
   userReducer: UserState;
   onUserSignOut: Function;
+  onUserDeleteAccount: Function;
 }
 
-const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
+const _SettingScreen: React.FC<SettingScreenProps> = ({userReducer, onUserSignOut, onUserDeleteAccount}) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
+
+  const { user } = userReducer
 
   const goBack = () => {
     navigation.goBack();
-  };
-
-  const onTapButton = (txt: string) => {
-    console.log(txt);
   };
 
   const onHandleGoEditProfile = (type: string) => {
@@ -30,6 +30,9 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
   }
 
   const onTapSignOut = async () => {
+    const keys = await AsyncStorage.getAllKeys();
+    await AsyncStorage.multiRemove(keys);
+    
     await onUserSignOut()
     setTimeout(() => {
       navigation.navigate('LoginStack');
@@ -42,7 +45,12 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
       'You are deleting your account!',
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
+        {text: 'OK', onPress: () => {
+          onUserDeleteAccount(user.account_id, user.id)
+          setTimeout(() => {
+            navigation.navigate('LoginStack');
+          }, 500);
+        }},
       ]
     );
   }
@@ -65,38 +73,40 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({onUserSignOut}) => {
         </View>
       </View>
 
-      <ButtonWithIcon
-        btnColor="#7182BD"
-        height={60}
-        width={350}
-        onTap={() => onHandleGoEditProfile("Edit Profile")}
-        title="Edit Profile"
-        txtColor="white"
-      />
-      <ButtonWithIcon
-        btnColor="#7182BD"
-        height={60}
-        width={350}
-        onTap={() => onHandleGoEditProfile("Change Password")}
-        title="Change password"
-        txtColor="white"
-      />
-      <ButtonWithIcon
-        btnColor="#7182BD"
-        height={60}
-        width={350}
-        onTap={() => onTapSignOut()}
-        title="SIGN OUT"
-        txtColor="white"
-      />
-      <ButtonWithIcon
-        btnColor="#9A3833"
-        height={60}
-        width={350}
-        onTap={onTapDeleteAccount}
-        title="DELETE ACCOUNT"
-        txtColor="white"
-      />
+      <ScrollView>
+        <ButtonWithIcon
+          btnColor="#7182BD"
+          height={60}
+          width={350}
+          onTap={() => onHandleGoEditProfile("Edit Profile")}
+          title="Edit Profile"
+          txtColor="white"
+        />
+        <ButtonWithIcon
+          btnColor="#7182BD"
+          height={60}
+          width={350}
+          onTap={() => onHandleGoEditProfile("Change Password")}
+          title="Change password"
+          txtColor="white"
+        />
+        <ButtonWithIcon
+          btnColor="#7182BD"
+          height={60}
+          width={350}
+          onTap={() => onTapSignOut()}
+          title="SIGN OUT"
+          txtColor="white"
+        />
+        <ButtonWithIcon
+          btnColor="#9A3833"
+          height={60}
+          width={350}
+          onTap={onTapDeleteAccount}
+          title="DELETE ACCOUNT"
+          txtColor="white"
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -130,6 +140,6 @@ const mapToStateProps = (state: ApplicationState) => ({
   userReducer: state.userReducer,
 });
 
-const SettingScreen = connect(mapToStateProps, {onUserSignOut})(_SettingScreen);
+const SettingScreen = connect(mapToStateProps, {onUserSignOut,onUserDeleteAccount})(_SettingScreen);
 
 export {SettingScreen};

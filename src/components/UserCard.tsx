@@ -1,26 +1,15 @@
-import React from 'react'
+import React, {memo} from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import { RootStackParams } from '../../App';
-import { useNavigation } from '@react-navigation/native';
 
 interface UserCardProps {
     image: string,
     name: string;
-    id: number;
-    acc_id: number;
+    onTap: Function
 }
 
-const UserCard: React.FC<UserCardProps> = ({image, name, id, acc_id}) => {
-
-    const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
-
-    const onTapUserCard = () => {
-        navigation.navigate('UserDetailPage', {"user_id": id, "acc_id": acc_id})
-    }
-
+const UserCard: React.FC<UserCardProps> = ({image, name, onTap}) => {
     return(
-        <TouchableOpacity onPress={() => onTapUserCard()} >
+        <TouchableOpacity onPress={() => onTap()} >
             <View style={styles.container} >
                 <View style={styles.top_container} >
                     <Image
@@ -71,4 +60,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export {UserCard}
+export default memo(UserCard)

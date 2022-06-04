@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
-import {ApplicationState, UserState, onGetUser, PostState, onGetDailyPost} from '../redux';
+import {ApplicationState, PostState, onGetDailyPost} from '../redux';
 import {connect} from 'react-redux';
 import { BACKGROUND_COLOR, TEXT_COLOR } from '../utils/Config';
 
@@ -92,6 +92,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     postReducer: state.postReducer
 });
   
-const DailyPostScreen = connect(mapToStateProps, {onGetUser, onGetDailyPost})(_DailyQuoteScreen);
+const DailyPostScreen = connect(mapToStateProps, {onGetDailyPost})(_DailyQuoteScreen);
   
 export {DailyPostScreen};

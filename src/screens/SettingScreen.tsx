@@ -35,7 +35,7 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({userReducer, onUserSignOu
     
     await onUserSignOut()
     setTimeout(() => {
-      navigation.navigate('LoginStack');
+      navigation.navigate('LoginPage');
     }, 500);
   };
 

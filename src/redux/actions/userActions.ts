@@ -116,11 +116,7 @@ export const onGetUser = (id: number) => {
       .then(response => {
         if (response.data.status == "error") {
           showToast(response.data.response)
-        } else {
-          AsyncStorage.setItem('user_status', response.data.response.status);
-          AsyncStorage.setItem('user_id', JSON.stringify(response.data.response.id));
-          AsyncStorage.setItem('account_id', JSON.stringify(response.data.response.account_id));
-  
+        } else {  
           dispatch({
             type: 'ON_USER_LOGIN',
             payload: response.data.response,
@@ -218,9 +214,6 @@ export const onUserSignOut = () => {
   return async (dispatch: Dispatch<UserAction>) => {
     try {
 
-      const keys = await AsyncStorage.getAllKeys();
-      await AsyncStorage.multiRemove(keys);
-
       await AsyncStorage.getAllKeys()
         .then(keys => AsyncStorage.multiRemove(keys))
 
@@ -228,17 +221,17 @@ export const onUserSignOut = () => {
       await AsyncStorage.removeItem("user_id");
       await AsyncStorage.removeItem("account_id");
 
-      const user_status = await AsyncStorage.removeItem("user_status");
+      const user_status = await AsyncStorage.getItem("user_status");
       if (user_status !== null){
         AsyncStorage.setItem("user_status", "");
       }
 
-      const user_id = await AsyncStorage.removeItem("user_id");
+      const user_id = await AsyncStorage.getItem("user_id");
       if (user_id !== null){
         AsyncStorage.setItem("user_id", "");
       }
 
-      const account_id = await AsyncStorage.removeItem("account_id");
+      const account_id = await AsyncStorage.getItem("account_id");
       if (account_id !== null){
         AsyncStorage.setItem("account_id", "");
       }

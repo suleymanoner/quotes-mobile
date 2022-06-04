@@ -29,7 +29,6 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   const [passwordAgain, setPasswordAgain] = useState('');
   const [username, setUsername] = useState('');
 
-
   const [storageUser, setStorageUser] = useState<UserModel>()
 
   const getUserFromStorage = async () => {
@@ -58,6 +57,8 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
       await AsyncStorage.getItem('user_status').then(status => {
         if(status === "ACTIVE") {
           navigation.navigate('BottomTabStack')
+        } else if(status == "PENDING") {
+          navigation.navigate("ConfirmationPage")
         }
       }).catch(err => console.log(err))
     } catch (error) {
@@ -84,18 +85,11 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
       }
     }
     return () => ac.abort()
-  })
+  }, [storageUser])
 
   useEffect(() => {
     const ac = new AbortController();
     getStatus()
-    if(user.id !== undefined) {
-      if(user.status == "ACTIVE") {
-          navigation.navigate('BottomTabStack')
-      } else {
-          navigation.navigate("ConfirmationPage")
-      }
-    }
     return () => ac.abort()
   });
 
@@ -112,7 +106,6 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     }
   }
   
-
   const onLogin = async () => {
     if (email.length == 0 || password.length == 0) {
       showError('Please fill all blanks!')

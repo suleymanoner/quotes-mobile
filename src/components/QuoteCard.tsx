@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from 'react'
 import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import { MAIN_COLOR, BACKGROUND_COLOR, BASE_URL} from '../utils/Config';
-import { PostModel, UserModel, UserState, Response, onLikePost } from '../redux'
+import { PostModel, UserModel, UserState, Response, onLikePost, onDeletePost } from '../redux'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment, { now } from 'moment';
 import {ApplicationState} from '../redux';
@@ -10,6 +10,7 @@ import axios from 'axios'
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import { RootStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
+import { showToast } from '../utils/showToast';
 
 interface QuoteCardProps {
     userReducer: UserState;
@@ -18,15 +19,18 @@ interface QuoteCardProps {
     userId: number,
     isImage: string,
     onLikePost: Function,
+    onDeletePost: Function;
 }
 
-const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isImage, onLikePost }) => {
+const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isImage, onLikePost, onDeletePost }) => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
 
     const date = moment(post.created_at).fromNow();
 
     const [postUser, setPostUser] = useState<UserModel>()
+    const [checkIfProfileUser, setCheckIfProfileUser] = useState(false)
+    const [deletePost, setDeletePost] = useState(false)
 
     const { user } = userReducer
 
@@ -34,6 +38,7 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
     const getUser = async () => {
         
         if(userId == user.id) {
+            setCheckIfProfileUser(true)
             setPostUser(user)
         } else {
             await axios.get<Response & UserModel>(`${BASE_URL}users/${userId}`)
@@ -62,23 +67,61 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({ userReducer, post, userId, isIma
         }
     }
 
+    const checkPostUser = () => {
+        if(postUser?.id == user.id) {
+            setDeletePost(true)
+        }
+    }
+
+    const onTapDeletePost = async () => {
+        await onDeletePost(post.id, user.id)
+        showToast("Post deleted!")
+        navigation.navigate("HomePage")
+    }
+
     useEffect(() => {
         const ac = new AbortController();
         getUser()
         return () => ac.abort()
     }, [])
 
+    useEffect(() => {
+        checkPostUser()
+    })
+
     return(
         <View style={styles.container} >
             <View style={styles.top_container} >
-                <TouchableOpacity onPress={() => onTapProfilePhoto(userId)} >
-                    <Image
-                    source={{uri: postUser?.profile_photo}}
-                    style={styles.image} />
-                </TouchableOpacity>
-                
-                <Text style={styles.name} >{postUser?.name}</Text>
-                <Text style={styles.username} > • {date}</Text>
+                {
+                    checkIfProfileUser ?
+                    <>
+                        <TouchableOpacity onPress={() => onTapProfilePhoto(userId)} >
+                            <Image
+                            source={{uri: user.profile_photo}}
+                            style={styles.image} />
+                        </TouchableOpacity>
+                        <Text style={styles.name} >{user.name}</Text>
+                        <Text style={styles.username} > • {date}</Text>
+                    </>
+                    : 
+                    <>
+                        <TouchableOpacity onPress={() => onTapProfilePhoto(userId)} >
+                            <Image
+                            source={{uri: postUser?.profile_photo}}
+                            style={styles.image} />
+                        </TouchableOpacity>
+                        <Text style={styles.name} >{postUser?.name}</Text>
+                        <Text style={styles.username} > • {date}</Text>
+                    </>
+                }
+                {
+                    deletePost ? 
+                    <View style={styles.delete_post_container}>
+                        <TouchableOpacity onPress={() => onTapDeletePost()} style={styles.delete_post_icon} >
+                            <Icon name='delete' color="#00344F" size={25}/>
+                        </TouchableOpacity>
+                    </View> : <></>
+                }
             </View>
             <View style={styles.post_container} >
                 <Text style={styles.post_text} >{post.body}</Text>
@@ -193,6 +236,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 10,
         aspectRatio: 1,
+    },
+    delete_post_container: {
+        flex: 1,
+        alignItems: "flex-end",
+    },
+    delete_post_icon: {
+        marginTop: 10
     }
 })
 
@@ -202,6 +252,6 @@ const mapToStateProps = (state: ApplicationState) => ({
     postReducer: state.postReducer,
 });
   
-const QuoteCard = connect(mapToStateProps, {onLikePost})(_QuoteCard);
+const QuoteCard = connect(mapToStateProps, {onLikePost,onDeletePost})(_QuoteCard);
   
 export default memo(QuoteCard)

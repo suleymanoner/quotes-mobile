@@ -44,6 +44,7 @@ const SearchStackScreen = () => (
   <SearchStack.Navigator screenOptions={{headerShown: false}}>
     <SearchStack.Screen name='SearchPage' component={SearchScreen} />
     <SearchStack.Screen name='UserDetailPage' component={UserDetailScreen} />
+    <SearchStack.Screen name="FollowerListPage" component={FollowerListScreen} />
   </SearchStack.Navigator>
 );
 

@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {LogBox} from 'react-native';
 import {LoginScreen} from './src/screens/LoginScreen';
 import {ConfirmationScreen} from './src/screens/ConfirmationScreen';
+import { ForgotPasswordScreen } from './src/screens/ForgotPasswordScreen';
 import {Provider} from 'react-redux';
 import {store} from './src/redux';
 import SplashScreen from 'react-native-splash-screen';
@@ -27,6 +28,7 @@ const LoginStackScreens = () => (
   <LoginStack.Navigator screenOptions={{headerShown: false}}>
     <LoginStack.Screen name="LoginPage" component={LoginScreen} />
     <LoginStack.Screen name="ConfirmationPage" component={ConfirmationScreen} />
+    <LoginStack.Screen name="ForgotPasswordPage" component={ForgotPasswordScreen} />
   </LoginStack.Navigator>
 );
 

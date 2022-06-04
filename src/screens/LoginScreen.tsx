@@ -17,7 +17,6 @@ interface LoginScreenProps {
   onUserSignUp: Function;
 }
 
-
 const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, onUserSignUp }) => {
   
   const {user, error} = userReducer;
@@ -29,6 +28,7 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   const [surname, setSurname] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [username, setUsername] = useState('');
+
 
   const [storageUser, setStorageUser] = useState<UserModel>()
 
@@ -79,13 +79,12 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     if(storageUser?.id !== undefined) {
       if(storageUser.status == "ACTIVE") {
           navigation.navigate('BottomTabStack')
-          console.log("asdasd");
       } else {
           navigation.navigate("ConfirmationPage")
       }
     }
     return () => ac.abort()
-  }, [])
+  })
 
   useEffect(() => {
     const ac = new AbortController();
@@ -98,7 +97,7 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
       }
     }
     return () => ac.abort()
-  }, []);
+  });
 
  
   const onSignUp = async () => {
@@ -122,11 +121,14 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
     }
   }
 
+  const onTapForgotPassword = () => {
+    navigation.navigate('ForgotPasswordPage')
+  }
 
   const onTapGoNextScreen = (where: string) => {
     if (where == 'signup') {
       setIsSignUp(true);
-    } else {
+    } else if(where == "signin") {
       setIsSignUp(false);
     }
   };
@@ -141,32 +143,37 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
           />
           <Text style={styles.title}>"Quotes"</Text>
         </View>
+          <View style={styles.input_container}>
+            <TextField placeholder="email" onTextChange={setEmail} value={email} />
+            <TextField
+              placeholder="password"
+              onTextChange={setPassword}
+              isSecure={true}
+              value={password}
+            />
+            <ButtonWithIcon
+              onTap={onLogin}
+              title="Sign In"
+              width={350}
+              height={50}
+              iconName="login"
+              iconColor={MAIN_COLOR}
+              iconSize={30}
+              btnColor="white"
+              txtColor={MAIN_COLOR}
+            />
 
-        <View style={styles.input_container}>
-          <TextField placeholder="email" onTextChange={setEmail} />
-          <TextField
-            placeholder="password"
-            onTextChange={setPassword}
-            isSecure={true}
-          />
-          <ButtonWithIcon
-            onTap={onLogin}
-            title="Sign In"
-            width={350}
-            height={50}
-            iconName="login"
-            iconColor={MAIN_COLOR}
-            iconSize={30}
-            btnColor="white"
-            txtColor={MAIN_COLOR}
-          />
-
-          <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
-            <Text style={styles.link_text}>
-              You don't have account yet? Click for Sign-up.
-            </Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
+              <Text style={styles.link_text}>
+                You don't have account yet? Click for Sign-up.
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onTapForgotPassword()}>
+              <Text style={[styles.link_text, {marginTop: 5}]}>
+                Forgot password?
+              </Text>
+            </TouchableOpacity>
+          </View>
       </View>
     );
   } else {
@@ -174,19 +181,21 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
       <View style={styles.container}>
         <Text style={styles.title}>"Sign Up"</Text>
 
-        <TextField placeholder="Name" onTextChange={setName} />
-        <TextField placeholder="Surname" onTextChange={setSurname} />
-        <TextField placeholder="Email" onTextChange={setEmail} />
-        <TextField placeholder="Username" onTextChange={setUsername} />
+        <TextField placeholder="Name" onTextChange={setName} value={name} />
+        <TextField placeholder="Surname" onTextChange={setSurname} value={surname} />
+        <TextField placeholder="Email" onTextChange={setEmail} value={email} />
+        <TextField placeholder="Username" onTextChange={setUsername}  value={username} />
         <TextField
           placeholder="Password"
           onTextChange={setPassword}
           isSecure={true}
+          value={password}
         />
         <TextField
           placeholder="Password Again"
           onTextChange={setPasswordAgain}
           isSecure={true}
+          value={passwordAgain}
         />
 
         <ButtonWithIcon

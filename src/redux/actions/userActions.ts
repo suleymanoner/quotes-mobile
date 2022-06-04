@@ -443,3 +443,17 @@ export const onDeleteComment = (id: number) => {
     }
   };
 };
+
+export const onForgotPassword = (email: string) => {
+  return async (dispatch: Dispatch<UserAction>) => {
+    try {
+      await axios.post<Response>(`${BASE_URL}users/forgot`, {
+        email
+      }).then(response => {
+        showToast(response.data.response)
+      }).catch(err => console.log(err));
+    } catch (error) {
+      showToast("Error : " + error)
+    }
+  };
+};

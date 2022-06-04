@@ -6,10 +6,11 @@ interface TextFieldProps {
     placeholder: string,
     isSecure?: boolean,
     onTextChange: Function,
+    value: string
 }
 
 
-const TextField: React.FC<TextFieldProps> = ({ placeholder, isSecure = false, onTextChange }) => {
+const TextField: React.FC<TextFieldProps> = ({ placeholder, isSecure = false, onTextChange, value }) => {
 
     return(
         <View style={styles.container} >
@@ -17,6 +18,7 @@ const TextField: React.FC<TextFieldProps> = ({ placeholder, isSecure = false, on
             placeholder={placeholder}
             placeholderTextColor="white"
             autoCapitalize='none'
+            value={value}
             secureTextEntry={isSecure}
             onChangeText={(text) => onTextChange(text)}
             style={styles.textField} />

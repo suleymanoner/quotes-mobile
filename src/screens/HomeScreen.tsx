@@ -57,7 +57,7 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
 
   useEffect(() => {
     const ac = new AbortController();
-    onGetFeedPosts(storageUserId)
+    onGetFeedPosts(user.id)
     return () => ac.abort()
   }, [feed_posts])
 
@@ -86,9 +86,10 @@ const _HomeScreen: React.FC<HomeScreenProps> = ({userReducer, postReducer, onGet
 
       <FlatList 
         data={feed_posts}
-        initialNumToRender={3}
+        extraData={feed_posts}
+        initialNumToRender={5}
         renderItem={({item}) => <QuoteCard post={item} userId={item.user_id} isImage={item.image} onTap={() => {}} />}
-        keyExtractor={(item, index) => String(index)}
+        keyExtractor={(item, index) => String(item.id)}
       />
       
     </View>

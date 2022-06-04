@@ -85,11 +85,11 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({userReducer, onUs
                     if(response.status !== 201) {
                         console.log("Failed to upload!");
                     }
+                    onUserEditProfile(user.id, name, surname, bio, response.headers.Location)
                 }).catch((error) => {
                     console.log(error);
                 })
             }
-            await onUserEditProfile(user.id, name, surname, bio, photo)
         } else if(type == "Change Password") {
             await onUserChangePassword(user.id, oldPassword, newPassword, newPasswordAgain)
         }

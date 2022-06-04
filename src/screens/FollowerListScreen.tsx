@@ -85,14 +85,14 @@ const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({route, userRedu
         initialNumToRender={3}
         renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name}
         onTap={() => onGoUserDetail(item.id, item.account_id)} />}
-        keyExtractor={(item, index) => String(index)}
+        keyExtractor={(item, index) => String(item.id)}
         /> :
         <FlatList 
         data={userFollowings}
         initialNumToRender={3}
         renderItem={({item}) => <UserCard image={item.profile_photo!} name={item.name}
         onTap={() => onGoUserDetail(item.id, item.account_id)}/>}
-        keyExtractor={(item, index) => String(index)}
+        keyExtractor={(item, index) => String(item.id)}
         />
       }
     </View>

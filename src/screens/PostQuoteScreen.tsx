@@ -17,6 +17,7 @@ import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker'
 import { AWS3_ACCESS_KEY, AWS3_SECRET_KEY } from '../utils/Config'
 import { RNS3 } from 'react-native-aws3'
+import { showToast } from '../utils/showToast';
  
 interface PostQuoteScreenProps {
     userReducer: UserState;
@@ -49,38 +50,42 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
 
     let randomName = (Math.random() + 1).toString(36).substring(2);
 
-    if(photo) {
-      const file = {
-        uri: photo,
-        name: randomName,
-        type: 'image/jpeg'
-      }
-  
-      const config = {
-        keyPrefix: 's3/',
-        bucket: 'quotes-photo-bucket',
-        region: 'eu-central-1',
-        accessKey: AWS3_ACCESS_KEY,
-        secretKey: AWS3_SECRET_KEY,
-        successActionStatus: 201,
-      }
-  
-      await RNS3.put(file, config)
-      .then((response) => {
-        if(response.status !== 201) {
-          console.log("Failed to upload!");
-        }
-        console.log(response.headers.Location);
-        console.log(response.status)
-        onPostQuote(quote, qFrom, response.headers.Location, user.id)
-      }).catch((error) => {
-        console.log(error);
-      })
+    if(qFrom?.length == 0 || quote?.length == 0) {
+      showToast('Please fill all blanks!')
     } else {
-      await onPostQuote(quote, qFrom, null, user.id)
-    }
 
-    goBack()
+      if(photo) {
+        const file = {
+          uri: photo,
+          name: randomName,
+          type: 'image/jpeg'
+        }
+    
+        const config = {
+          keyPrefix: 's3/',
+          bucket: 'quotes-photo-bucket',
+          region: 'eu-central-1',
+          accessKey: AWS3_ACCESS_KEY,
+          secretKey: AWS3_SECRET_KEY,
+          successActionStatus: 201,
+        }
+    
+        await RNS3.put(file, config)
+        .then((response) => {
+          if(response.status !== 201) {
+            console.log("Failed to upload!");
+          }
+          console.log(response.headers.Location);
+          console.log(response.status)
+          onPostQuote(quote, qFrom, response.headers.Location, user.id)
+        }).catch((error) => {
+          console.log(error);
+        })
+      } else {
+        await onPostQuote(quote, qFrom, null, user.id)
+      }
+      goBack()
+    }
   };
 
   const chooseFromLibrary = () => {
@@ -100,18 +105,6 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
       console.log(error);
     }
   }
-
-  /**
-   * <View style={{width: '80%',
-              alignItems: 'center',
-              justifyContent: 'center', 
-              borderRadius: 10,
-              aspectRatio: 1,
-              marginLeft: 15, borderColor: "black", borderWidth: 2}}>
-            <Text style={{fontSize: 30, color: "black", fontFamily: 'Roboto-Regular',}} >Add Photo</Text>
-          </View>
-   */
-
 
   return (
     <View style={styles.container}>
@@ -167,8 +160,6 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
             />
           }
           </View>
-
-        
 
         <View style={styles.bottom_container}>
           <TouchableOpacity style={{marginLeft: 10}} onPress={() => chooseFromLibrary()}>

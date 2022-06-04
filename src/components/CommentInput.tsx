@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, Image, TextInput } from 'react-native'
 import { PostModel, UserModel, ErrorModel, CommentModel } from '../redux'
 import { BACKGROUND_COLOR, BASE_URL, MAIN_COLOR } from '../utils/Config'
@@ -27,7 +27,6 @@ const _CommentInput: React.FC<CommentInputProps> = ({user, acc_name, post_id, on
     const onSendComment = async () => {
         await onMakeComment(comm, post_id, user.id )
         showToast("Comment sent!")
-        navigation.goBack()
     }
 
     return(
@@ -44,6 +43,7 @@ const _CommentInput: React.FC<CommentInputProps> = ({user, acc_name, post_id, on
                 <TextInput 
                 placeholder="Enter comment.."
                 autoCapitalize='none'
+                value={comm}
                 onChangeText={(text) => setComm(text)}
                 style={styles.textField} />
             </View>

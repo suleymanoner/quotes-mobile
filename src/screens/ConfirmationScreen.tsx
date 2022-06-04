@@ -30,39 +30,35 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
       const id = await AsyncStorage.getItem('user_id')
 
       if(id !== undefined) {
-        if(id) {
           await axios.get<Response & UserModel>(`${BASE_URL}users/${id}`)
           .then(response => {
             if(response.data.response) {
               setStorageUser(response.data.response)
+              console.log(response.data.response);
             }
           });
-        }
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  const checkActive = async () => {
-    try {
-      if (storageUser?.status == 'ACTIVE') {
-        navigation.navigate('BottomTabStack');
-      } else {
-        console.log('not active yet!!!');
-      }
-    } catch (error) {
-      console.log(error);
+  const checkActive = () => {
+    if (storageUser?.status == 'ACTIVE') {
+      navigation.navigate('BottomTabStack');
+    } else {
+      console.log('not active yet!!!');
     }
   };
 
 
   useEffect(() => {
-    const ac = new AbortController();
     getUserFromStorage()
-    checkActive();
-    return () => ac.abort()
   });
+
+  useEffect(() => {
+    checkActive()
+  })
 
   return (
     <View style={styles.container}>

@@ -68,7 +68,8 @@ const _CommentScreen: React.FC<CommentScreenScreenProps> = (props) => {
                 <FlatList
                     data={comments}
                     initialNumToRender={6}
-                    renderItem={({item}) => <CommentCard comment={item} userId={item.user_id} />} 
+                    renderItem={({item}) => <CommentCard comment={item} userId={item.user_id} />}
+                    keyExtractor={(item, index) => String(item.id)} 
                 /> : <></>
             }
 

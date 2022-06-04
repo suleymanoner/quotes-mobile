@@ -97,6 +97,7 @@ const _ProfileScreen: React.FC<ProfileScreenProps> = ({userReducer, postReducer,
                 data={users_posts}
                 initialNumToRender={3}
                 renderItem={({item}) => <QuoteCard post={item} userId={user.id} isImage={item.image} onTap={() => {}} />}
+                keyExtractor={(item, index) => String(item.id)}
                 /> : noPostComponent()
             }
         </View>

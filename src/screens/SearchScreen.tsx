@@ -57,7 +57,7 @@ const _SearchScreen: React.FC<SearchScreenProps> = ({userReducer, onGetAllUsers}
               ? allUsers.filter(item => {
                   return item.name.toLocaleLowerCase().includes(txt);
                 })
-              : allUsers
+              : []
           }
           renderItem={({item}) => (
             <UserCard

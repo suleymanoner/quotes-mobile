@@ -176,6 +176,7 @@ const _UserDetailScreen: React.FC<UserDetailScreenProps> = ({userReducer, onUser
                 data={posts}
                 initialNumToRender={3}
                 renderItem={({item}) => <QuoteCard post={item} userId={user_id} isImage={item.image} onTap={() => {}} />}
+                keyExtractor={(item, index) => String(item.id)}
                 /> : noPostComponent()
             }
         </View>

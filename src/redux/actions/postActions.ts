@@ -33,7 +33,7 @@ export interface PostErrorAction {
 export type PostAction = PostErrorAction | GetUsersPosts | GetPostsAction | GetDailyPostAction | UserGetIndividualPostAction;
 
 
-export const onGetFeedPosts = (id: string) => {
+export const onGetFeedPosts = (id: number) => {
     return async (dispatch: Dispatch<PostAction>) => {
       try {
   
@@ -135,7 +135,7 @@ export const onGetUsersPosts = (id: string) => {
     }
   };
 };
-
+    
 export const onPostQuote = (body: string, post_from: string, image: string|null, user_id: number) => {
   return async (dispatch: Dispatch<PostAction>) => {
     try {
@@ -147,8 +147,28 @@ export const onPostQuote = (body: string, post_from: string, image: string|null,
         user_id
       }).then(response => {
         console.log(response.data)
+        onGetFeedPosts(user_id)
       }).catch(err => console.log(err));
       
+    } catch (error) {
+      console.log(error)
+      dispatch({
+        type: 'ON_POST_ERROR',
+        payload: {"message": "Error : " + error},
+      });
+    }
+  };
+};
+
+
+export const onDeletePost = (id: number, user_id: number) => {
+  return async (dispatch: Dispatch<PostAction>) => {
+    try {
+      await axios.delete(`${BASE_URL}posts/${id}`, {
+      }).then(response => {
+        console.log(response.data)
+        onGetFeedPosts(user_id)
+      }).catch(err => console.log(err));
     } catch (error) {
       console.log(error)
       dispatch({

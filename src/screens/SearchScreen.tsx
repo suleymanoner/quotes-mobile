@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TextInput, FlatList, TouchableWithoutFeedback } from 'react-native';
+import {View, Text, StyleSheet, TextInput, FlatList} from 'react-native';
 import {ApplicationState, UserState, onGetAllUsers} from '../redux';
 import {connect} from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import { RootStackParams } from '../../App';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import {RootStackParams} from '../../App';
 import UserCard from '../components/UserCard';
 
 interface SearchScreenProps {
@@ -12,32 +12,30 @@ interface SearchScreenProps {
   onGetAllUsers: Function;
 }
 
-const _SearchScreen: React.FC<SearchScreenProps> = ({userReducer, onGetAllUsers}) => {
-
-  const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
-
-  const { allUsers } = userReducer
-
+const _SearchScreen: React.FC<SearchScreenProps> = ({
+  userReducer,
+  onGetAllUsers,
+}) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
+  const {user, allUsers} = userReducer;
   const [isEditing, setIsEditing] = useState(false);
   const [txt, setTxt] = useState('');
 
-  const onGoUserDetail:Function = (id: number, acc_id: number) => {
-    navigation.navigate('UserDetailPage', {"user_id": id, "acc_id": acc_id})
-  }
+  const onGoUserDetail: Function = (id: number, acc_id: number) => {
+    navigation.navigate('UserDetailPage', {user_id: id, acc_id: acc_id});
+  };
 
   useEffect(() => {
     const ac = new AbortController();
-    onGetAllUsers()
-    return () => ac.abort()
-  }, [])
-  
- 
+    onGetAllUsers(user.id);
+    return () => ac.abort();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.top_container}>
         <Text style={styles.top_container_title}>"Search"</Text>
       </View>
-
       <View style={styles.text_field_container}>
         <TextInput
           placeholder="Enter username.."
@@ -47,17 +45,16 @@ const _SearchScreen: React.FC<SearchScreenProps> = ({userReducer, onGetAllUsers}
           style={styles.textField}
         />
       </View>
-
       {isEditing ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           initialNumToRender={10}
           data={
             isEditing
-              ? allUsers.filter(item => {
+              ? Object.values(allUsers).filter(item => {
                   return item.name.toLocaleLowerCase().includes(txt);
                 })
-              : []
+              : allUsers
           }
           renderItem={({item}) => (
             <UserCard
@@ -71,31 +68,9 @@ const _SearchScreen: React.FC<SearchScreenProps> = ({userReducer, onGetAllUsers}
       ) : (
         <></>
       )}
-
     </View>
   );
 };
-
-
-/**
- * 
- * {isEditing ? (
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={}
-          renderItem={({item}) => (
-            <UserCard
-              image={item.image}
-              name={item.name}
-              username={item.username}
-            />
-          )}
-          keyExtractor={item => `${item.name}`}
-        />
-      ) : (
-        <></>
-      )}
- */
 
 const styles = StyleSheet.create({
   container: {

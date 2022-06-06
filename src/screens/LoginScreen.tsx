@@ -1,15 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, Dimensions, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {BASE_URL, MAIN_COLOR} from '../utils/Config';
 import {TextField, ButtonWithIcon} from '../components';
-import { UserModel, UserState, ApplicationState, onUserLogin, onUserSignUp, Response } from '../redux';
-import { useNavigation } from '@react-navigation/native';
+import {
+  UserModel,
+  UserState,
+  ApplicationState,
+  onUserLogin,
+  onUserSignUp,
+  Response,
+} from '../redux';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import { RootStackParams } from '../../App';
+import {StackNavigationProp} from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import {RootStackParams} from '../../App';
 import axios from 'axios';
-import { showToast } from '../utils/showToast';
+import {showToast} from '../utils/showToast';
 
 interface LoginScreenProps {
   userReducer: UserState;
@@ -17,10 +24,13 @@ interface LoginScreenProps {
   onUserSignUp: Function;
 }
 
-const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, onUserSignUp }) => {
-  
+const _LoginScreen: React.FC<LoginScreenProps> = ({
+  userReducer,
+  onUserLogin,
+  onUserSignUp,
+}) => {
   const {user, error} = userReducer;
-  const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
+  const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,100 +38,89 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
   const [surname, setSurname] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [username, setUsername] = useState('');
-
-  const [storageUser, setStorageUser] = useState<UserModel>()
+  const [storageUser, setStorageUser] = useState<UserModel>();
 
   const getUserFromStorage = async () => {
     try {
-      const id = await AsyncStorage.getItem('user_id')
+      const id = await AsyncStorage.getItem('user_id');
 
-      if(id !== null) {
-        if(id) {
-          await axios.get<Response & UserModel>(`${BASE_URL}users/${id}`)
-          .then(response => {
-            if(response.data.response) {
-              setStorageUser(response.data.response)
-            }
-          }).catch(err => console.log(err));
+      if (id !== null) {
+        if (id) {
+          await axios
+            .get<Response & UserModel>(`${BASE_URL}users/${id}`)
+            .then(response => {
+              if (response.data.response) {
+                setStorageUser(response.data.response);
+              }
+            })
+            .catch(err => console.log(err));
         }
       }
-
     } catch (error) {
       console.log(error);
     }
-  }
-
-  
-  const getStatus = async () => {
-    try {
-      await AsyncStorage.getItem('user_status').then(status => {
-        if(status === "ACTIVE") {
-          navigation.navigate('BottomTabStack')
-        } else if(status == "PENDING") {
-          navigation.navigate("ConfirmationPage")
-        }
-      }).catch(err => console.log(err))
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  };
 
   const showError = (errorMsg?: string) => {
-    if(error.message) {
-      showToast(error.message)
-    } else if(errorMsg) {
-      showToast(errorMsg)
+    if (error.message) {
+      showToast(error.message);
+    } else if (errorMsg) {
+      showToast(errorMsg);
     }
-  }
+  };
 
   useEffect(() => {
     const ac = new AbortController();
-    getUserFromStorage()
-    if(storageUser?.id !== undefined) {
-      if(storageUser.status == "ACTIVE") {
-          navigation.navigate('BottomTabStack')
-      } else {
-          navigation.navigate("ConfirmationPage")
-      }
-    }
-    return () => ac.abort()
-  }, [storageUser])
-
-  useEffect(() => {
-    const ac = new AbortController();
-    getStatus()
-    return () => ac.abort()
+    getUserFromStorage();
+    return () => ac.abort();
   });
 
- 
+  useEffect(() => {
+    const ac = new AbortController();
+    if (storageUser?.id !== undefined) {
+      if (storageUser.status == 'ACTIVE') {
+        navigation.navigate('BottomTabStack');
+      } else {
+        navigation.navigate('ConfirmationPage');
+      }
+    }
+    return () => ac.abort();
+  }, [storageUser]);
+
   const onSignUp = async () => {
-    if (email.length == 0 || password.length == 0 || name.length == 0 || surname.length == 0 || username.length == 0) {
-      showError('Please fill all blanks!')
+    if (
+      email.length == 0 ||
+      password.length == 0 ||
+      name.length == 0 ||
+      surname.length == 0 ||
+      username.length == 0
+    ) {
+      showError('Please fill all blanks!');
     } else {
       if (password == passwordAgain) {
         await onUserSignUp(name, surname, email, password, username);
       } else {
-        showError('Your passwords not matched!')
+        showError('Your passwords not matched!');
       }
     }
-  }
-  
+  };
+
   const onLogin = async () => {
     if (email.length == 0 || password.length == 0) {
-      showError('Please fill all blanks!')
+      showError('Please fill all blanks!');
     } else {
-      await onUserLogin(email, password)
+      await onUserLogin(email, password);
     }
-  }
+  };
 
   const onTapForgotPassword = () => {
-    navigation.navigate('ForgotPasswordPage')
-  }
+    navigation.navigate('ForgotPasswordPage');
+  };
 
   const onTapGoNextScreen = (where: string) => {
     if (where == 'signup') {
       setIsSignUp(true);
-    } else if(where == "signin") {
+    } else if (where == 'signin') {
       setIsSignUp(false);
     }
   };
@@ -136,48 +135,58 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
           />
           <Text style={styles.title}>"Quotes"</Text>
         </View>
-          <View style={styles.input_container}>
-            <TextField placeholder="email" onTextChange={setEmail} value={email} />
-            <TextField
-              placeholder="password"
-              onTextChange={setPassword}
-              isSecure={true}
-              value={password}
-            />
-            <ButtonWithIcon
-              onTap={onLogin}
-              title="Sign In"
-              width={350}
-              height={50}
-              iconName="login"
-              iconColor={MAIN_COLOR}
-              iconSize={30}
-              btnColor="white"
-              txtColor={MAIN_COLOR}
-            />
-
-            <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
-              <Text style={styles.link_text}>
-                You don't have account yet? Click for Sign-up.
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => onTapForgotPassword()}>
-              <Text style={[styles.link_text, {marginTop: 5}]}>
-                Forgot password?
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.input_container}>
+          <TextField
+            placeholder="email"
+            onTextChange={setEmail}
+            value={email}
+          />
+          <TextField
+            placeholder="password"
+            onTextChange={setPassword}
+            isSecure={true}
+            value={password}
+          />
+          <ButtonWithIcon
+            onTap={onLogin}
+            title="Sign In"
+            width={350}
+            height={50}
+            iconName="login"
+            iconColor={MAIN_COLOR}
+            iconSize={30}
+            btnColor="white"
+            txtColor={MAIN_COLOR}
+          />
+          <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
+            <Text style={styles.link_text}>
+              You don't have account yet? Click for Sign-up.
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => onTapForgotPassword()}>
+            <Text style={[styles.link_text, {marginTop: 5}]}>
+              Forgot password?
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   } else {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>"Sign Up"</Text>
-
         <TextField placeholder="Name" onTextChange={setName} value={name} />
-        <TextField placeholder="Surname" onTextChange={setSurname} value={surname} />
+        <TextField
+          placeholder="Surname"
+          onTextChange={setSurname}
+          value={surname}
+        />
         <TextField placeholder="Email" onTextChange={setEmail} value={email} />
-        <TextField placeholder="Username" onTextChange={setUsername}  value={username} />
+        <TextField
+          placeholder="Username"
+          onTextChange={setUsername}
+          value={username}
+        />
         <TextField
           placeholder="Password"
           onTextChange={setPassword}
@@ -190,19 +199,17 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({ userReducer, onUserLogin, on
           isSecure={true}
           value={passwordAgain}
         />
-
         <ButtonWithIcon
           onTap={onSignUp}
           title="Sign Up"
           width={350}
           height={50}
           iconName="account-plus"
-          iconColor= {MAIN_COLOR}
+          iconColor={MAIN_COLOR}
           iconSize={30}
           btnColor="white"
           txtColor={MAIN_COLOR}
         />
-
         <TouchableOpacity onPress={() => onTapGoNextScreen('signin')}>
           <Text style={styles.link_text}>
             Do you have account? Click for Sign-in.
@@ -217,7 +224,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   userReducer: state.userReducer,
 });
 
-const LoginScreen = connect(mapStateToProps, {onUserLogin, onUserSignUp})(_LoginScreen);
+const LoginScreen = connect(mapStateToProps, {onUserLogin, onUserSignUp})(
+  _LoginScreen,
+);
 
 export {LoginScreen};
 

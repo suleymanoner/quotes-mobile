@@ -1,47 +1,35 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {ApplicationState, UserState, Response, onGetUser, UserModel} from '../redux';
+import {Response, UserModel} from '../redux';
 import {BASE_URL, MAIN_COLOR} from '../utils/Config';
-import {connect} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LottieView from "lottie-react-native";
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
-import { RootStackParams } from '../../App';
+import LottieView from 'lottie-react-native';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import {RootStackParams} from '../../App';
 import axios from 'axios';
 
-interface ConfirmationScreenProps {
-  navigation: {getParam: Function};
-  userReducer: UserState;
-  onGetUser: Function;
-}
-
-const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, onGetUser}) => {
-
-  const navigation = useNavigation<StackNavigationProp<RootStackParams>>()
-
-  const {user} = userReducer;
-
-  const [storageUser, setStorageUser] = useState<UserModel>()
-
+const ConfirmationScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
+  const [storageUser, setStorageUser] = useState<UserModel>();
 
   const getUserFromStorage = async () => {
     try {
-      const id = await AsyncStorage.getItem('user_id')
+      const id = await AsyncStorage.getItem('user_id');
 
-      if(id !== undefined) {
-          await axios.get<Response & UserModel>(`${BASE_URL}users/${id}`)
+      if (id !== undefined) {
+        await axios
+          .get<Response & UserModel>(`${BASE_URL}users/${id}`)
           .then(response => {
-            if(response.data.response) {
-              setStorageUser(response.data.response)
-              console.log(response.data.response);
+            if (response.data.response) {
+              setStorageUser(response.data.response);
             }
           });
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const checkActive = () => {
     if (storageUser?.status == 'ACTIVE') {
@@ -51,34 +39,27 @@ const _ConfirmationScreen: React.FC<ConfirmationScreenProps> = ({userReducer, on
     }
   };
 
-
   useEffect(() => {
-    getUserFromStorage()
+    getUserFromStorage();
   });
 
   useEffect(() => {
-    checkActive()
-  })
+    checkActive();
+  });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>"Please check your email and confirm your account!"</Text>
-      <LottieView 
-          source={require('../assets/images/loading.json')}
-          autoPlay
-          loop
+      <Text style={styles.title}>
+        "Please check your email and confirm your account!"
+      </Text>
+      <LottieView
+        source={require('../assets/images/loading.json')}
+        autoPlay
+        loop
       />
     </View>
   );
 };
-
-const mapToStateProps = (state: ApplicationState) => ({
-  userReducer: state.userReducer,
-});
-
-const ConfirmationScreen = connect(mapToStateProps, {onGetUser})(
-  _ConfirmationScreen,
-);
 
 export {ConfirmationScreen};
 
@@ -95,6 +76,6 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
 });

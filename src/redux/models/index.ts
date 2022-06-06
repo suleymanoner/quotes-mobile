@@ -8,13 +8,13 @@ export interface UserState {
   account: AccountModel;
   error: ErrorModel;
   post: PostModel;
-  followers: [UserModel],
-  followings: [UserModel],
-  allUsers: [UserModel],
+  followers: [UserModel];
+  followings: [UserModel];
+  allUsers: [UserModel];
 }
 
 export interface ErrorModel {
-  message: string
+  message: string;
 }
 
 export interface AccountModel {
@@ -52,11 +52,11 @@ export interface UserModel {
 }
 
 export interface PostState {
-  users_posts: [PostModel],
-  feed_posts: [PostModel],
-  liked_posts: [PostModel],
-  indv_post: PostModel,
-  daily_post: PostModel
+  users_posts: [PostModel];
+  feed_posts: [PostModel];
+  liked_posts: [PostModel];
+  indv_post: PostModel;
+  daily_post: PostModel;
 }
 
 export interface PostModel {

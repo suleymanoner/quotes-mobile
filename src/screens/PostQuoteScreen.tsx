@@ -14,53 +14,48 @@ import {StackNavigationProp} from 'react-navigation-stack/lib/typescript/src/ven
 import {RootStackParams} from '../../App';
 import {ApplicationState, UserState, PostState, onPostQuote} from '../redux';
 import {connect} from 'react-redux';
-import ImagePicker from 'react-native-image-crop-picker'
-import { AWS3_ACCESS_KEY, AWS3_SECRET_KEY } from '../utils/Config'
-import { RNS3 } from 'react-native-aws3'
-import { showToast } from '../utils/showToast';
- 
+import ImagePicker from 'react-native-image-crop-picker';
+import {AWS3_ACCESS_KEY, AWS3_SECRET_KEY} from '../utils/Config';
+import {RNS3} from 'react-native-aws3';
+import {showToast} from '../utils/showToast';
+
 interface PostQuoteScreenProps {
-    userReducer: UserState;
-    postReducer: PostState;
-    onPostQuote: Function;
-    route: any
+  userReducer: UserState;
+  postReducer: PostState;
+  onPostQuote: Function;
+  route: any;
 }
 
-const link = 'https://imgix.bustle.com/rehost/2016/9/13/e1e65f33-bf55-4867-a620-02f057792a60.png?w=1200&h=630&fit=crop&crop=faces&fm=jpg';
-
-
-const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQuote, route}) => {
-    
+const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({
+  userReducer,
+  onPostQuote,
+  route,
+}) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
-
-  const { user } = userReducer
-
-  const { acc_name } = route.params
-
-  const [qFrom, setQFrom] = useState<string|null>('');
-  const [quote, setQuote] = useState<string|null>('');
-  const [photo, setPhoto] = useState<string|null>(null)
-  const [isPhoto, setIsPhoto] = useState(false)
+  const {user} = userReducer;
+  const {acc_name} = route.params;
+  const [qFrom, setQFrom] = useState<string | null>('');
+  const [quote, setQuote] = useState<string | null>('');
+  const [photo, setPhoto] = useState<string | null>(null);
+  const [isPhoto, setIsPhoto] = useState(false);
 
   const goBack = () => {
     navigation.goBack();
   };
 
   const onTapSend = async () => {
-
     let randomName = (Math.random() + 1).toString(36).substring(2);
 
-    if(qFrom?.length == 0 || quote?.length == 0) {
-      showToast('Please fill all blanks!')
+    if (qFrom?.length == 0 || quote?.length == 0) {
+      showToast('Please fill all blanks!');
     } else {
-
-      if(photo) {
+      if (photo) {
         const file = {
           uri: photo,
           name: randomName,
-          type: 'image/jpeg'
-        }
-    
+          type: 'image/jpeg',
+        };
+
         const config = {
           keyPrefix: 's3/',
           bucket: 'quotes-photo-bucket',
@@ -68,23 +63,24 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
           accessKey: AWS3_ACCESS_KEY,
           secretKey: AWS3_SECRET_KEY,
           successActionStatus: 201,
-        }
-    
+        };
+
         await RNS3.put(file, config)
-        .then((response) => {
-          if(response.status !== 201) {
-            console.log("Failed to upload!");
-          }
-          console.log(response.headers.Location);
-          console.log(response.status)
-          onPostQuote(quote, qFrom, response.headers.Location, user.id)
-        }).catch((error) => {
-          console.log(error);
-        })
+          .then(response => {
+            if (response.status !== 201) {
+              console.log('Failed to upload!');
+            }
+            console.log(response.headers.Location);
+            console.log(response.status);
+            onPostQuote(quote, qFrom, response.headers.Location, user.id);
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
-        await onPostQuote(quote, qFrom, null, user.id)
+        await onPostQuote(quote, qFrom, null, user.id);
       }
-      goBack()
+      goBack();
     }
   };
 
@@ -94,17 +90,19 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
         width: 350,
         height: 300,
         cropping: true,
-      }).then(image => {
-        console.log(image);
-        setPhoto(image.path)
-        setIsPhoto(true)
-      }).catch((error) => {
-        console.log(error);
-      });
+      })
+        .then(image => {
+          console.log(image);
+          setPhoto(image.path);
+          setIsPhoto(true);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -119,14 +117,12 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
         </TouchableOpacity>
         <Text style={styles.top_container_title}>"Post Quote"</Text>
       </View>
-
       <View style={styles.inside_container}>
         <View style={styles.inside_top_container}>
           <Image source={{uri: user.profile_photo}} style={styles.image} />
           <Text style={styles.name}>{user.name}</Text>
           <Text style={styles.username}>@{acc_name}</Text>
         </View>
-
         <View style={styles.text_field_container}>
           <TextInput
             placeholder="Quote From.."
@@ -136,7 +132,6 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
             style={styles.textField}
           />
         </View>
-
         <View style={[styles.text_field_container, {height: 70}]}>
           <TextInput
             placeholder="Quote.."
@@ -147,25 +142,24 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({userReducer, onPostQu
             style={[styles.textField, {textAlignVertical: 'top', height: 70}]}
           />
         </View>
-
         <View style={styles.image_container}>
-
-          {
-            !isPhoto ? <></> : 
+          {!isPhoto ? (
+            <></>
+          ) : (
             <Image
               source={{
-                uri: photo
+                uri: photo,
               }}
               style={styles.post_image}
             />
-          }
-          </View>
-
+          )}
+        </View>
         <View style={styles.bottom_container}>
-          <TouchableOpacity style={{marginLeft: 10}} onPress={() => chooseFromLibrary()}>
+          <TouchableOpacity
+            style={{marginLeft: 10}}
+            onPress={() => chooseFromLibrary()}>
             <Icon name="image" color="#00344F" size={35} />
           </TouchableOpacity>
-
           <View style={{marginRight: 15}}>
             <ButtonWithIcon
               title="Send"
@@ -274,15 +268,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     aspectRatio: 1,
-    marginLeft: 15
+    marginLeft: 15,
   },
 });
 
 const mapToStateProps = (state: ApplicationState) => ({
-    userReducer: state.userReducer,
-    postReducer: state.postReducer
+  userReducer: state.userReducer,
+  postReducer: state.postReducer,
 });
-  
-const PostQuoteScreen = connect(mapToStateProps, {onPostQuote})(_PostQuoteScreen);
-  
+
+const PostQuoteScreen = connect(mapToStateProps, {onPostQuote})(
+  _PostQuoteScreen,
+);
+
 export {PostQuoteScreen};

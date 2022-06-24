@@ -42,6 +42,7 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({
   const [postUser, setPostUser] = useState<UserModel>();
   const [checkIfProfileUser, setCheckIfProfileUser] = useState(false);
   const [deletePost, setDeletePost] = useState(false);
+  const [disableDelete, setDisableDelete] = useState(false)
   const {user} = userReducer;
 
   const getUser = async () => {
@@ -85,6 +86,7 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({
   };
 
   const onTapDeletePost = async () => {
+    setDisableDelete(!disableDelete)
     await onDeletePost(post.id, user.id);
     showToast('Post deleted!');
   };
@@ -125,6 +127,7 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({
         {deletePost ? (
           <View style={styles.delete_post_container}>
             <TouchableOpacity
+              disabled={disableDelete}
               onPress={() => onTapDeletePost()}
               style={styles.delete_post_icon}>
               <Icon name="delete" color="#00344F" size={25} />

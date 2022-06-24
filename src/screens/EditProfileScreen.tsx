@@ -48,6 +48,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({
   const [oldPassword, setOldPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [newPasswordAgain, setNewPasswordAgain] = useState<string>('');
+  const [disableSave, setDisableSave] = useState(false);
 
   const goBack = () => {
     navigation.goBack();
@@ -74,6 +75,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({
   };
 
   const onTapSave = async () => {
+    setDisableSave(!disableSave)
     if (type == 'Edit Profile') {
       if (isPhoto) {
         let randomName = (Math.random() + 1).toString(36).substring(2);
@@ -215,6 +217,7 @@ const _EditProfileScreen: React.FC<EditProfileScreenProps> = ({
           onTap={() => onTapSave()}
           title="Save"
           txtColor="white"
+          disable={disableSave}
         />
       </View>
     </View>

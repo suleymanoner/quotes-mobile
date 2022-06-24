@@ -21,8 +21,8 @@ const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({
 }) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
   const {title, user_id} = route.params;
-  const [userFollowers, setUserFollowers] = useState<[UserModel]>();
-  const [userFollowings, setUserFollowings] = useState<[UserModel]>();
+  const [userFollowers, setUserFollowers] = useState<[UserModel]|null>();
+  const [userFollowings, setUserFollowings] = useState<[UserModel]|null>();
 
   const getFollowers = async (id: number) => {
     try {
@@ -59,11 +59,20 @@ const _FollowerListScreen: React.FC<FollowerListScreenProps> = ({
   };
 
   useEffect(() => {
-    const ac = new AbortController();
+    const unsubscribe = () => {
+      navigation.addListener('focus', async () => {
+        setUserFollowers(null)
+        setUserFollowings(null)
+    });
+    }
+    
     getFollowers(user_id);
     getFollowings(user_id);
-    return () => ac.abort();
-  }, []);
+    return () => {
+      unsubscribe;
+    };
+  }, [navigation]);
+
 
   const goBack = () => {
     navigation.goBack();

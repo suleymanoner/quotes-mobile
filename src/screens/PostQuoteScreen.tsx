@@ -38,12 +38,14 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({
   const [quote, setQuote] = useState<string | null>('');
   const [photo, setPhoto] = useState<string | null>(null);
   const [isPhoto, setIsPhoto] = useState(false);
+  const [disablePost, setDisablePost] = useState(false);
 
   const goBack = () => {
     navigation.goBack();
   };
 
   const onTapSend = async () => {
+    setDisablePost(!disablePost);
     let randomName = (Math.random() + 1).toString(36).substring(2);
 
     if (qFrom?.length == 0 || quote?.length == 0) {
@@ -80,6 +82,7 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({
       } else {
         await onPostQuote(quote, qFrom, null, user.id);
       }
+      
       goBack();
     }
   };
@@ -168,6 +171,7 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({
               height={40}
               btnColor="#7182BD"
               txtColor="white"
+              disable={disablePost}
             />
           </View>
         </View>

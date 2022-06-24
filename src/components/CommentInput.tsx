@@ -21,10 +21,16 @@ const _CommentInput: React.FC<CommentInputProps> = ({
   onMakeComment,
 }) => {
   const [comm, setComm] = useState('');
+  const [disable, setDisable] = useState(false)
 
   const onSendComment = async () => {
-    await onMakeComment(comm, post_id, user.id);
-    showToast('Comment sent!');
+    if(comm == '') {
+      showToast('Please enter your comment!');
+    } else {
+      setDisable(!disable)
+      await onMakeComment(comm, post_id, user.id);
+      showToast('Comment sent!');
+    }
   };
 
   return (
@@ -53,6 +59,7 @@ const _CommentInput: React.FC<CommentInputProps> = ({
           height={40}
           btnColor={MAIN_COLOR}
           txtColor="white"
+          disable={disable}
         />
       </View>
     </View>

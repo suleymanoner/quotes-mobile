@@ -44,8 +44,6 @@ const _SettingScreen: React.FC<SettingScreenProps> = ({
   };
 
   const onTapSignOut = async () => {
-    const keys = await AsyncStorage.getAllKeys();
-    await AsyncStorage.multiRemove(keys);
     await onUserSignOut();
     setTimeout(() => {
       navigation.navigate('LoginPage');

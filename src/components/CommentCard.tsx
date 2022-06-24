@@ -23,6 +23,7 @@ const _CommentCard: React.FC<CommentCardProps> = ({
   onDeleteComment,
 }) => {
   const [deleteIcon, setDeleteIcon] = useState(false);
+  const [disableDelete, setDisableDelete] = useState(false)
   const {user} = userReducer;
   const date = moment(comment.created_at).fromNow();
   const [commentUser, setCommentUser] = useState<UserModel>();
@@ -46,6 +47,7 @@ const _CommentCard: React.FC<CommentCardProps> = ({
   };
 
   const deleteComment = async () => {
+    setDisableDelete(!disableDelete)
     await onDeleteComment(comment.id);
     showToast('Comment deleted!');
   };
@@ -74,6 +76,7 @@ const _CommentCard: React.FC<CommentCardProps> = ({
         {deleteIcon ? (
           <View style={styles.delete_icon_container}>
             <TouchableOpacity
+              disabled={disableDelete}
               onPress={() => deleteComment()}
               style={styles.delete_icon}>
               <Icon name="delete" color="#00344F" size={30} />

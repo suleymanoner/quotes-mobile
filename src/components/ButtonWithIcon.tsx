@@ -13,6 +13,7 @@ interface ButtonProps {
   iconColor?: string;
   iconSize?: number;
   title: string;
+  disable?: boolean
 }
 
 const ButtonWithIcon: React.FC<ButtonProps> = ({
@@ -25,9 +26,11 @@ const ButtonWithIcon: React.FC<ButtonProps> = ({
   title,
   btnColor,
   txtColor,
+  disable
 }) => {
   return (
     <TouchableOpacity
+      disabled={disable}
       style={[styles.button, {width, height, backgroundColor: btnColor}]}
       onPress={() => onTap()}>
       <View style={styles.inside_container}>

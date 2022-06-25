@@ -1,4 +1,4 @@
-package com.quotes;
+package com.quotes.smapp;
 
 import android.content.Intent;
 import android.os.Bundle;

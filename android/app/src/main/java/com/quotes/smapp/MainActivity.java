@@ -1,4 +1,4 @@
-package com.quotes;
+package com.quotes.smapp;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;

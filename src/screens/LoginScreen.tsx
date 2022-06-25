@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 import {connect} from 'react-redux';
 import {BASE_URL, MAIN_COLOR} from '../utils/Config';
 import {TextField, ButtonWithIcon} from '../components';
@@ -136,38 +143,40 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({
           <Text style={styles.title}>"Quotes"</Text>
         </View>
         <View style={styles.input_container}>
-          <TextField
-            placeholder="email"
-            onTextChange={setEmail}
-            value={email}
-          />
-          <TextField
-            placeholder="password"
-            onTextChange={setPassword}
-            isSecure={true}
-            value={password}
-          />
-          <ButtonWithIcon
-            onTap={onLogin}
-            title="Sign In"
-            width={350}
-            height={50}
-            iconName="login"
-            iconColor={MAIN_COLOR}
-            iconSize={30}
-            btnColor="white"
-            txtColor={MAIN_COLOR}
-          />
-          <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
-            <Text style={styles.link_text}>
-              You don't have account yet? Click for Sign-up.
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onTapForgotPassword()}>
-            <Text style={[styles.link_text, {marginTop: 5}]}>
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
+          <ScrollView>
+            <TextField
+              placeholder="email"
+              onTextChange={setEmail}
+              value={email}
+            />
+            <TextField
+              placeholder="password"
+              onTextChange={setPassword}
+              isSecure={true}
+              value={password}
+            />
+            <ButtonWithIcon
+              onTap={onLogin}
+              title="Sign In"
+              width={350}
+              height={50}
+              iconName="login"
+              iconColor={MAIN_COLOR}
+              iconSize={30}
+              btnColor="white"
+              txtColor={MAIN_COLOR}
+            />
+            <TouchableOpacity onPress={() => onTapForgotPassword()}>
+              <Text style={[styles.link_text, {marginTop: 5}]}>
+                Forgot password?
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onTapGoNextScreen('signup')}>
+              <Text style={styles.link_text}>
+                You don't have account yet? Click for Sign-up.
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       </View>
     );
@@ -175,46 +184,52 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({
     return (
       <View style={styles.container}>
         <Text style={styles.title}>"Sign Up"</Text>
-        <TextField placeholder="Name" onTextChange={setName} value={name} />
-        <TextField
-          placeholder="Surname"
-          onTextChange={setSurname}
-          value={surname}
-        />
-        <TextField placeholder="Email" onTextChange={setEmail} value={email} />
-        <TextField
-          placeholder="Username"
-          onTextChange={setUsername}
-          value={username}
-        />
-        <TextField
-          placeholder="Password"
-          onTextChange={setPassword}
-          isSecure={true}
-          value={password}
-        />
-        <TextField
-          placeholder="Password Again"
-          onTextChange={setPasswordAgain}
-          isSecure={true}
-          value={passwordAgain}
-        />
-        <ButtonWithIcon
-          onTap={onSignUp}
-          title="Sign Up"
-          width={350}
-          height={50}
-          iconName="account-plus"
-          iconColor={MAIN_COLOR}
-          iconSize={30}
-          btnColor="white"
-          txtColor={MAIN_COLOR}
-        />
-        <TouchableOpacity onPress={() => onTapGoNextScreen('signin')}>
-          <Text style={styles.link_text}>
-            Do you have account? Click for Sign-in.
-          </Text>
-        </TouchableOpacity>
+        <ScrollView>
+          <TextField placeholder="Name" onTextChange={setName} value={name} />
+          <TextField
+            placeholder="Surname"
+            onTextChange={setSurname}
+            value={surname}
+          />
+          <TextField
+            placeholder="Email"
+            onTextChange={setEmail}
+            value={email}
+          />
+          <TextField
+            placeholder="Username"
+            onTextChange={setUsername}
+            value={username}
+          />
+          <TextField
+            placeholder="Password"
+            onTextChange={setPassword}
+            isSecure={true}
+            value={password}
+          />
+          <TextField
+            placeholder="Password Again"
+            onTextChange={setPasswordAgain}
+            isSecure={true}
+            value={passwordAgain}
+          />
+          <ButtonWithIcon
+            onTap={onSignUp}
+            title="Sign Up"
+            width={350}
+            height={50}
+            iconName="account-plus"
+            iconColor={MAIN_COLOR}
+            iconSize={30}
+            btnColor="white"
+            txtColor={MAIN_COLOR}
+          />
+          <TouchableOpacity onPress={() => onTapGoNextScreen('signin')}>
+            <Text style={styles.link_text}>
+              Do you have account? Click for Sign-in.
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
     );
   }

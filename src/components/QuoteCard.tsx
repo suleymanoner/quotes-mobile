@@ -42,7 +42,8 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({
   const [postUser, setPostUser] = useState<UserModel>();
   const [checkIfProfileUser, setCheckIfProfileUser] = useState(false);
   const [deletePost, setDeletePost] = useState(false);
-  const [disableDelete, setDisableDelete] = useState(false)
+  const [disableDelete, setDisableDelete] = useState(false);
+  const [likeTapped, setLikeTapped] = useState(false);
   const {user} = userReducer;
 
   const getUser = async () => {
@@ -66,6 +67,7 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({
 
   const onTapLike = () => {
     onLikePost(post.id, user.id);
+    setLikeTapped(!likeTapped)
   };
 
   const onTapProfilePhoto = (user_id: number) => {
@@ -159,7 +161,12 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({
 
         <View style={styles.comment_like_inside_container}>
           <TouchableOpacity onPress={() => onTapLike()}>
-            <Icon name="cards-heart" color="#00344F" size={25} />
+            {
+              likeTapped ? 
+              <Icon name="cards-heart-outline" color="#00344F" size={25} />
+              :
+              <Icon name="cards-heart" color="#00344F" size={25} />
+            }
           </TouchableOpacity>
           <Text style={styles.comment_like_number}>{post.total_likes}</Text>
         </View>

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import {ApplicationState, PostState, onGetDailyPost} from '../redux';
 import {connect} from 'react-redux';
 import {BACKGROUND_COLOR, TEXT_COLOR} from '../utils/Config';
@@ -24,17 +24,19 @@ const _DailyQuoteScreen: React.FC<DailyQuoteScreenProps> = ({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>"Daily Quote"</Text>
-      {daily_post.id ? (
-        <View style={styles.text_container}>
-          <Text style={styles.post_body_text}>"{daily_post.body}"</Text>
-          <Text style={styles.post_from_text}>• {daily_post.post_from}</Text>
+      <ScrollView>
+        {daily_post.id ? (
+          <View style={styles.text_container}>
+            <Text style={styles.post_body_text}>"{daily_post.body}"</Text>
+            <Text style={styles.post_from_text}>• {daily_post.post_from}</Text>
+          </View>
+        ) : (
+          <></>
+        )}
+        <View style={styles.image_container}>
+          <Image source={{uri: daily_post.image}} style={styles.post_image} />
         </View>
-      ) : (
-        <></>
-      )}
-      <View style={styles.image_container}>
-        <Image source={{uri: daily_post.image}} style={styles.post_image} />
-      </View>
+      </ScrollView>
     </View>
   );
 };

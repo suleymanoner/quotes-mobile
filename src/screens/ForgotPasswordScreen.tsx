@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {ButtonWithIcon, TextField} from '../components';
 import {
   UserState,
@@ -76,70 +76,74 @@ const _ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
       {isForgotSent ? (
         <View style={styles.input_container}>
-          <TextField
-            placeholder="token"
-            onTextChange={setToken}
-            value={token}
-          />
-          <TextField
-            placeholder="new password"
-            onTextChange={setNewPassword}
-            isSecure={true}
-            value={newPassword}
-          />
-          <TextField
-            placeholder="new password again"
-            onTextChange={setNewPasswordAgain}
-            isSecure={true}
-            value={newPasswordAgain}
-          />
-          <ButtonWithIcon
-            onTap={onResetPassword}
-            title="Reset Password"
-            width={350}
-            height={50}
-            iconName="lock-reset"
-            iconColor={MAIN_COLOR}
-            iconSize={30}
-            btnColor="white"
-            txtColor={MAIN_COLOR}
-          />
-          <TouchableOpacity
-            onPress={() => setIsForgotSent(false)}
-            style={{marginTop: 5}}>
-            <Text style={styles.link_text}>
-              Do you want to send recovery link? Click here.
-            </Text>
-          </TouchableOpacity>
+          <ScrollView>
+            <TextField
+              placeholder="token"
+              onTextChange={setToken}
+              value={token}
+            />
+            <TextField
+              placeholder="new password"
+              onTextChange={setNewPassword}
+              isSecure={true}
+              value={newPassword}
+            />
+            <TextField
+              placeholder="new password again"
+              onTextChange={setNewPasswordAgain}
+              isSecure={true}
+              value={newPasswordAgain}
+            />
+            <ButtonWithIcon
+              onTap={onResetPassword}
+              title="Reset Password"
+              width={350}
+              height={50}
+              iconName="lock-reset"
+              iconColor={MAIN_COLOR}
+              iconSize={30}
+              btnColor="white"
+              txtColor={MAIN_COLOR}
+            />
+            <TouchableOpacity
+              onPress={() => setIsForgotSent(false)}
+              style={{marginTop: 5}}>
+              <Text style={styles.link_text}>
+                Do you want to send recovery link? Click here.
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       ) : (
         <View style={styles.input_container}>
-          <TextField
-            placeholder="email"
-            onTextChange={setForgotEmail}
-            value={forgotEmail}
-          />
-          <ButtonWithIcon
-            onTap={onSendForgotLink}
-            title="Send Forgot Password Link"
-            width={350}
-            height={50}
-            iconName="send"
-            iconColor={MAIN_COLOR}
-            iconSize={30}
-            btnColor="white"
-            txtColor={MAIN_COLOR}
-          />
-          <TouchableOpacity onPress={() => setIsForgotSent(true)}>
-            <Text style={styles.link_text}>Enter token here.</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{marginTop: 5}}>
-            <Text style={styles.link_text}>
-              Do you want to go Sign-in? Click here.
-            </Text>
-          </TouchableOpacity>
+          <ScrollView>
+            <TextField
+              placeholder="email"
+              onTextChange={setForgotEmail}
+              value={forgotEmail}
+            />
+            <ButtonWithIcon
+              onTap={onSendForgotLink}
+              title="Send Forgot Password Link"
+              width={350}
+              height={50}
+              iconName="send"
+              iconColor={MAIN_COLOR}
+              iconSize={30}
+              btnColor="white"
+              txtColor={MAIN_COLOR}
+            />
+            <TouchableOpacity onPress={() => setIsForgotSent(true)}>
+              <Text style={styles.link_text}>Enter token here.</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{marginTop: 5}}>
+              <Text style={styles.link_text}>
+                Do you want to go Sign-in? Click here.
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
       )}
     </View>

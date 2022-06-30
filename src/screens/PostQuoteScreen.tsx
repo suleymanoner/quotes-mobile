@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ButtonWithIcon} from '../components';
@@ -82,7 +83,7 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({
       } else {
         await onPostQuote(quote, qFrom, null, user.id);
       }
-      
+
       goBack();
     }
   };
@@ -121,60 +122,62 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({
         <Text style={styles.top_container_title}>"Post Quote"</Text>
       </View>
       <View style={styles.inside_container}>
-        <View style={styles.inside_top_container}>
-          <Image source={{uri: user.profile_photo}} style={styles.image} />
-          <Text style={styles.name}>{user.name}</Text>
-          <Text style={styles.username}>@{acc_name}</Text>
-        </View>
-        <View style={styles.text_field_container}>
-          <TextInput
-            placeholder="Quote From.."
-            autoCapitalize="none"
-            onChangeText={text => setQFrom(text)}
-            underlineColorAndroid="transparent"
-            style={styles.textField}
-          />
-        </View>
-        <View style={[styles.text_field_container, {height: 70}]}>
-          <TextInput
-            placeholder="Quote.."
-            autoCapitalize="none"
-            onChangeText={text => setQuote(text)}
-            multiline={true}
-            underlineColorAndroid="transparent"
-            style={[styles.textField, {textAlignVertical: 'top', height: 70}]}
-          />
-        </View>
-        <View style={styles.image_container}>
-          {!isPhoto ? (
-            <></>
-          ) : (
-            <Image
-              source={{
-                uri: photo,
-              }}
-              style={styles.post_image}
-            />
-          )}
-        </View>
-        <View style={styles.bottom_container}>
-          <TouchableOpacity
-            style={{marginLeft: 10}}
-            onPress={() => chooseFromLibrary()}>
-            <Icon name="image" color="#00344F" size={35} />
-          </TouchableOpacity>
-          <View style={{marginRight: 15}}>
-            <ButtonWithIcon
-              title="Send"
-              onTap={() => onTapSend()}
-              width={100}
-              height={40}
-              btnColor="#7182BD"
-              txtColor="white"
-              disable={disablePost}
+        <ScrollView>
+          <View style={styles.inside_top_container}>
+            <Image source={{uri: user.profile_photo}} style={styles.image} />
+            <Text style={styles.name}>{user.name}</Text>
+            <Text style={styles.username}>@{acc_name}</Text>
+          </View>
+          <View style={styles.text_field_container}>
+            <TextInput
+              placeholder="Quote From.."
+              autoCapitalize="none"
+              onChangeText={text => setQFrom(text)}
+              underlineColorAndroid="transparent"
+              style={styles.textField}
             />
           </View>
-        </View>
+          <View style={[styles.text_field_container, {height: 70}]}>
+            <TextInput
+              placeholder="Quote.."
+              autoCapitalize="none"
+              onChangeText={text => setQuote(text)}
+              multiline={true}
+              underlineColorAndroid="transparent"
+              style={[styles.textField, {textAlignVertical: 'top', height: 70}]}
+            />
+          </View>
+          <View style={styles.image_container}>
+            {!isPhoto ? (
+              <></>
+            ) : (
+              <Image
+                source={{
+                  uri: photo,
+                }}
+                style={styles.post_image}
+              />
+            )}
+          </View>
+          <View style={styles.bottom_container}>
+            <TouchableOpacity
+              style={{marginLeft: 10}}
+              onPress={() => chooseFromLibrary()}>
+              <Icon name="image" color="#00344F" size={35} />
+            </TouchableOpacity>
+            <View style={{marginRight: 15}}>
+              <ButtonWithIcon
+                title="Send"
+                onTap={() => onTapSend()}
+                width={100}
+                height={40}
+                btnColor="#7182BD"
+                txtColor="white"
+                disable={disablePost}
+              />
+            </View>
+          </View>
+        </ScrollView>
       </View>
     </View>
   );

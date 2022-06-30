@@ -163,9 +163,9 @@ const _QuoteCard: React.FC<QuoteCardProps> = ({
           <TouchableOpacity onPress={() => onTapLike()}>
             {
               likeTapped ? 
-              <Icon name="cards-heart-outline" color="#00344F" size={25} />
-              :
               <Icon name="cards-heart" color="#00344F" size={25} />
+              :
+              <Icon name="cards-heart-outline" color="#00344F" size={25} />
             }
           </TouchableOpacity>
           <Text style={styles.comment_like_number}>{post.total_likes}</Text>

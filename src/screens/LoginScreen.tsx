@@ -62,6 +62,8 @@ const _LoginScreen: React.FC<LoginScreenProps> = ({
             })
             .catch(err => console.log(err));
         }
+      } else {
+        storageUser?.id == null
       }
     } catch (error) {
       console.log(error);

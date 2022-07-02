@@ -121,8 +121,8 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({
         </TouchableOpacity>
         <Text style={styles.top_container_title}>"Post Quote"</Text>
       </View>
-      <View style={styles.inside_container}>
-        <ScrollView>
+      <ScrollView>
+        <View style={styles.inside_container}>
           <View style={styles.inside_top_container}>
             <Image source={{uri: user.profile_photo}} style={styles.image} />
             <Text style={styles.name}>{user.name}</Text>
@@ -177,8 +177,8 @@ const _PostQuoteScreen: React.FC<PostQuoteScreenProps> = ({
               />
             </View>
           </View>
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };

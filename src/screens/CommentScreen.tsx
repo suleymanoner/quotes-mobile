@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  ScrollView,
 } from 'react-native';
 import {StackNavigationProp} from 'react-navigation-stack/lib/typescript/src/vendor/types';
 import {RootStackParams} from '../../App';
@@ -63,21 +62,19 @@ const _CommentScreen: React.FC<CommentScreenScreenProps> = props => {
         </TouchableOpacity>
         <Text style={styles.top_container_title}>"Comments"</Text>
       </View>
-      <ScrollView>
-        <CommentInput user={user} acc_name={account.name} post_id={post_id} />
-        {comments ? (
-          <FlatList
-            data={comments}
-            initialNumToRender={6}
-            renderItem={({item}) => (
-              <CommentCard comment={item} userId={item.user_id} />
-            )}
-            keyExtractor={(item, index) => String(item.id)}
-          />
-        ) : (
-          <></>
-        )}
-      </ScrollView>
+      <CommentInput user={user} acc_name={account.name} post_id={post_id} />
+      {comments ? (
+        <FlatList
+          data={comments}
+          initialNumToRender={6}
+          renderItem={({item}) => (
+            <CommentCard comment={item} userId={item.user_id} />
+          )}
+          keyExtractor={(item, index) => String(item.id)}
+        />
+      ) : (
+        <></>
+      )}
     </View>
   );
 };

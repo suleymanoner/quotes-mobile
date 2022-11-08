@@ -20,7 +20,7 @@
     "axios": "^0.26.1",
     "lottie-ios": "3.2.3",
     "lottie-react-native": "^5.0.1",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "react": "17.0.2",
     "react-native": "0.67.3",
     "react-native-aws3": "^0.0.9",
